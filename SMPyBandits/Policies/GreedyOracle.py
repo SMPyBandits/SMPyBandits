@@ -1,29 +1,46 @@
+"""
+author: Julien Seznec
+
+Reference: [Heidari et al., 2016, https://www.ijcai.org/Proceedings/16/Papers/224.pdf]
+Tight Policy Regret Bounds for Improving and Decaying Bandits.
+Hoda Heidari, Michael Kearns, Aaron Roth.
+International Joint Conference on Artificial Intelligence (IJCAI) 2016, 1562.
+"""
 from .IndexPolicy import IndexPolicy
 import numpy as np
 
 class GreedyPolicy(IndexPolicy):
-    """ Greedy Oracle for rotting bandits.
+    """
+    Greedy Oracle for rotting bandits (A2 in teh reference below).
     Selects arm with best last value.
-    Reference: [Heidari , Kearns & Roth, 2016]
+    Reference: [Heidari et al., 2016, https://www.ijcai.org/Proceedings/16/Papers/224.pdf]
     """
     def __init__(self, nbArms):
         super(GreedyPolicy, self).__init__(nbArms)
-        self.arms_history = [np.array([]) for arm in range(nbArms)]
+        self.last_pull = [np.inf for _ in range(nbArms)]
 
     def getReward(self, arm, reward):
-        super(GreedyOracle, self).getReward(arm, reward)
-        self.arms_history[arm] = np.insert(self.arms_history[arm], 0, 0) + reward
+        super(GreedyPolicy, self).getReward(arm, reward)
+        self.last_pull[arm] = reward
 
-    def computeAllIndex(self,arms):
+    def computeAllIndex(self):
+        return self.last_pull
+
+    def computeIndex(self,arm):
         """ Compute the mean of the h last value """
-        for i, arm in enumerate(arms):
-            self.index[i] = self.arms_history[arm][0]
+        return self.last_pull[arm]
+
+    def startGame(self):
+        super(GreedyPolicy, self).startGame()
+        self.last_pull = [np.inf for _ in self.last_pull]
+
 
 class GreedyOracle(IndexPolicy):
-    """ Greedy Oracle for rotting bandits.
-        Look 1 step forward and select next best value.
-        Optimal policy for rotting bandits problem.
-    Reference: [Heidari , Kearns & Roth, 2016]
+    """
+    Greedy Oracle for rotting bandits (A0 in the reference below).
+    Look 1 step forward and select next best value.
+    Optimal policy for rotting bandits problem.
+    Reference: [Heidari et al., 2016, https://www.ijcai.org/Proceedings/16/Papers/224.pdf]
     """
     def __init__(self,nbArms, arms):
         super(GreedyOracle, self).__init__(nbArms)
@@ -32,3 +49,5 @@ class GreedyOracle(IndexPolicy):
     def computeIndex(self, arm):
         return self.arms[arm].mean
 
+    def computeAllIndex(self):
+        return [arm.mean for arm in self.arms]

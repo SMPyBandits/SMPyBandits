@@ -1,12 +1,21 @@
+# -*- coding: utf-8 -*-
+"""
+author: Julien Seznec
+
+Rotting Adaptive Window Upper Confidence Bounds for rotting bandits.
+
+Reference : [Seznec et al.,  2019b]
+A single algorithm for both rested and restless rotting bandits (WIP)
+Julien Seznec, Pierre Ménard, Alessandro Lazaric, Michal Valko
+"""
+
+
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Julien Seznec"
 __version__ = "0.1"
 
-from math import sqrt, log
 import numpy as np
-import pandas as pd
-
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 try:
@@ -16,16 +25,18 @@ try:
     from .kullback import klucbBern
 except ImportError:
     from BasePolicy import BasePolicy
+    from IndexPolicy import IndexPolicy
     from FEWA import FEWA, EFF_FEWA
     from kullback import klucbBern
-    from IndexPolicy import IndexPolicy
+
 
 
 class EFF_RAWUCB(EFF_FEWA):
     """
-    Efficient mechanism as described in [Seznec et al.,  2019a] (m=2) and [Seznec et al.,  2019b] (m<=2)
-    Algorithm Rotting Adaptive Window Upper Confidence Bound (RAW-UCB) [Seznec et al.,  2019b]
-    We use the confidence level \delta_t = \frac{1}{t^\alpha}.
+    Efficient Rotting Adaptive Window Upper Confidence Bound (RAW-UCB) [Seznec et al.,  2019b, WIP]
+    Efficient trick described in [Seznec et al.,  2019a, https://arxiv.org/abs/1811.11043] (m=2)
+    and [Seznec et al.,  2019b, WIP] (m<=2)
+    We use the confidence level :math:`\delta_t = \frac{1}{t^\alpha}`.
     """
 
     def choice(self):
@@ -41,15 +52,19 @@ class EFF_RAWUCB(EFF_FEWA):
 
     def _append_thresholds(self, w):
         # FEWA use two confidence bounds. Hence, the outlogconst is twice smaller for RAWUCB
-        return sqrt(2 * self.subgaussian ** 2 / w)
+        return np.sqrt(2 * self.subgaussian ** 2 / w)
 
     def __str__(self):
         return r"EFF_RAW-UCB($\alpha={:.3g}, \, m={:.3g}$)".format(self.alpha, self.grid)
 
 
-class EFF_klRAWUCB(EFF_RAWUCB):
+class EFF_RAWklUCB(EFF_RAWUCB):
+    """
+    Use KL-confidence bound instead of close formula approximation.
+    Experimental work : Much slower (!!) because we compute many UCB at each round per arm)
+    """
     def __init__(self, nbArms, subgaussian=1, alpha=1, klucb=klucbBern, tol=1e-4, m=2):
-        super(EFF_klRAWUCB, self).__init__(nbArms=nbArms, subgaussian=subgaussian, alpha=alpha, m=m)
+        super(EFF_RAWklUCB, self).__init__(nbArms=nbArms, subgaussian=subgaussian, alpha=alpha, m=m)
         self.c = alpha
         self.klucb_vec = np.vectorize(klucb, excluded=['precision'])
         self.tolerance = tol
@@ -58,15 +73,19 @@ class EFF_klRAWUCB(EFF_RAWUCB):
         not_selected = np.where(self.pulls == 0)[0]
         if len(not_selected):
             return not_selected[0]
-        self.ucb = self.klucb_vec(self.statistics[0, :, :] / self.windows, self.c * log(self.t + 1) / self.windows,
+        self.ucb = self.klucb_vec(self.statistics[0, :, :] / self.windows, self.c * np.log(self.t + 1) / self.windows,
                                   precision=self.tolerance)
-        return np.nanmin(self.ucb, axis=1).argmax()
+        return np.argmax(np.nanmin(self.ucb, axis=1))
 
     def __str__(self):
         return r"EFF_RAW-klUCB($c={:.3g}, \, m={:.3g}$)".format(self.alpha, self.grid)
 
 
 class RAWUCB(EFF_RAWUCB):
+    """
+    Rotting Adaptive Window Upper Confidence Bound (RAW-UCB) [Seznec et al.,  2019b, WIP]
+    We use the confidence level :math:`\delta_t = \frac{1}{t^\alpha}`.
+    """
     def __init__(self, nbArms, subgaussian=1, alpha=1):
         super(RAWUCB, self).__init__(nbArms=nbArms, subgaussian=subgaussian, alpha=alpha, m=1 + 1e-15)
 
@@ -76,10 +95,10 @@ class RAWUCB(EFF_RAWUCB):
 
 class EFF_RAWUCB_asymptotic(EFF_RAWUCB):
     """
-    Efficient mechanism as described in [Seznec et al.,  2019a] (m=2) and [Seznec et al.,  2019b] (m<=2)
-    Algorithm Rotting Adaptive Window Upper Confidence Bound (RAW-UCB) [Seznec et al.,  2019b]
-    We use the confidence level \delta_t = \frac{1}{t(1+log(t)^\Beta)}.
-    $\Beta=2$ corresponds to an asymptotic optimal tuning of UCB (Lattimore et Czebesvari's Bandit Book)
+    Efficient Rotting Adaptive Window Upper Confidence Bound (RAW-UCB) [Seznec et al.,  2019b, WIP]
+    We use the confidence level :math:`\delta_t = \frac{1}{t(1+log(t)^\Beta)}`.
+    :math:`\Beta=2` corresponds to an asymptotic optimal tuning of UCB for stationnary bandits
+    (Bandit Algorithms, Lattimore and Szepesvari,  Chapter 7, https://tor-lattimore.com/downloads/book/book.pdf)
     """
 
     def __init__(self, nbArms, subgaussian=1, beta=2, m =2):

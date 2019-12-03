@@ -1,15 +1,26 @@
 # -*- coding: utf-8 -*-
-""" The Confidence Bound Filtering on Expanding Window Average policy for rotting bandits.
-Reference: [Seznec et al.,  2018].
+"""
+author: Julien Seznec
+
+Filtering on Expanding Window Algorithm for rotting bandits.
+
+Reference: [Seznec et al.,  2019a]
+Rotting bandits are not harder than stochastic ones;
+Julien Seznec, Andrea Locatelli, Alexandra Carpentier, Alessandro Lazaric, Michal Valko ;
+Proceedings of Machine Learning Research, PMLR 89:2564-2572, 2019.
+http://proceedings.mlr.press/v89/seznec19a.html
+https://arxiv.org/abs/1811.11043 (updated version)
+
+Reference : [Seznec et al.,  2019b]
+A single algorithm for both rested and restless rotting bandits (WIP)
+Julien Seznec, Pierre Ménard, Alessandro Lazaric, Michal Valko
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Julien Seznec"
 __version__ = "0.1"
 
-from math import sqrt, log
 import numpy as np
-import pandas as pd
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 try:
@@ -20,9 +31,10 @@ except ImportError:
 
 class EFF_FEWA(BasePolicy):
     """
-    Efficient mechanism as described in [Seznec et al.,  2019a] (m=2) and [Seznec et al.,  2019b] (m<=2)
-    Algorithm Filtering on Expanding Window Average [Seznec et al.,  2019a]
-    We use the confidence level \delta_t = \frac{1}{t^\alpha}.
+    Efficient Filtering on Expanding Window Average
+    Efficient trick described in [Seznec et al.,  2019a, https://arxiv.org/abs/1811.11043] (m=2)
+    and [Seznec et al.,  2019b, WIP] (m<=2)
+    We use the confidence level :math:`\delta_t = \frac{1}{t^\alpha}`.
      """
     def __init__(self, nbArms, alpha=0.06, subgaussian=1, m=2):
         super(EFF_FEWA, self).__init__(nbArms)
@@ -32,7 +44,7 @@ class EFF_FEWA(BasePolicy):
         self.statistics = np.ones(shape=(3, self.nbArms, 2)) * np.nan
         # [0,:,:] : current statistics, [1,:,:]: pending statistics, [3,:,:]: number of sample in the pending statistics
         self.windows = np.array([1, int(np.ceil(m))])
-        self.outlogconst = np.sqrt(self.windows * sqrt(8 * self.alpha * self.subgaussian ** 2))
+        self.outlogconst = np.sqrt(self.windows * np.sqrt(8 * self.alpha * self.subgaussian ** 2))
         self.armSet = np.arange(nbArms)
         self.grid = m
 
@@ -43,7 +55,7 @@ class EFF_FEWA(BasePolicy):
         super(EFF_FEWA, self).getReward(arm, reward)
         if not np.all(np.isnan(self.statistics[0,:,-1])):
             self.statistics = np.append(self.statistics, np.nan * np.ones([3, self.nbArms, 1]), axis=2)
-        while self.statistics.shape[2] > min([len(self.outlogconst), len(self.windows)]):
+        while self.statistics.shape[2] > min(len(self.outlogconst), len(self.windows)):
             self.windows = np.append(self.windows, int(np.ceil(self.windows[-1] * self.grid)))
             self.outlogconst = np.append(self.outlogconst, self._append_thresholds(self.windows[-1]))
         self.statistics[1, arm, 0] = reward
@@ -71,18 +83,26 @@ class EFF_FEWA(BasePolicy):
         return selected[np.argmin(self.pulls[selected])]
 
     def _append_thresholds(self, w):
-        return sqrt(8 * self.subgaussian ** 2 * w)
+        return np.sqrt(8 * w * self.subgaussian ** 2)
 
     def _confidence_level_inv(self):
         return self.t ** self.alpha
 
+    def startGame(self):
+        super(EFF_FEWA, self).startGame()
+        self.statistics = np.ones(shape=(3, self.nbArms, 2)) * np.nan
+        self.windows = np.array([1, int(np.ceil(self.m))])
+        self.outlogconst = np.sqrt(self.windows * np.sqrt(8 * self.alpha * self.subgaussian ** 2))
+
+
+
 
 class FEWA(EFF_FEWA):
-    """ Filtering on Expanding Window Average policy for rotting bandits.
-    Reference: [Seznec et al.,  2019a].
-    FEWA is equivalent to EFF_FEWA for m < 1+1/T.
-    This implementation is valid for $T < 10^15$.
-    For T>10^15, FEWA will have running time and memory issues as its time and space complexity is O(KT) per round.
+    """ Filtering on Expanding Window Average.
+    Reference: [Seznec et al.,  2019a, https://arxiv.org/abs/1811.11043].
+    FEWA is equivalent to EFF_FEWA for :math:`m < 1+1/T` [Seznec et al.,  2019b, WIP].
+    This implementation is valid for $:math:`T < 10^{15}`.
+    For :math:`T>10^{15}`, FEWA will have time and memory issues as its time and space complexity is O(KT) per round.
     """
     def __init__(self, nbArms, subgaussian=1, alpha = 4):
         super(FEWA, self).__init__(nbArms, subgaussian=subgaussian, alpha=alpha, m = 1 + 10**(-15))

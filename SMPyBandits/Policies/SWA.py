@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
-""" The Sliding Window Average policy for rotting bandits.
-Reference: [Levine , Crammer & Mannor, 2017].
+"""
+author : Julien Seznec
+
+Sliding Window Average policy for rotting bandits.
+Reference: [Levine et al., 2017, https://papers.nips.cc/paper/6900-rotting-bandits.pdf].
+Advances in Neural Information Processing Systems 30 (NIPS 2017)
+Nir Levine, Koby Crammer, Shie Mannor
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Julien Seznec"
 __version__ = "0.1"
 
-from math import sqrt, log
 import numpy as np
-import pandas as pd
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 try:
@@ -20,24 +23,22 @@ except ImportError:
 
 class SWA(IndexPolicy):
     """ The Sliding Window Average policy for rotting bandits.
-    Reference: [Levine , Crammer & Mannor, 2017].
+    Reference: [Levine et al., 2017, https://papers.nips.cc/paper/6900-rotting-bandits.pdf].
     """
     def __init__(self, nbArms, horizon=1, subgaussian=1, maxDecrement=1,alpha=0.2, doublingTrick=False):
         super(SWA, self).__init__(nbArms)
         self.t = 0
         self.nbArms = nbArms
-        self.arms_history = {}
-        for arm in range(nbArms):
-            self.arms_history[arm] = np.array([])
+        self.arms_history = {arm: [] for arm in range(nbArms)}
         self.armSet = set(range(nbArms))
         self.horizon = horizon
-        self.alpha = alpha if alpha else (2*maxDecrement)**(-2/3)
+        self.alpha = alpha if alpha is not None else (2*maxDecrement)**(-2/3)
         self.subgaussian = subgaussian
         self.h = self.setWindow()
         self.doubling = doublingTrick
 
     def setWindow(self):
-        return self.alpha * (16 * self.subgaussian**2 * self.horizon**2 * log(sqrt(2)*self.horizon)/ len(self.armSet)**2)**(1/3)
+        return np.ceil(self.alpha * (16 * self.subgaussian**2 * self.horizon**2 * np.log(np.sqrt(2)*self.horizon)/ len(self.armSet)**2)**(1/3))
 
     def getReward(self, arm, reward):
         super(SWA, self).getReward(arm, reward)
@@ -50,9 +51,14 @@ class SWA(IndexPolicy):
         else:
             return self.arms_history[arm][int(self.h)]
 
+    def startGame(self):
+        super(SWA, self).startGame()
+        self.arms_history = {arm: [] for arm in range(self.nbArms)}
+
+
 class wSWA(SWA):
-    """ SWA with doubling trick (custom = no restart)
-    Reference: [Levine , Crammer & Mannor, 2017].
+    """ SWA with doubling trick
+    Reference: [Levine et al., 2017, https://papers.nips.cc/paper/6900-rotting-bandits.pdf].
     """
     def __init__(self, nbArms, firstHorizon=1, subgaussian=1, maxDecrement=1, alpha=0.2):
         super(wSWA, self).__init__(nbArms, firstHorizon, subgaussian, maxDecrement, alpha)
@@ -63,6 +69,7 @@ class wSWA(SWA):
     def doublingTrick(self):
         self.horizon = 2 * self.horizon
         self.h = self.setWindow()
+        self.startGame()
 
     def getReward(self, arm, reward):
         super(wSWA, self).getReward(arm,reward)
