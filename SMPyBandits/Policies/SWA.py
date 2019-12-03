@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 author : Julien Seznec
-
 Sliding Window Average policy for rotting bandits.
+
 Reference: [Levine et al., 2017, https://papers.nips.cc/paper/6900-rotting-bandits.pdf].
 Advances in Neural Information Processing Systems 30 (NIPS 2017)
 Nir Levine, Koby Crammer, Shie Mannor
@@ -80,7 +80,6 @@ class wSWA(SWA):
             self.doublingTrick()
 
 # --- Debugging
-
 if __name__ == "__main__":
     # Code for debugging purposes.
     reward = {0:0, 1:0.2, 2:0.4, 3:0.6, 4:0.8}
