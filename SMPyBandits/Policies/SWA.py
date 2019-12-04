@@ -50,7 +50,7 @@ class SWA(IndexPolicy):
         if len(self.arms_history[arm]) < self.h:
             return float('+inf')
         else:
-            return self.arms_history[arm][int(self.h)]
+            return self.arms_history[arm][int(self.h)-1]
 
     def startGame(self, resetHorizon = True):
         super(SWA, self).startGame()
