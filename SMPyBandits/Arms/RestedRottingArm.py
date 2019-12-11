@@ -3,11 +3,14 @@ author: Julien Seznec
 Rested rotting arm, i.e. arms with mean value which decay at each pull
 """
 try:
-    from .Arm import Arm
-    from . import *
+    from . import Arm, Bernoulli, UnboundedExponential, UnboundedGaussian, Constant, UnboundedPoisson
 except ImportError:
-    from . import *
-    from Gaussian import UnboundedGaussian as Gaussian
+    from Arm import Arm
+    from Bernoulli import Bernoulli
+    from Binomial import Binomial
+    from Constant import Constant
+    from Gaussian import UnboundedGaussian
+    from Constant import Constant
 
 
 class RestedRottingArm(Arm):
@@ -75,7 +78,7 @@ def abruptSingleDecay(x, mu, switchPoint):
 
 
 if __name__ == '__main__':
-    gaussian = Gaussian(0, 1)
-    rotting_gaussian = RestedRottingArm(lambda n: 0 if n > 10 else 1, gaussian)
-    for i in range(100):
-        print(rotting_gaussian.draw())
+    rotting_bernoulli = RestedRottingBernoulli(lambda n: 0 if n > 10 else 1)
+    rotting_gaussian = RestedRottingGaussian(lambda n: 0 if n > 10 else 1)
+    print([rotting_gaussian.draw() for _ in range(50)])
+    print([rotting_bernoulli.draw() for _ in range(50)])
