@@ -49,6 +49,9 @@ class Arm(object):
         self.draw(t)
         return self.mean
 
+    def set_mean_param(self,mean):
+        raise NotImplementedError("This method draw(t) has to be implemented in the class inheriting from Arm.")
+
 
 
     def draw_nparray(self, shape=(1,)):
