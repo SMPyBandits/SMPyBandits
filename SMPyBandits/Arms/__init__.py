@@ -48,6 +48,7 @@ if __name__ != "__main__":
     from .Exponential import Exponential, ExponentialFromMean, UnboundedExponential
     from .Gamma import Gamma, GammaFromMean, UnboundedGamma
     from .DiscreteArm import DiscreteArm
+    from .RestedRottingArm import RestedRottingArm, constant, abruptSingleDecay
 
     mapping_ARM_TYPE = {
         "Constant": Constant,

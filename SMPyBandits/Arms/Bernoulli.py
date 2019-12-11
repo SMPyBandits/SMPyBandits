@@ -56,6 +56,9 @@ class Bernoulli(Arm):
         """ Draw a numpy array of random samples, of a certain shape."""
         return np.asarray(binomial(1, self.probability, shape), dtype=float)
 
+    def set_mean_param(self, probability):
+        self.probability = self.mean = probability
+
     # --- Printing
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
