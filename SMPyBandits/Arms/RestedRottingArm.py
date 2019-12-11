@@ -5,7 +5,6 @@ Rested rotting arm, i.e. arms with mean value which decay at each pull
 try:
     from .Arm import Arm
     from .Gaussian import UnboundedGaussian as Gaussian
-    from Bernoulli
 except ImportError:
     from Arm import Arm
     from Gaussian import UnboundedGaussian as Gaussian
@@ -39,7 +38,7 @@ def abruptSingleDecay(x,mu, switchPoint):
   return mu if x < switchPoint else -mu
 
 if __name__ == '__main__':
-  gaussian = Bernoulli(0,1)
+  gaussian = Gaussian(0,1)
   rotting_gaussian = RestedRottingArm(lambda n: 0 if n>10 else 1, gaussian)
   for i in range(100):
     print(rotting_gaussian.draw())
