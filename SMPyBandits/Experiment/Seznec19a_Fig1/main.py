@@ -1,5 +1,5 @@
-from ...Arms import PullDecayingGaussian, constant, abruptSingleDecay
-from ...Policies import *
+from ...Arms import RestedRottingArm
+from ...Policies import FEWA, EFF_FEWA, wSWA
 from ...Environment.MAB_rotting import repetedRuns
 import numpy as np
 import datetime
@@ -46,16 +46,16 @@ for i, policy in enumerate(policies):
   time_res = []
   overpull_res =[]
   for m, mu in enumerate(mus):
-    logging.info("EVENT : GAME %s $\mu = %s$" % (m, mu))
+    logging.info("GAME %s : $\mu = %s$" % (m, mu))
     print(mu)
     ### SET K arms
     arms = [
       [
-        PullDecayingGaussian,
+        RestedRottingArm,
         {'function': constant, 'sigma': sigma, 'functionName': 'constant', 'functionArgs': {"mu": 0}}
       ],
       [
-        PullDecayingGaussian,
+        RestedRottingArm,
         {'function': abruptSingleDecay, 'sigma': sigma,
          'functionName': 'AbruptSingleDecay', 'functionArgs': {"mu": mu, "switchPoint": HORIZON / 4}}
       ],
