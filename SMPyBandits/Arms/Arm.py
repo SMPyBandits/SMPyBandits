@@ -43,6 +43,17 @@ class Arm(object):
         """ Draw one random sample."""
         raise NotImplementedError("This method draw(t) has to be implemented in the class inheriting from Arm.")
 
+    def oracle_draw(self, t = None):
+        # draw the arm as usual but return the mean
+        assert hasattr(self , "mean"), "oracle_draw can be used on Arm with self.mean"
+        self.draw(t)
+        return self.mean
+
+    def set_mean_param(self,mean):
+        raise NotImplementedError("This method draw(t) has to be implemented in the class inheriting from Arm.")
+
+
+
     def draw_nparray(self, shape=(1,)):
         """ Draw a numpy array of random samples, of a certain shape."""
         raise NotImplementedError("This method draw_nparray(t) has to be implemented in the class inheriting from Arm.")

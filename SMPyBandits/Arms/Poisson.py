@@ -71,6 +71,20 @@ class Poisson(Arm):
         """ Draw a numpy array of random samples, of a certain shape."""
         return np.minimum(poisson.rvs(self.p, size=shape), self.trunc)
 
+    def set_mean_param(self, p):
+        self.p = p
+        if isinf(self.trunc):
+            self.mean = p  #: Mean for this Poisson arm
+        else:  # Warning: this is very slow if self.trunc is large!
+            q = exp(-p)
+            sq = q
+            self.mean = 0
+            for k in range(1, self.trunc):
+                q *= p / k
+                self.mean += k * q
+                sq += q
+            self.mean += self.trunc * (1 - sq)
+
     # --- Printing
 
     def __str__(self):

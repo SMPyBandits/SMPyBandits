@@ -59,6 +59,12 @@ class Binomial(Arm):
         """ Draw a numpy array of random samples, of a certain shape."""
         return np.asarray(npbinomial(self.draws, self.probability, shape), dtype=float)
 
+    def set_mean_param(self, probability, draws=None):
+        if draws==None:
+            self.draws = draws
+        self.mean = probability
+        self.probability = probability * self.draws
+
     # --- Printing
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
