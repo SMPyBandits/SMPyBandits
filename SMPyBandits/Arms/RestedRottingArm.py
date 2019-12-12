@@ -2,15 +2,8 @@
 author: Julien Seznec
 Rested rotting arm, i.e. arms with mean value which decay at each pull
 """
-try:
-    from . import Arm, Bernoulli, UnboundedExponential, UnboundedGaussian, Constant, UnboundedPoisson
-except ImportError:
-    from Arm import Arm
-    from Bernoulli import Bernoulli
-    from Binomial import Binomial
-    from Constant import Constant
-    from Gaussian import UnboundedGaussian
-    from Constant import Constant
+
+from . import Arm, Bernoulli, Binomial, UnboundedExponential, UnboundedGaussian, Constant, UnboundedPoisson
 
 
 class RestedRottingArm(Arm):
@@ -67,14 +60,6 @@ class RestedRottingPoisson(RestedRottingArm):
         arm = UnboundedPoisson(0)
         super(RestedRottingPoisson, self).__init__(decayingFunction, arm)
 
-
-# DECAYING FUNCTIONS
-def constant(x, mu):
-    return mu
-
-
-def abruptSingleDecay(x, mu, switchPoint):
-    return mu if x < switchPoint else -mu
 
 
 if __name__ == '__main__':
