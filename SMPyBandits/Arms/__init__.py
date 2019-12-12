@@ -39,6 +39,7 @@ import numpy as np
 
 # Local imports
 if __name__ != "__main__":
+    from .Arm import Arm
     from .Constant import Constant
     from .UniformArm import UniformArm
     from .Bernoulli import Bernoulli
