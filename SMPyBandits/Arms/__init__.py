@@ -44,18 +44,24 @@ if __name__ != "__main__":
     from .Bernoulli import Bernoulli
     from .Binomial import Binomial
     from .Poisson import Poisson, UnboundedPoisson
-    from .Gaussian import Gaussian, Gaussian_0_1, Gaussian_0_2, Gaussian_0_5, Gaussian_0_10, Gaussian_0_100, Gaussian_m1_1, Gaussian_m2_2, Gaussian_m5_5, Gaussian_m10_10, Gaussian_m100_100, UnboundedGaussian
+    from .Gaussian import Gaussian, Gaussian_0_1, Gaussian_0_2, Gaussian_0_5, Gaussian_0_10, Gaussian_0_100, \
+        Gaussian_m1_1, Gaussian_m2_2, Gaussian_m5_5, Gaussian_m10_10, Gaussian_m100_100, UnboundedGaussian
     from .Exponential import Exponential, ExponentialFromMean, UnboundedExponential
     from .Gamma import Gamma, GammaFromMean, UnboundedGamma
     from .DiscreteArm import DiscreteArm
-    from .RestedRottingArm import RestedRottingArm, constant, abruptSingleDecay
+    from .RestedRottingArm import RestedRottingArm, constant, abruptSingleDecay, RestedRottingBernoulli, \
+        RestedRottingBinomial, RestedRottingConstant, RestedRottingExponential, RestedRottingGaussian, \
+        RestedRottingPoisson
 
     mapping_ARM_TYPE = {
         "Constant": Constant,
         "Uniform": UniformArm,
         "Bernoulli": Bernoulli, "B": Bernoulli,
         "Gaussian": Gaussian, "Gauss": Gaussian, "G": Gaussian,
-        "Gaussian_0_1": Gaussian_0_1, "Gaussian_0_2": Gaussian_0_2, "Gaussian_0_5": Gaussian_0_5, "Gaussian_0_10": Gaussian_0_10, "Gaussian_0_100": Gaussian_0_100, "Gaussian_m1_1": Gaussian_m1_1, "Gaussian_m2_2": Gaussian_m2_2, "Gaussian_m5_5": Gaussian_m5_5, "Gaussian_m10_10": Gaussian_m10_10, "Gaussian_m100_100": Gaussian_m100_100,
+        "Gaussian_0_1": Gaussian_0_1, "Gaussian_0_2": Gaussian_0_2, "Gaussian_0_5": Gaussian_0_5,
+        "Gaussian_0_10": Gaussian_0_10, "Gaussian_0_100": Gaussian_0_100, "Gaussian_m1_1": Gaussian_m1_1,
+        "Gaussian_m2_2": Gaussian_m2_2, "Gaussian_m5_5": Gaussian_m5_5, "Gaussian_m10_10": Gaussian_m10_10,
+        "Gaussian_m100_100": Gaussian_m100_100,
         "UnboundedGaussian": UnboundedGaussian,
         "Poisson": Poisson, "P": Poisson,
         "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
@@ -108,7 +114,8 @@ def uniformMeans(nbArms=3, delta=0.05, lower=0., amplitude=1., isSorted=True):
         return shuffled(list(mus))
 
 
-def uniformMeansWithSparsity(nbArms=10, sparsity=3, delta=0.05, lower=0., lowerNonZero=0.5, amplitude=1., isSorted=True):
+def uniformMeansWithSparsity(nbArms=10, sparsity=3, delta=0.05, lower=0., lowerNonZero=0.5, amplitude=1.,
+                             isSorted=True):
     """Return a list of means of arms, well spaced, in [lower, lower + amplitude].
 
     - Exactly ``nbArms-sparsity`` arms will have a mean = ``lower`` and the others are randomly sampled uniformly in [lowerNonZero, lower + amplitude].
@@ -130,8 +137,10 @@ def uniformMeansWithSparsity(nbArms=10, sparsity=3, delta=0.05, lower=0., lowerN
     assert nbArms >= 1, "Error: 'nbArms' = {} has to be >= 1.".format(nbArms)  # DEBUG
     assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
     assert 0. < delta < 1., "Error: 'delta' = {:.3g} has to be in (0, 1).".format(delta)  # DEBUG
-    assert 0 <= sparsity <= nbArms, "Error: 'sparsity' = {} has to be 0 <= sparsity <= nbArms = {} ...".format(sparsity, nbArms)  # DEBUG
-    assert lower <= lowerNonZero, "Error: 'lower' = {:.3g} has to be <= 'lowerNonZero' = {:.3g} ...".format(lower, lowerNonZero)  # DEBUG
+    assert 0 <= sparsity <= nbArms, "Error: 'sparsity' = {} has to be 0 <= sparsity <= nbArms = {} ...".format(sparsity,
+                                                                                                               nbArms)  # DEBUG
+    assert lower <= lowerNonZero, "Error: 'lower' = {:.3g} has to be <= 'lowerNonZero' = {:.3g} ...".format(lower,
+                                                                                                            lowerNonZero)  # DEBUG
     mus = np.sort(np.random.rand(sparsity))
     # bad_mus = [lower] * (nbArms - sparsity)  # WARNING this was putting all the bad arms on 0 !
     bad_mus = list(lower + (lowerNonZero - lower) * np.linspace(delta, 1 - delta, nbArms - sparsity))
@@ -166,7 +175,9 @@ def randomMeans(nbArms=3, mingap=None, lower=0., amplitude=1., isSorted=True):
     assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
     mus = np.random.rand(nbArms)
     if mingap is not None and mingap > 0:
-        assert (nbArms * mingap) < (amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(mingap, nbArms)  # DEBUG
+        assert (nbArms * mingap) < (
+                amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(
+            mingap, nbArms)  # DEBUG
         # while len(set(mus)) == nbArms and np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
         while np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
             mus = np.random.rand(nbArms)
@@ -184,12 +195,15 @@ def randomMeansWithGapBetweenMbestMworst(nbArms=3, mingap=None, nbPlayers=2, low
     assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
     mus = np.random.rand(nbArms)
     if mingap is not None and mingap > 0 and nbPlayers < nbArms:
-        assert mingap < amplitude, "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(mingap, nbArms)  # DEBUG
+        assert mingap < amplitude, "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(
+            mingap, nbArms)  # DEBUG
+
         def gap(mus):
             sorted_mus = sorted(mus)
             mu_Mbest = sorted_mus[-nbPlayers]
-            mu_Mworst = sorted_mus[-nbPlayers-1]
+            mu_Mworst = sorted_mus[-nbPlayers - 1]
             return mu_Mbest - mu_Mworst
+
         # while len(set(mus)) == nbArms and gap(mus) <= mingap:  # Ensure a min gap > mingap
         while gap(mus) <= mingap:  # Ensure a min gap > mingap
             mus = np.random.rand(nbArms)
@@ -200,7 +214,8 @@ def randomMeansWithGapBetweenMbestMworst(nbArms=3, mingap=None, nbPlayers=2, low
         return list(lower + (amplitude * mus))
 
 
-def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, delta=0.05, lower=0., lowerNonZero=0.5, amplitude=1., isSorted=True):
+def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, delta=0.05, lower=0., lowerNonZero=0.5, amplitude=1.,
+                            isSorted=True):
     """Return a list of means of arms, in [lower, lower + amplitude], with a min gap >= mingap.
 
     - Exactly ``nbArms-sparsity`` arms will have a mean = ``lower`` and the others are randomly sampled uniformly in ``[lowerNonZero, lower + amplitude]``.
@@ -222,11 +237,15 @@ def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, delta=0.05, lowe
     """
     assert nbArms >= 1, "Error: 'nbArms' = {} has to be >= 1.".format(nbArms)  # DEBUG
     assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
-    assert 0 <= sparsity <= nbArms, "Error: 'sparsity' = {} has to be 0 <= sparsity <= nbArms = {} ...".format(sparsity, nbArms)  # DEBUG
-    assert lower <= lowerNonZero, "Error: 'lower' = {:.3g} has to be <= 'lowerNonZero' = {:.3g} ...".format(lower, lowerNonZero)  # DEBUG
+    assert 0 <= sparsity <= nbArms, "Error: 'sparsity' = {} has to be 0 <= sparsity <= nbArms = {} ...".format(sparsity,
+                                                                                                               nbArms)  # DEBUG
+    assert lower <= lowerNonZero, "Error: 'lower' = {:.3g} has to be <= 'lowerNonZero' = {:.3g} ...".format(lower,
+                                                                                                            lowerNonZero)  # DEBUG
     mus = np.sort(np.random.rand(sparsity))
     if mingap is not None and mingap > 0:
-        assert (nbArms * mingap) < (amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(mingap, nbArms)  # DEBUG
+        assert (nbArms * mingap) < (
+                amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(
+            mingap, nbArms)  # DEBUG
         while len(set(mus)) == sparsity and np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
             mus = np.sort(np.random.rand(sparsity))
     # bad_mus = [lower] * (nbArms - sparsity)  # WARNING this was putting all the bad arms on 0 !
@@ -238,9 +257,15 @@ def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, delta=0.05, lowe
     mus = list(bad_mus) + list(good_mus)
 
     # Just some check...
-    assert len(mus) == nbArms, "Error: randomMeansWithSparsity() created a list mus of size = {} not = nbArms = {}...".format(len(mus), nbArms)  # DEBUG
-    assert len([m for m in mus if m > lowerNonZero]) == sparsity, "Error: randomMeansWithSparsity() created a list mus of with sparsity = {} not equal to s = {}...".format(len([m for m in mus if m >= lowerNonZero]), sparsity)  # DEBUG
-    assert len([m for m in mus if m <= lowerNonZero]) == (nbArms - sparsity), "Error: randomMeansWithSparsity() created a list mus of with a number of zero component = {} not equal to K - s = {}...".format(len([m for m in mus if m < lowerNonZero]), nbArms - sparsity)  # DEBUG
+    assert len(
+        mus) == nbArms, "Error: randomMeansWithSparsity() created a list mus of size = {} not = nbArms = {}...".format(
+        len(mus), nbArms)  # DEBUG
+    assert len([m for m in mus if
+                m > lowerNonZero]) == sparsity, "Error: randomMeansWithSparsity() created a list mus of with sparsity = {} not equal to s = {}...".format(
+        len([m for m in mus if m >= lowerNonZero]), sparsity)  # DEBUG
+    assert len([m for m in mus if m <= lowerNonZero]) == (
+            nbArms - sparsity), "Error: randomMeansWithSparsity() created a list mus of with a number of zero component = {} not equal to K - s = {}...".format(
+        len([m for m in mus if m < lowerNonZero]), nbArms - sparsity)  # DEBUG
     # print("randomMeansWithSparsity() returns mus = {} ...".format(np.asarray(mus)))  # DEBUG
 
     if isSorted:
@@ -249,7 +274,8 @@ def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, delta=0.05, lowe
         return shuffled(list(mus))
 
 
-def randomMeansWithSparsity2(nbArms=10, sparsity=3, mingap=0.01, lower=-1.0, lowerNonZero=0.0, amplitude=2.0, isSorted=True):
+def randomMeansWithSparsity2(nbArms=10, sparsity=3, mingap=0.01, lower=-1.0, lowerNonZero=0.0, amplitude=2.0,
+                             isSorted=True):
     """Return a list of means of arms, in [lower, lower + amplitude], with a min gap >= mingap.
 
     - Exactly ``nbArms-sparsity`` arms will have a mean sampled uniformly in ``[lower, lowerNonZero]`` and the others are randomly sampled uniformly in ``[lowerNonZero, lower + amplitude]``.
@@ -271,17 +297,23 @@ def randomMeansWithSparsity2(nbArms=10, sparsity=3, mingap=0.01, lower=-1.0, low
     """
     assert nbArms >= 1, "Error: 'nbArms' = {} has to be >= 1.".format(nbArms)  # DEBUG
     assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
-    assert 0 <= sparsity <= nbArms, "Error: 'sparsity' = {} has to be 0 <= sparsity <= nbArms = {} ...".format(sparsity, nbArms)  # DEBUG
-    assert lower <= lowerNonZero, "Error: 'lower' = {:.3g} has to be <= 'lowerNonZero' = {:.3g} ...".format(lower, lowerNonZero)  # DEBUG
+    assert 0 <= sparsity <= nbArms, "Error: 'sparsity' = {} has to be 0 <= sparsity <= nbArms = {} ...".format(sparsity,
+                                                                                                               nbArms)  # DEBUG
+    assert lower <= lowerNonZero, "Error: 'lower' = {:.3g} has to be <= 'lowerNonZero' = {:.3g} ...".format(lower,
+                                                                                                            lowerNonZero)  # DEBUG
     # first the bad
     nb_bad = nbArms - sparsity
     mus = np.sort(np.random.rand(nb_bad))
     if mingap is not None and mingap > 0:
-        assert (nbArms * mingap) < (amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(mingap, nbArms)  # DEBUG
+        assert (nbArms * mingap) < (
+                amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(
+            mingap, nbArms)  # DEBUG
         while len(set(mus)) == nb_bad and np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
             mus = np.sort(np.random.rand(nb_bad))
     bad_mus = lower + ((lowerNonZero - lower) * mus)
-    assert np.min(bad_mus) >= lower and np.max(bad_mus) <= lowerNonZero, "Error: bad generation of 'bad_mus', in interval [{:.3g},{:.3g}] instead of [{:.3g},{:.3g}]...".format(np.min(bad_mus), np.max(bad_mus), lower, lowerNonZero)  # DEBUG
+    assert np.min(bad_mus) >= lower and np.max(
+        bad_mus) <= lowerNonZero, "Error: bad generation of 'bad_mus', in interval [{:.3g},{:.3g}] instead of [{:.3g},{:.3g}]...".format(
+        np.min(bad_mus), np.max(bad_mus), lower, lowerNonZero)  # DEBUG
     # then the good
     nb_good = sparsity
     mus = np.sort(np.random.rand(nb_good))
@@ -289,7 +321,9 @@ def randomMeansWithSparsity2(nbArms=10, sparsity=3, mingap=0.01, lower=-1.0, low
         while len(set(mus)) == nb_good and np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
             mus = np.sort(np.random.rand(nb_good))
     good_mus = lowerNonZero + ((lower + amplitude - lowerNonZero) * mus)
-    assert np.min(good_mus) >= lowerNonZero and np.max(good_mus) <= lower + amplitude, "Error: bad generation of 'good_mus', in interval [{:.3g},{:.3g}] instead of [{:.3g},{:.3g}]...".format(np.min(good_mus), np.max(good_mus), lowerNonZero, lower + amplitude)  # DEBUG
+    assert np.min(good_mus) >= lowerNonZero and np.max(
+        good_mus) <= lower + amplitude, "Error: bad generation of 'good_mus', in interval [{:.3g},{:.3g}] instead of [{:.3g},{:.3g}]...".format(
+        np.min(good_mus), np.max(good_mus), lowerNonZero, lower + amplitude)  # DEBUG
     mus = list(bad_mus) + list(good_mus)
     if isSorted:
         return sorted(list(mus))
@@ -448,10 +482,12 @@ def randomContinuouslyVaryingMeans(means, maxSlowChange=0.1, horizon=None, lower
         np.random.shuffle(mus)  # Useless
         return list(mus)
 
+
 # --- Debugging
 
 if __name__ == "__main__":
     # Code for debugging purposes.
     from doctest import testmod
+
     print("\nTesting automatically all the docstring written in each functions of this module :")
     testmod(verbose=True)
