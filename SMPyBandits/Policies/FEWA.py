@@ -36,7 +36,7 @@ class EFF_FEWA(BasePolicy):
     and [Seznec et al.,  2019b, WIP] (m<=2)
     We use the confidence level :math:`\delta_t = \frac{1}{t^\alpha}`.
      """
-    def __init__(self, nbArms, alpha=0.06, subgaussian=1, m=2):
+    def __init__(self, nbArms, alpha=0.06, subgaussian=1, m=2, delta = None ):
         super(EFF_FEWA, self).__init__(nbArms)
         self.alpha = alpha
         self.nbArms = nbArms
@@ -45,11 +45,16 @@ class EFF_FEWA(BasePolicy):
         # [0,:,:] : current statistics, [1,:,:]: pending statistics, [3,:,:]: number of sample in the pending statistics
         self.windows = np.array([1, int(np.ceil(m))])
         self.outlogconst = np.sqrt(self.windows * np.sqrt(8 * self.alpha * self.subgaussian ** 2))
+        self.delta = delta if delta!= None else 1
+        self.plot_delta = delta != None
         self.armSet = np.arange(nbArms)
         self.grid = m
 
     def __str__(self):
-        return r"EFF_FEWA($\alpha={:.3g}, \, m={:.3g}$)".format(self.alpha, self.grid)
+        if self.plot_delta:
+            return r"EFF_FEWA($\alpha={:.3g}, \, m={:.3g}$)".format(self.alpha, self.grid)
+        else:
+            return r"EFF_FEWA($\alpha={:.3g}, \, \delta ={:.3g}, \, m={:.3g}$)".format(self.alpha, self.delta, self.grid)
 
     def getReward(self, arm, reward):
         super(EFF_FEWA, self).getReward(arm, reward)
@@ -86,7 +91,7 @@ class EFF_FEWA(BasePolicy):
         return np.sqrt(8 * w * self.subgaussian ** 2)
 
     def _confidence_level_inv(self):
-        return self.t ** self.alpha
+        return self.t ** self.alpha / self.delta
 
     def startGame(self):
         super(EFF_FEWA, self).startGame()
@@ -104,11 +109,14 @@ class FEWA(EFF_FEWA):
     This implementation is valid for $:math:`T < 10^{15}`.
     For :math:`T>10^{15}`, FEWA will have time and memory issues as its time and space complexity is O(KT) per round.
     """
-    def __init__(self, nbArms, subgaussian=1, alpha = 4):
-        super(FEWA, self).__init__(nbArms, subgaussian=subgaussian, alpha=alpha, m = 1 + 10**(-15))
+    def __init__(self, nbArms, subgaussian=1, alpha = 4, delta = None):
+        super(FEWA, self).__init__(nbArms, subgaussian=subgaussian, alpha=alpha,delta = delta, m = 1 + 10**(-15))
 
     def __str__(self):
-        return r"FEWA($\alpha={:.3g}$)".format(self.alpha)
+        if self.plot_delta:
+            return r"FEWA($\alpha={:.3g}$)".format(self.alpha)
+        else:
+            return r"FEWA($\alpha={:.3g}, \, \delta ={:.3g}$)".format(self.alpha, self.delta)
 
 
 

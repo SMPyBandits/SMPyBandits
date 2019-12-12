@@ -50,9 +50,8 @@ if __name__ != "__main__":
     from .Exponential import Exponential, ExponentialFromMean, UnboundedExponential
     from .Gamma import Gamma, GammaFromMean, UnboundedGamma
     from .DiscreteArm import DiscreteArm
-    from .RestedRottingArm import RestedRottingArm, constant, abruptSingleDecay, RestedRottingBernoulli, \
-        RestedRottingBinomial, RestedRottingConstant, RestedRottingExponential, RestedRottingGaussian, \
-        RestedRottingPoisson
+    from .RestedRottingArm import RestedRottingArm, RestedRottingBernoulli, RestedRottingBinomial, \
+        RestedRottingConstant, RestedRottingExponential, RestedRottingGaussian, RestedRottingPoisson
 
     mapping_ARM_TYPE = {
         "Constant": Constant,
@@ -177,7 +176,7 @@ def randomMeans(nbArms=3, mingap=None, lower=0., amplitude=1., isSorted=True):
     mus = np.random.rand(nbArms)
     if mingap is not None and mingap > 0:
         assert (nbArms * mingap) < (
-                amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(
+            amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(
             mingap, nbArms)  # DEBUG
         # while len(set(mus)) == nbArms and np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
         while np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
@@ -245,7 +244,7 @@ def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, delta=0.05, lowe
     mus = np.sort(np.random.rand(sparsity))
     if mingap is not None and mingap > 0:
         assert (nbArms * mingap) < (
-                amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(
+            amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(
             mingap, nbArms)  # DEBUG
         while len(set(mus)) == sparsity and np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
             mus = np.sort(np.random.rand(sparsity))
@@ -265,7 +264,7 @@ def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, delta=0.05, lowe
                 m > lowerNonZero]) == sparsity, "Error: randomMeansWithSparsity() created a list mus of with sparsity = {} not equal to s = {}...".format(
         len([m for m in mus if m >= lowerNonZero]), sparsity)  # DEBUG
     assert len([m for m in mus if m <= lowerNonZero]) == (
-            nbArms - sparsity), "Error: randomMeansWithSparsity() created a list mus of with a number of zero component = {} not equal to K - s = {}...".format(
+        nbArms - sparsity), "Error: randomMeansWithSparsity() created a list mus of with a number of zero component = {} not equal to K - s = {}...".format(
         len([m for m in mus if m < lowerNonZero]), nbArms - sparsity)  # DEBUG
     # print("randomMeansWithSparsity() returns mus = {} ...".format(np.asarray(mus)))  # DEBUG
 
@@ -307,7 +306,7 @@ def randomMeansWithSparsity2(nbArms=10, sparsity=3, mingap=0.01, lower=-1.0, low
     mus = np.sort(np.random.rand(nb_bad))
     if mingap is not None and mingap > 0:
         assert (nbArms * mingap) < (
-                amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(
+            amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(
             mingap, nbArms)  # DEBUG
         while len(set(mus)) == nb_bad and np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
             mus = np.sort(np.random.rand(nb_bad))

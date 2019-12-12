@@ -53,7 +53,7 @@ def play(arms, policy, T, Oracle= False):
     for t in range(T):
         start = time.time()
         choice = policy.choice()
-        reward = arms[choice].mu
+        reward = arms[choice].mean
         noisy_reward = arms[choice].draw(t) if not Oracle else arms[choice].oracle_draw(t)
         policy.getReward(choice, noisy_reward)
         times.append(time.time() - start)
