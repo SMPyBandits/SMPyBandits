@@ -1,82 +1,93 @@
 from matplotlib import pyplot as plt
-plt.style.use('style.mplstyle')
-from Arms import *
-from Policies import *
+from SMPyBandits.Policies import wSWA, FEWA, EFF_FEWA
 import os
 import numpy as np
 
+plt.style.use('style.mplstyle')
+MARKERS = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
+COLORS = ['b', 'r', 'g', 'tab:purple', 'k', 'c', 'm', 'y']
 
 
-def fig1A(regret,L, policies, save = True ):
+def fig1A(data, L, save=True, name="fig1A.pdf"):
     # --------------  PLOT  --------------
-    fig = plt.figure(figsize=(12,10))
+    fig = plt.figure(figsize=(12, 10))
     ax = plt.subplot()
-    for i in range(regret.shape[1]):
-        ax.semilogx(L,regret[:,i,-1], label=policies[i][0](2, **policies[i][1]))
-
-    plt.ylim(0,400)
+    for i, policy in enumerate(data):
+        ax.semilogx(L, data[policy]["mean"][:, -1], label=policy, color=COLORS[i % len(COLORS)],
+                    marker=MARKERS[i % len(MARKERS)], linewidth=3, markersize=6)
+        ax.semilogx(L, data[policy]["uppq"][:, -1], label=None, linestyle='--', color=COLORS[i % len(COLORS)],
+                    linewidth=1)
+        ax.semilogx(L, data[policy]["lowq"][:, -1], label=None, linestyle='--', color=COLORS[i % len(COLORS)],
+                    linewidth=1)
+        plt.fill_between(L, data[policy]["uppq"][:, -1], data[policy]["lowq"][:, -1], alpha=.05,
+                         color=COLORS[i % len(COLORS)])
+    plt.ylim(0, 400)
     plt.legend(prop={'variant': 'small-caps'})
     plt.xlabel('$L$')
     plt.ylabel('Average regret at $T = 10^4$')
     ax.xaxis.set_label_coords(0.5, -0.08)
-    ax.yaxis.set_label_coords(-0.08, 0.5)
-
-    #-------------- SAVE --------------
-    if save:
-        plt.savefig("fig1A.pdf")
-
-
-def fig1A2(regret,low_regret,up_regret, L, policies, save=True):
-    # --------------  PLOT  --------------
-    fig = plt.figure(figsize=(24, 20))
-    ax = plt.subplot()
-    #ax.text(0.8, 0.8, 'We show theoretical and empirical parameter value for FEWA and XUCB with 90% confidence band. We see that theoretical FEWA is unpractical (4 times more regret, as predicted by our theory). However, FEWA has a practical tuning far outside its theory limit which have good empirical result. Nevertheless, XUCB has a tuning which slightly outperform FEWA but also enjoys better concentration around its mean. ', color='black',
-    #        bbox=dict(facecolor='none', edgecolor='black', boxstyle='round,pad=1'))
-    print(regret.shape, policies.shape)
-    for i in range(regret.shape[1]):
-        ax.semilogx(L, regret[:, i, -1], label=policies[i][0](2, **policies[i][1]))
-        ax.fill_between(L, up_regret[:, i, -1], low_regret[:, i, -1], alpha=.5)
-
-    plt.ylim(0, 800)
-    plt.legend(prop={'variant': 'small-caps'})
-    plt.xlabel('$L$')
-    plt.ylabel('Average regret at $T = 10^4$')
-    ax.xaxis.set_label_coords(0.5, -0.08)
-    ax.yaxis.set_label_coords(-0.08, 0.5)
+    ax.yaxis.set_label_coords(-0.09, 0.5)
 
     # -------------- SAVE --------------
     if save:
-        plt.savefig("fig1A.pdf")
+        plt.savefig(name)
+
+
+def fig1BC(data, mus, mu_index=11, name='fig1B.pdf', ylim=300):
+    # --------------  PLOT  --------------
+    L = mus[mu_index]
+    fig = plt.figure(figsize=(12, 10))
+    ax = plt.subplot()
+    for i, policy in enumerate(data):
+        X = range(data[policy]["mean"].shape[1])
+        ax.plot(X, data[policy]["mean"][mu_index, :], label=policy, color=COLORS[i % len(COLORS)], linewidth=3)
+        ax.plot(X, data[policy]["uppq"][mu_index, :], label=None, linestyle='--', color=COLORS[i % len(COLORS)],
+                linewidth=1)
+        ax.plot(X, data[policy]["lowq"][mu_index, :], label=None, linestyle='--', color=COLORS[i % len(COLORS)],
+                linewidth=1)
+        plt.fill_between(X, data[policy]["uppq"][mu_index, :], data[policy]["lowq"][mu_index, :], alpha=.05,
+                         color=COLORS[i % len(COLORS)])
+    plt.ylim(0, ylim)
+    plt.legend(prop={'variant': 'small-caps'})
+    plt.xlabel('Round ($t$)')
+    plt.ylabel('Average regret $R_t$')
+    ax.xaxis.set_label_coords(0.5, -0.08)
+    ax.yaxis.set_label_coords(-0.09, 0.5)
+    plt.title('$L = {:.3g}$'.format(L), y=1.04)
+
+    # -------------- SAVE --------------
+    plt.savefig(name)
+
 
 if __name__ == "__main__":
-    # --------------  CONFIG --------------
     policies = [
-        #[FEWA, {'alpha': .03, 'delta': 1}],
-        #[FEWA, {'alpha': .06, 'delta': 1}],
-        #[FEWA, {'alpha': .1, 'delta': 1}],
-        #[EFF_FEWA, {'alpha': .06, 'subgaussian': 1, 'delta':1}],
-        #[wSWA, {'alpha': 0.006}],
+        [FEWA, {'alpha': .03, 'delta': 1}],
+        [FEWA, {'alpha': .06, 'delta': 1}],
+        [FEWA, {'alpha': .1, 'delta': 1}],
+        [EFF_FEWA, {'alpha': .06, 'delta': 1}],
         [wSWA, {'alpha': 0.002}],
         [wSWA, {'alpha': 0.02}],
         [wSWA, {'alpha': 0.2}]
     ]
     L = [0.02 * 1.25 ** (i) for i in range(30)]
+    data = {}
+    for policy in policies:
+        policy_name = str(policy[0](nbArms=2, **policy[1]))
+        policy_name_nospace = policy_name.replace(' ', '_')
+        policy_data = [
+            np.load(os.path.join('./data', file)) for file in os.listdir('./data') if
+            file.startswith("REGRET_" + policy_name_nospace)
+        ]
+        if not policy_data:
+            continue
+        policy_data_array = np.concatenate(policy_data, axis=1)
+        print(len(policy_data), policy_data_array.shape)
+        data[policy_name] = {
+            "mean": policy_data_array.mean(axis=1),
+            "uppq": np.quantile(policy_data_array, 0.9, axis=1),
+            "lowq": np.quantile(policy_data_array, 0.1, axis=1)
+        }
 
-    # --------------  LOAD --------------
-    print(os.listdir('../../data'))
-    #current = '../../data/Fig1/regret291_2.npy'
-    #file =  '../../data/2019-03-01_19-37-52_fig1/regret.npy'
-    #file2 =  '../../data/2019-03-11_13-50-30_fig1/regret.npy'
-    file3 = '../../data/2019-12-04_16-14-27_fig1/regret.npy'
-
-
-
-    data = np.load(file3)
-    #data1= np.load(file)
-    #data2= np.load(file2)
-    #data = np.concatenate([data,  data2], axis=1)
-    #fig1A(data[:,[1,4,5,6,7,8,9, 10],:], L, policies)
-    print(data.shape, len(policies))
-    fig1A(data.mean(axis=2), L, np.array(policies))
-
-
+    fig1A(data, L)
+    fig1BC(data, L, mu_index=11, name='fig1B.pdf')
+    fig1BC(data, L, mu_index=24, name='fig1C.pdf')

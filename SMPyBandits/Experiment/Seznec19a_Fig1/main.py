@@ -1,3 +1,13 @@
+"""
+Produce the experiment and record the relevant data to reproduce Figure 1 of [Seznec et al.,  2019a]
+Reference: [Seznec et al.,  2019a]
+Rotting bandits are not harder than stochastic ones;
+Julien Seznec, Andrea Locatelli, Alexandra Carpentier, Alessandro Lazaric, Michal Valko ;
+Proceedings of Machine Learning Research, PMLR 89:2564-2572, 2019.
+http://proceedings.mlr.press/v89/seznec19a.html
+https://arxiv.org/abs/1811.11043 (updated version)
+"""
+
 from SMPyBandits.Arms import RestedRottingGaussian
 from SMPyBandits.Policies import FEWA, EFF_FEWA, wSWA, GreedyOracle
 from SMPyBandits.Environment.MAB_rotting import repetedRuns
@@ -5,19 +15,20 @@ import numpy as np
 import datetime
 import os
 import logging
+import sys
 
-date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S_")
+date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 ### SET Policies
 policies = [
   [FEWA, {'alpha': .03, 'delta': 1}],
   [FEWA, {'alpha': .06, 'delta': 1}],
   [FEWA, {'alpha': .1, 'delta': 1}],
-  [EFF_FEWA, {'alpha' : 0.06, 'delta':1, 'm':2}],
+  [EFF_FEWA, {'alpha' : 0.06,  'm':2}],
   [wSWA, {'alpha' : 0.002}],
   [wSWA, {'alpha' : 0.02}],
   [wSWA, {'alpha' : 0.2}],
 ]
-policy_ind = 6
+policy_ind = 3 if len(sys.argv) == 1 else sys.argv[1]
 policy = policies[policy_ind]
 policy_name = str(policy[0](nbArms=2, **policy[1]))
 policy_name_nospace = policy_name.replace (' ', '_')
@@ -28,7 +39,7 @@ logging.basicConfig(filename=os.path.join('./data/logging', date + '.log'), leve
 logging.info("Policy : %s$" % (policy_name))
 
 PARALLEL = -1 # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
-REPETITIONS =  4 # Set the number of repetitions
+REPETITIONS =  4 if len(sys.argv) < 3 else sys.argv[2] # Set the number of repetitions
 HORIZON = 10000 # Horizon T
 sigma = 1 # Gaussian noise std
 
