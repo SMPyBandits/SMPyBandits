@@ -79,7 +79,6 @@ class EFF_FEWA(BasePolicy):
         i = 0
         selected = remainingArms[np.isnan(self.statistics[0, :, i])]
         sqrtlogt = np.sqrt(np.log(self._inlog()))
-        print(sqrtlogt,self._inlog())
         while len(selected) == 0 :
             thresh = np.max(self.statistics[0, remainingArms, i]) - sqrtlogt * self.outlogconst[i]
             remainingArms = remainingArms[self.statistics[0, remainingArms, i] >= thresh]
