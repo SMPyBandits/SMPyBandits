@@ -1,5 +1,6 @@
 """
-Produce the experiment and record the relevant data to reproduce Figure 1 of [Seznec et al.,  2019a]
+author : Julien SEZNEC
+Produce the experiment and record the relevant data to reproduce Figure 2 of [Seznec et al.,  2019a]
 Reference: [Seznec et al.,  2019a]
 Rotting bandits are not harder than stochastic ones;
 Julien Seznec, Andrea Locatelli, Alexandra Carpentier, Alessandro Lazaric, Michal Valko ;

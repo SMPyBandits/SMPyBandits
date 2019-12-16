@@ -1,3 +1,13 @@
+"""
+author: Julien SEZNEC
+Plot utility to reproduce Figure 2 of [Seznec et al.,  2019a]
+Reference: [Seznec et al.,  2019a]
+Rotting bandits are not harder than stochastic ones;
+Julien Seznec, Andrea Locatelli, Alexandra Carpentier, Alessandro Lazaric, Michal Valko ;
+Proceedings of Machine Learning Research, PMLR 89:2564-2572, 2019.
+http://proceedings.mlr.press/v89/seznec19a.html
+https://arxiv.org/abs/1811.11043 (updated version)
+"""
 from SMPyBandits.Policies import wSWA, FEWA, EFF_FEWA
 import os
 import numpy as np
