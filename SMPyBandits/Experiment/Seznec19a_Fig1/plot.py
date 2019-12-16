@@ -64,7 +64,6 @@ def fig1BC(data, mus, mu_index=11, name='fig1B.pdf', ylim=300):
     ax.xaxis.set_label_coords(0.5, -0.08)
     ax.yaxis.set_label_coords(-0.09, 0.5)
     plt.title('$L = {:.3g}$'.format(L), y=1.04)
-
     # -------------- SAVE --------------
     plt.savefig(name)
 
