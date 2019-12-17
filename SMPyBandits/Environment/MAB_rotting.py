@@ -50,6 +50,7 @@ def play(arms, policy, T, Oracle= False):
     rewards = []
     times = []
     pulls = []
+    cumul_pulls = [0 for _ in range(len(arms))]
     for t in range(T):
         start = time.time()
         choice = policy.choice()
@@ -60,4 +61,5 @@ def play(arms, policy, T, Oracle= False):
         noisy_rewards.append(noisy_reward)
         rewards.append(reward)
         pulls.append(choice)
-    return {'rewards': rewards, 'noisy_rewards': noisy_rewards, 'time': times, 'pulls': pulls, 'cumul_pulls' : policy.pulls}
+        cumul_pulls[choice] += 1
+    return {'rewards': rewards, 'noisy_rewards': noisy_rewards, 'time': times, 'pulls': pulls, 'cumul_pulls' : cumul_pulls}
