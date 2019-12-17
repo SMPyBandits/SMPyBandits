@@ -72,6 +72,9 @@ class Gaussian(Arm):
         """ Draw a numpy array of random samples, of a certain shape."""
         return np.minimum(np.maximum(self.mu + self.sigma * standard_normal(shape), self.min), self.max)
 
+    def set_mean_param(self, mean):
+        self.mu = self.mean = mean
+
     # --- Printing
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property

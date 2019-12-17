@@ -64,6 +64,9 @@ class Constant(Arm):
         """ Draw a numpy array of constant samples, of a certain shape."""
         return np.full(shape, self.constant_reward)
 
+    def set_mean_param(self, mean):
+        self.mean = mean
+
     # --- Printing
 
     def __str__(self):

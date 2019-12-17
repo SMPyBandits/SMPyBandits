@@ -87,6 +87,13 @@ class Exponential(Arm):
         """ Draw one random sample. The parameter t is ignored in this Arm."""
         return np.minimum((-1. / self.p) * np.log(nprandom(shape)), self.trunc)
 
+    def set_mean_param(self, p_inv):
+        self.p = 1 / p_inv
+        if isinf(self.trunc):
+            self.mean = 1. / self.p  #: Mean of Exponential arm
+        else:
+            self.mean = (1. - exp(-self.p * self.trunc)) / self.p
+
     # --- Printing
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
@@ -136,6 +143,7 @@ class UnboundedExponential(Exponential):
     def __init__(self, mu):
         """New arm."""
         super(UnboundedExponential, self).__init__(mu, trunc=float('+inf'))
+
 
 
 # Only export and expose the class defined here

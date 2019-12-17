@@ -83,7 +83,7 @@ class wSWA(SWA):
 if __name__ == "__main__":
     # Code for debugging purposes.
     reward = {0:0, 1:0.2, 2:0.4, 3:0.6, 4:0.8}
-    policy = SWA(5, horizon=1000)
+    policy = wSWA(5)
     for t in range(1000):
         choice = policy.choice()
         print("chosen:%s" % choice)

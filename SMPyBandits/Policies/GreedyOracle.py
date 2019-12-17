@@ -51,5 +51,3 @@ class GreedyOracle(IndexPolicy):
     def computeIndex(self, arm):
         return self.arms[arm].mean
 
-    def computeAllIndex(self):
-        return [arm.mean for arm in self.arms]

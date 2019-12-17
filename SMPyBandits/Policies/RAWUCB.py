@@ -47,8 +47,7 @@ class EFF_RAWUCB(EFF_FEWA):
         return np.nanmin(self.ucb, axis=1).argmax()
 
     def _compute_ucb(self):
-        delta_t_inv = self._confidence_level_inv()
-        return (self.statistics[0, :, :] / self.windows + self.outlogconst * np.sqrt(np.log(delta_t_inv)))
+        return (self.statistics[0, :, :] / self.windows + self.outlogconst * np.sqrt(np.log(self._inlog())))
 
     def _append_thresholds(self, w):
         # FEWA use two confidence bounds. Hence, the outlogconst is twice smaller for RAWUCB
@@ -109,8 +108,8 @@ class EFF_RAWUCB_asymptotic(EFF_RAWUCB):
         print(self.beta)
         return r"EFF-RAW-UCB($\delta_t=\frac{1}{t(1+log(t)^{:.3g}}$)".format(self.beta)
 
-    def _confidence_level_inv(self):
-        return self.t ** self.alpha * (1 + np.log(self.t) ** self.beta)
+    def _inlog(self):
+        return self.t * (1 + np.log(self.t) ** self.beta)
 
 
 if __name__ == "__main__":
