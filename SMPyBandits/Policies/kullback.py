@@ -644,7 +644,7 @@ def kllcb(x, d, kl, lowerbound,
     while _count_iteration < max_iterations and value - l > precision:
         _count_iteration += 1
         m = (value + l) * 0.5
-        if kl(x, m) < d:
+        if kl(x, m) > d:
             l = m
         else:
             value = m
