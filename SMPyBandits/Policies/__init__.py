@@ -139,6 +139,7 @@ from .BayesUCB import BayesUCB
 from .klUCB import klUCB
 from .klUCBloglog import klUCBloglog  # With log(t) + c log(log(t)) and c = 1 (variable)
 from .klUCB_forGLR import klUCB_forGLR  # With f(t - tau_i(t)) different for each arm
+from .klUCBloglog_forGLR import klUCBloglog_forGLR
 from .klUCBPlus import klUCBPlus    # Different indexes
 from .klUCBH import klUCBH          # Knowing the horizon
 from .klUCBHPlus import klUCBHPlus  # Different indexes
