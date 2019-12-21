@@ -29,7 +29,7 @@ policies = [
     [wSWA, {'alpha': 0.02}],
     [wSWA, {'alpha': 0.2}],
 ]
-policy_ind = 3 if len(sys.argv) == 1 else sys.argv[1]
+policy_ind = 3 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
 policy_name = str(policy[0](nbArms=2, **policy[1]))
 policy_name_nospace = policy_name.replace(' ', '_')
@@ -41,7 +41,7 @@ logging.basicConfig(filename=os.path.join('./data/logging', date + '.log'), leve
 logging.info("Policy : %s$" % (policy_name))
 
 PARALLEL = -1  # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
-REPETITIONS = 4 if len(sys.argv) < 3 else sys.argv[2]  # Set the number of repetitions
+REPETITIONS = 4 if len(sys.argv) < 3 else int(sys.argv[2])  # Set the number of repetitions
 HORIZON = 10000  # Horizon T
 sigma = 1  # Gaussian noise std
 
