@@ -24,7 +24,7 @@ policies = [
     [FEWA, {'alpha': .03, 'delta': 1}],
     [FEWA, {'alpha': .06, 'delta': 1}],
     [FEWA, {'alpha': .1, 'delta': 1}],
-    [EFF_FEWA, {'alpha': 0.06, 'm': 2}],
+    [EFF_FEWA, {'alpha': 0.06, 'delta': 1}],
     [wSWA, {'alpha': 0.002}],
     [wSWA, {'alpha': 0.02}],
     [wSWA, {'alpha': 0.2}],
