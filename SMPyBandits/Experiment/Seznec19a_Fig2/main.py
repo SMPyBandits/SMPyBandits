@@ -10,7 +10,7 @@ https://arxiv.org/abs/1811.11043 (updated version)
 """
 
 from SMPyBandits.Arms import RestedRottingGaussian
-from SMPyBandits.Policies import FEWA, EFF_FEWA, wSWA, GreedyOracle
+from SMPyBandits.Policies import FEWA, EFF_FEWA, wSWA, GreedyOracle, SWUCB, DUCB
 from SMPyBandits.Environment.MAB_rotting import repetedRuns
 import numpy as np
 import datetime
