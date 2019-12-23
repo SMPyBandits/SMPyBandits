@@ -26,6 +26,8 @@ policies = [
   [wSWA, {'alpha' : 0.002}],
   [wSWA, {'alpha' : 0.02}],
   [wSWA, {'alpha' : 0.2}],
+  [DUCB, {'gamma': 0.997}],
+  [SWUCB, {'tau': 200}]
 ]
 policy_ind = 2 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
