@@ -65,7 +65,6 @@ rew, noisy_rew, time, pulls, cumul_pulls = repetedRuns(policy, arms, rep=REPETIT
 oracle_rew, noisy_oracle_rew, oracle_time, oracle_pull, oracle_cumul_pulls = repetedRuns([GreedyOracle, {}], arms, rep=1, T=HORIZON, oracle=True)
 regret = oracle_rew - rew
 diffpulls = np.abs(cumul_pulls - oracle_cumul_pulls)
-print(diffpulls)
 logging.info("EVENT : SAVING ... ")
 path_regret = os.path.join('./data/', 'REGRET_' + policy_name_nospace + '_' + date )
 path_diffpull = os.path.join('./data/', 'DIFFPULL_' + policy_name_nospace + '_' + date )
