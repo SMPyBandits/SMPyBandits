@@ -37,7 +37,7 @@ class DiscountedUCB(UCBalpha):
                  useRealDiscount=True,
                  *args, **kwargs):
         super(DiscountedUCB, self).__init__(nbArms, *args, **kwargs)
-        self.discounted_pulls = np.zeros(nbArms, dtype=int)  #: Number of pulls of each arms
+        self.discounted_pulls = np.zeros(nbArms)  #: Number of pulls of each arms
         self.discounted_rewards = np.zeros(nbArms)  #: Cumulated rewards of each arms
         assert alpha >= 0, "Error: the 'alpha' parameter for DiscountedUCB class has to be >= 0."  # DEBUG
         self.alpha = alpha  #: Parameter alpha
