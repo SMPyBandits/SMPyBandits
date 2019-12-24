@@ -10,7 +10,7 @@ https://arxiv.org/abs/1811.11043 (updated version)
 """
 
 from SMPyBandits.Arms import RestedRottingGaussian
-from SMPyBandits.Policies import FEWA, EFF_FEWA, wSWA, GreedyOracle
+from SMPyBandits.Policies import FEWA, EFF_FEWA, wSWA, GreedyOracle, SWUCB, DiscountedUCB as DUCB
 from SMPyBandits.Environment.MAB_rotting import repetedRuns
 import numpy as np
 import datetime
@@ -22,12 +22,14 @@ date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 ### SET Policies
 policies = [
   [FEWA, {'alpha': .06, 'delta': 1}],
-  [EFF_FEWA, {'alpha' : 0.06, 'delta':1, 'm':2}],
+  [EFF_FEWA, {'alpha' : 0.06, 'delta':1}],
   [wSWA, {'alpha' : 0.002}],
   [wSWA, {'alpha' : 0.02}],
   [wSWA, {'alpha' : 0.2}],
+  [DUCB, {'gamma': 0.997}],
+  [SWUCB, {'tau': 200}]
 ]
-policy_ind = 2 if len(sys.argv) == 1 else sys.argv[1]
+policy_ind = 2 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
 policy_name = str(policy[0](nbArms=2, **policy[1]))
 policy_name_nospace = policy_name.replace (' ', '_')
@@ -38,7 +40,7 @@ logging.basicConfig(filename=os.path.join('./data/logging', date + '.log'), leve
 logging.info("Policy : %s$" % (policy_name))
 
 PARALLEL = False # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
-REPETITIONS =  1 if len(sys.argv) < 3 else sys.argv[2] # Set the number of repetitions
+REPETITIONS =  1 if len(sys.argv) < 3 else int(sys.argv[2]) # Set the number of repetitions
 HORIZON = 25000 # Horizon T
 sigma = 1 # Gaussian noise std
 
@@ -63,7 +65,6 @@ rew, noisy_rew, time, pulls, cumul_pulls = repetedRuns(policy, arms, rep=REPETIT
 oracle_rew, noisy_oracle_rew, oracle_time, oracle_pull, oracle_cumul_pulls = repetedRuns([GreedyOracle, {}], arms, rep=1, T=HORIZON, oracle=True)
 regret = oracle_rew - rew
 diffpulls = np.abs(cumul_pulls - oracle_cumul_pulls)
-print(diffpulls)
 logging.info("EVENT : SAVING ... ")
 path_regret = os.path.join('./data/', 'REGRET_' + policy_name_nospace + '_' + date )
 path_diffpull = os.path.join('./data/', 'DIFFPULL_' + policy_name_nospace + '_' + date )

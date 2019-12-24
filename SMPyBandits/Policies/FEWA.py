@@ -36,25 +36,33 @@ class EFF_FEWA(BasePolicy):
     and [Seznec et al.,  2019b, WIP] (m<=2)
     We use the confidence level :math:`\delta_t = \frac{1}{t^\alpha}`.
      """
-    def __init__(self, nbArms, alpha=0.06, subgaussian=1, m=2, delta = None ):
+    def __init__(self, nbArms, alpha=0.06, subgaussian=1, m = None, delta = None ):
         super(EFF_FEWA, self).__init__(nbArms)
         self.alpha = alpha
         self.nbArms = nbArms
         self.subgaussian = subgaussian
         self.statistics = np.ones(shape=(3, self.nbArms, 2)) * np.nan
+        self.grid = m if m is not None else 2
         # [0,:,:] : current statistics, [1,:,:]: pending statistics, [2,:,:]: number of sample in the pending statistics
-        self.windows = np.array([1, int(np.ceil(m))])
+        self.windows = np.array([1, int(np.ceil(self.grid))])
         self.outlogconst = self._append_thresholds(self.windows)
-        self.delta = delta if delta!= None else 1
+        self.delta = delta
         self.inlogconst = 1/delta**(1/alpha) if delta!= None else 1
         self.armSet = np.arange(nbArms)
-        self.grid = m
+        self.display_m = m is not None
 
     def __str__(self):
-        if self.delta != None:
-            return r"EFF_FEWA($\alpha={:.3g}, \, \delta={:.3g}, \, m={:.3g}$)".format(self.alpha, self.delta, self.grid)
+        if self.delta is not None:
+            if self.display_m:
+                return r"EFF_FEWA($\alpha={:.3g}, \, \delta={:.3g}, \, m={:.3g}$)".format(self.alpha, self.delta, self.grid)
+            else: 
+                return r"EFF_FEWA($\alpha={:.3g}, \, \delta={:.3g}$)".format(self.alpha, self.delta)
         else:
-            return r"EFF_FEWA($\alpha={:.3g}, \, m={:.3g}$)".format(self.alpha, self.grid)
+            if self.display_m:
+                return r"EFF_FEWA($\alpha={:.3g}, \, m={:.3g}$)".format(self.alpha, self.grid)
+            else: 
+                return r"EFF_FEWA($\alpha={:.3g}$)".format(self.alpha)
+            
 
 
     def getReward(self, arm, reward):
