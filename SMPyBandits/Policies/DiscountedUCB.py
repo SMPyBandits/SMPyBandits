@@ -37,7 +37,7 @@ class DiscountedUCB(UCBalpha):
                  useRealDiscount=True,
                  *args, **kwargs):
         super(DiscountedUCB, self).__init__(nbArms, *args, **kwargs)
-        self.discounted_pulls = np.zeros(nbArms, dtype=int)  #: Number of pulls of each arms
+        self.discounted_pulls = np.zeros(nbArms)  #: Number of pulls of each arms
         self.discounted_rewards = np.zeros(nbArms)  #: Cumulated rewards of each arms
         assert alpha >= 0, "Error: the 'alpha' parameter for DiscountedUCB class has to be >= 0."  # DEBUG
         self.alpha = alpha  #: Parameter alpha
@@ -74,10 +74,12 @@ class DiscountedUCB(UCBalpha):
         """
         super(DiscountedUCB, self).getReward(arm, reward)
         # FIXED we should multiply by gamma^delta where delta is the number of time steps where we didn't play this arm, +1
-        self.discounted_pulls[arm] = ((self.gamma ** (1 + self.delta_time_steps[arm])) * self.discounted_pulls[arm]) + 1
-        # XXX self.discounted_pulls[arm] += 1  # if we were using N_k(t) and not N_{k,gamma}(t).
+        self.discounted_pulls *= self.gamma
+        self.discounted_rewards *= self.gamma
+        self.discounted_pulls[arm] += 1
         reward = (reward - self.lower) / self.amplitude
-        self.discounted_rewards[arm] = ((self.gamma ** (1 + self.delta_time_steps[arm])) * self.discounted_rewards[arm]) + reward
+        self.discounted_rewards[arm] += reward
+        # XXX self.discounted_pulls[arm] += 1  # if we were using N_k(t) and not N_{k,gamma}(t).
         # Ok and we saw this arm so no delta now
         if self.useRealDiscount:
             self.delta_time_steps += 1  # increase delay for each algorithms

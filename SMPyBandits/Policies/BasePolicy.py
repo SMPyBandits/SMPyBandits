@@ -27,7 +27,7 @@ class BasePolicy(object):
         assert amplitude > 0, "Error: the 'amplitude' parameter of a {} object cannot be <= 0.".format(self)  # DEBUG
         self.amplitude = amplitude  #: Larger values for rewards
         # Internal memory
-        self.t = -1  #: Internal time
+        self.t = 0  #: Internal time
         self.pulls = np.zeros(nbArms, dtype=int)  #: Number of pulls of each arms
         self.rewards = np.zeros(nbArms)  #: Cumulated rewards of each arms
 

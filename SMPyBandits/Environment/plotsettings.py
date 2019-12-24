@@ -53,7 +53,7 @@ BBOX_INCHES = None
 
 if __name__ != '__main__':
     # use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
-    sns.set(context="talk", style="whitegrid", palette="hls" if HLS else "husl", font="sans-serif", font_scale=0.95)
+    sns.set(context="talk", style="whitegrid", palette="hls" if HLS else "husl", font="sans-serif", font_scale=1.05)
 
     # Use tex by default http://matplotlib.org/2.0.0/users/dflt_style_changes.html#math-text
     # mpl.rcParams['text.usetex'] = True  # XXX force use of LaTeX
@@ -64,10 +64,17 @@ if __name__ != '__main__':
 
     # Configure size for axes and x and y labels
     # Cf. https://stackoverflow.com/a/12444777/
-    mpl.rcParams['axes.labelsize']  = "small"
-    mpl.rcParams['xtick.labelsize'] = "x-small"
-    mpl.rcParams['ytick.labelsize'] = "x-small"
-    mpl.rcParams['figure.titlesize'] = "small"
+    # mpl.rcParams['axes.labelsize']  = "small"
+    # mpl.rcParams['xtick.labelsize'] = "x-small"
+    # mpl.rcParams['ytick.labelsize'] = "x-small"
+    # mpl.rcParams['figure.titlesize'] = "small"
+
+    mpl.rcParams['axes.labelsize']  = "medium"
+    mpl.rcParams['lines.linewidth']  = 10
+    mpl.rcParams['lines.markersize']  = 14
+    mpl.rcParams['xtick.labelsize'] = "large"
+    mpl.rcParams['ytick.labelsize'] = "large"
+    mpl.rcParams['figure.titlesize'] = "large"
 
     # Configure the DPI of all images, once and for all!
     mpl.rcParams['figure.dpi'] = DPI
@@ -139,7 +146,7 @@ SHRINKFACTOR = 0.75
 MAXNBOFLABELINFIGURE = 8
 
 
-def legend(putatright=PUTATRIGHT, fontsize="xx-small",
+def legend(putatright=PUTATRIGHT, fontsize="large",
         shrinkfactor=SHRINKFACTOR, maxnboflabelinfigure=MAXNBOFLABELINFIGURE,
         fig=None, title=None
     ):
