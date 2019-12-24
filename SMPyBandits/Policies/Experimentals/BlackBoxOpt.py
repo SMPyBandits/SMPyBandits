@@ -83,7 +83,7 @@ class BlackBoxOpt(BasePolicy):
                  lower=0., amplitude=1.,  # not used, but needed for my framework
                  *args, **kwargs):
         self.nbArms = nbArms  #: Number of arms of the MAB problem.
-        self.t = -1  #: Current time.
+        self.t = 0  #: Current time.
         # Black-box optimizer
         self._opt = opt  # Store it
         self._est = est  # Store it
@@ -101,7 +101,7 @@ class BlackBoxOpt(BasePolicy):
 
     def startGame(self):
         """ Reinitialize the black-box optimizer."""
-        self.t = -1
+        self.t = 0
         self.opt = self._opt(self.nbArms, self._est, *self._args, **self._kwargs)  # The black-box optimizer to use, initialized from the other arguments
 
     def getReward(self, armId, reward):
