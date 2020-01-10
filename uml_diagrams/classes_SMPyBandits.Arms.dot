@@ -1,18 +1,18 @@
 digraph "classes_SMPyBandits.Arms" {
 charset="utf-8"
 rankdir=BT
-"0" [label="{SMPyBandits.Arms.Arm.Arm|amplitude : float\llower : float\llower_amplitude\lmax : float\lmin : float\l|__init__(lower, amplitude)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneHOI(mumax, mu)\loneLR(mumax, mu)\l}", shape="record"];
-"1" [label="{SMPyBandits.Arms.Bernoulli.Bernoulli|lower_amplitude\lmean\lprobability\l|__init__(probability)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneLR(mumax, mu)\l}", shape="record"];
-"2" [label="{SMPyBandits.Arms.Binomial.Binomial|draws : int\llower_amplitude\lmean\lprobability\l|__init__(probability, draws)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneLR(mumax, mu)\l}", shape="record"];
-"3" [label="{SMPyBandits.Arms.Constant.Constant|amplitude : float\lconstant_reward : float\llower\lmean : float\l|__init__(constant_reward, lower, amplitude)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneLR(mumax, mu)\l}", shape="record"];
+"0" [label="{SMPyBandits.Arms.Arm.Arm|amplitude : float\llower : float\llower_amplitude\lmax : float\lmin : float\l|__init__(lower, amplitude)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneHOI(mumax, mu)\loneLR(mumax, mu)\loracle_draw(t)\lset_mean_param(mean)\l}", shape="record"];
+"1" [label="{SMPyBandits.Arms.Bernoulli.Bernoulli|lower_amplitude\lmean\lprobability\l|__init__(probability)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneLR(mumax, mu)\lset_mean_param(probability)\l}", shape="record"];
+"2" [label="{SMPyBandits.Arms.Binomial.Binomial|draws : int, NoneType\llower_amplitude\lmean\lprobability\l|__init__(probability, draws)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneLR(mumax, mu)\lset_mean_param(probability, draws)\l}", shape="record"];
+"3" [label="{SMPyBandits.Arms.Constant.Constant|amplitude : float\lconstant_reward : float\llower\lmean : float\l|__init__(constant_reward, lower, amplitude)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneLR(mumax, mu)\lset_mean_param(mean)\l}", shape="record"];
 "4" [label="{SMPyBandits.Arms.DiscreteArm.DiscreteArm|_amplitude\l_items : list\l_lower\l_probabilities : ndarray\l_values : ndarray\l_values_to_proba\llower_amplitude\lmean\lsize : int\l|__init__(values_to_proba)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneLR(mumax, mu)\l}", shape="record"];
-"5" [label="{SMPyBandits.Arms.Exponential.Exponential|lower_amplitude\lmean\lp\ltrunc : int\l|__init__(p, trunc)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneHOI(mumax, mu)\loneLR(mumax, mu)\l}", shape="record"];
+"5" [label="{SMPyBandits.Arms.Exponential.Exponential|lower_amplitude\lmean\lp\ltrunc : int\l|__init__(p, trunc)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneHOI(mumax, mu)\loneLR(mumax, mu)\lset_mean_param(p_inv)\l}", shape="record"];
 "6" [label="{SMPyBandits.Arms.Exponential.ExponentialFromMean|\l|__init__(mean, trunc)\l}", shape="record"];
 "7" [label="{SMPyBandits.Arms.Exponential.UnboundedExponential|\l|__init__(mu)\l}", shape="record"];
 "8" [label="{SMPyBandits.Arms.Gamma.Gamma|lower_amplitude\lmax : int\lmean\lmin : int\lscale : float\lshape\l|__init__(shape, scale, mini, maxi)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneHOI(mumax, mu)\loneLR(mumax, mu)\l}", shape="record"];
 "9" [label="{SMPyBandits.Arms.Gamma.GammaFromMean|\l|__init__(mean, scale, mini, maxi)\l}", shape="record"];
 "10" [label="{SMPyBandits.Arms.Gamma.UnboundedGamma|\l|__init__(shape, scale)\l}", shape="record"];
-"11" [label="{SMPyBandits.Arms.Gaussian.Gaussian|lower_amplitude\lmax : int\lmean\lmin : int\lmu\lsigma : float\l|__init__(mu, sigma, mini, maxi)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneHOI(mumax, mu)\loneLR(mumax, mu)\l}", shape="record"];
+"11" [label="{SMPyBandits.Arms.Gaussian.Gaussian|lower_amplitude\lmax : int\lmean\lmin : int\lmu\lsigma : float\l|__init__(mu, sigma, mini, maxi)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneHOI(mumax, mu)\loneLR(mumax, mu)\lset_mean_param(mean)\l}", shape="record"];
 "12" [label="{SMPyBandits.Arms.Gaussian.Gaussian_0_1|\l|__init__(mu, sigma, mini, maxi)\l}", shape="record"];
 "13" [label="{SMPyBandits.Arms.Gaussian.Gaussian_0_10|\l|__init__(mu, sigma, mini, maxi)\l}", shape="record"];
 "14" [label="{SMPyBandits.Arms.Gaussian.Gaussian_0_100|\l|__init__(mu, sigma, mini, maxi)\l}", shape="record"];
@@ -24,9 +24,16 @@ rankdir=BT
 "20" [label="{SMPyBandits.Arms.Gaussian.Gaussian_m2_2|\l|__init__(mu, sigma, mini, maxi)\l}", shape="record"];
 "21" [label="{SMPyBandits.Arms.Gaussian.Gaussian_m5_5|\l|__init__(mu, sigma, mini, maxi)\l}", shape="record"];
 "22" [label="{SMPyBandits.Arms.Gaussian.UnboundedGaussian|\l|__init__(mu, sigma)\l__repr__()\ldraw(t)\ldraw_nparray(shape)\l}", shape="record"];
-"23" [label="{SMPyBandits.Arms.Poisson.Poisson|mean : int\lp\ltrunc : int\l|__init__(p, trunc)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneLR(mumax, mu)\l}", shape="record"];
+"23" [label="{SMPyBandits.Arms.Poisson.Poisson|mean : int\lp\ltrunc : int\l|__init__(p, trunc)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneLR(mumax, mu)\lset_mean_param(p)\l}", shape="record"];
 "24" [label="{SMPyBandits.Arms.Poisson.UnboundedPoisson|\l|__init__(p)\l}", shape="record"];
-"25" [label="{SMPyBandits.Arms.UniformArm.UniformArm|amplitude\llower\lmean\l|__init__(mini, maxi, mean, lower, amplitude)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneLR(mumax, mu)\l}", shape="record"];
+"25" [label="{SMPyBandits.Arms.RestedRottingArm.RestedRottingArm|arm\ldecayingFunction\lmean\lpull_count : int\l|__init__(decayingFunction, staticArm)\ldraw(t)\l}", shape="record"];
+"26" [label="{SMPyBandits.Arms.RestedRottingArm.RestedRottingBernoulli|\l|__init__(decayingFunction)\l}", shape="record"];
+"27" [label="{SMPyBandits.Arms.RestedRottingArm.RestedRottingBinomial|\l|__init__(decayingFunction, draws)\l}", shape="record"];
+"28" [label="{SMPyBandits.Arms.RestedRottingArm.RestedRottingConstant|\l|__init__(decayingFunction)\l}", shape="record"];
+"29" [label="{SMPyBandits.Arms.RestedRottingArm.RestedRottingExponential|\l|__init__(decayingFunction)\l}", shape="record"];
+"30" [label="{SMPyBandits.Arms.RestedRottingArm.RestedRottingGaussian|\l|__init__(decayingFunction, sigma)\l}", shape="record"];
+"31" [label="{SMPyBandits.Arms.RestedRottingArm.RestedRottingPoisson|\l|__init__(decayingFunction, sigma)\l}", shape="record"];
+"32" [label="{SMPyBandits.Arms.UniformArm.UniformArm|amplitude\llower\lmean\l|__init__(mini, maxi, mean, lower, amplitude)\l__repr__()\l__str__()\ldraw(t)\ldraw_nparray(shape)\lkl(x, y)\loneLR(mumax, mu)\l}", shape="record"];
 "1" -> "0" [arrowhead="empty", arrowtail="none"];
 "2" -> "0" [arrowhead="empty", arrowtail="none"];
 "3" -> "0" [arrowhead="empty", arrowtail="none"];
@@ -52,4 +59,11 @@ rankdir=BT
 "23" -> "0" [arrowhead="empty", arrowtail="none"];
 "24" -> "23" [arrowhead="empty", arrowtail="none"];
 "25" -> "0" [arrowhead="empty", arrowtail="none"];
+"26" -> "25" [arrowhead="empty", arrowtail="none"];
+"27" -> "25" [arrowhead="empty", arrowtail="none"];
+"28" -> "25" [arrowhead="empty", arrowtail="none"];
+"29" -> "25" [arrowhead="empty", arrowtail="none"];
+"30" -> "25" [arrowhead="empty", arrowtail="none"];
+"31" -> "25" [arrowhead="empty", arrowtail="none"];
+"32" -> "0" [arrowhead="empty", arrowtail="none"];
 }

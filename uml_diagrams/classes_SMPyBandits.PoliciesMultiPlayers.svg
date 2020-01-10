@@ -711,7 +711,7 @@
 <text text-anchor="middle" x="5776.5" y="-746.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.PoliciesMultiPlayers.Scenario1.Scenario1</text>
 <polyline fill="none" stroke="#000000" points="5614,-738.5 5939,-738.5 "/>
 <text text-anchor="start" x="5622" y="-723.3" font-family="Times,serif" font-size="14.00" fill="#000000">children</text>
-<text text-anchor="start" x="5622" y="-708.3" font-family="Times,serif" font-size="14.00" fill="#000000">chosenOne : ndarray, NoneType</text>
+<text text-anchor="start" x="5622" y="-708.3" font-family="Times,serif" font-size="14.00" fill="#000000">chosenOne : NoneType, ndarray</text>
 <text text-anchor="start" x="5622" y="-693.3" font-family="Times,serif" font-size="14.00" fill="#000000">nbArms</text>
 <text text-anchor="start" x="5622" y="-678.3" font-family="Times,serif" font-size="14.00" fill="#000000">nbPlayers</text>
 <polyline fill="none" stroke="#000000" points="5614,-670.5 5939,-670.5 "/>
