@@ -8,7 +8,7 @@
 # __version__ = "0.9"
 
 # Using bash and not sh, cf. http://stackoverflow.com/a/589300/
-SHELL := /bin/bash -o pipefail
+SHELL := /usr/bin/env bash -o pipefail
 
 # Put it first so that "make" without argument is like "make help".
 help:
