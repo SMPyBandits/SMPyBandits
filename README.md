@@ -149,7 +149,7 @@ pip install -r requirements_full.txt
 # run a single-player simulation!
 N=100 T=10000 K=9 N_JOBS=4 make single
 # run a multi-player simulation!
-N=100 T=10000 M=3 K=9 N_JOBS=4 make more
+N=100 T=10000 M=3 K=9 N_JOBS=4 make moremulti
 ```
 
 You can also install it directly with [`pip`](https://pip.pypa.io/) and from GitHub:
