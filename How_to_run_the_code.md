@@ -3,12 +3,21 @@
 > This short page explains quickly how to install the requirements for this project, and then how to use the code to run simulations.
 
 ## Required modules
+
+### Virtualenv
 *First*, install the requirements, globally (or with a virtualenv, [see below](#In-a-virtualenv-?)):
 ```bash
 pip install -r requirements.txt
 ```
 
 > Some requirements are only needed for one policy (mostly the experimental ones), and for the documentation.
+
+### Nix
+
+A pinned [Nix](https://nixos.org) environment is available:
+```bash 
+nix-shell
+``` 
 
 ## Running some simulations
 *Then*, it should be very straight forward to run some experiment.
