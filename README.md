@@ -168,22 +168,20 @@ pip install git+https://github.com/SMPyBandits/SMPyBandits.git#egg=SMPyBandits[f
 
 ### Nix
 
-A pinned [Nix](https://nixos.org) environment is available for this
-experimental setup in the `pkgs/` directory. From the root of the project:
+A pinned [Nix](https://nixos.org) environment is available for this experimental setup in the [`nix/pkgs/`](nix/pkgs) directory.
+From the root of the project:
 
 ```bash 
 $ nix-shell
 nix-shell$ jupyter_notebook 
-nix-shell $ N=100 T=10000 K=9 N_JOBS=4 make single
+nix-shell$ N=100 T=10000 K=9 N_JOBS=4 make single
 ``` 
 
-The following one-liner lets you explore one of the example notebooks from any
-Nix-enabled machine, without cloning the repository:
+The following one-liner lets you explore one of the example notebooks from any Nix-enabled machine, without cloning the repository:
 
+```bash
+$ nix-shell https://github.com/SMPYBandits/SMPyBandits/archive/master.tar.gz --run 'jupyter-notebook $EXAMPLE_NOTEBOOKS/Example_of_a_small_Multi-Player_Simulation__with_Centralized_Algorithms.ipynb' 
 ```
-nix-shell https://github.com/SMPYBandits/SMPyBandits/archive/master.tar.gz --run 'jupyter-notebook $EXAMPLE_NOTEBOOKS/Example_of_a_small_Multi-Player_Simulation__with_Centralized_Algorithms.ipynb' 
-```
-
 
 ----
 
