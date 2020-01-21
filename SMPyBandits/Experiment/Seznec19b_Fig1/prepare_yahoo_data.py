@@ -94,7 +94,6 @@ def plot_reward(df, i):
     """
     Plot the reward functions.
     """
-    print(df)
     fig, ax = plt.subplots(figsize=(12, 10))
     df.apply(lambda data: ax.plot(range(len(data)), data))
     df.apply(lambda data: print(data))
