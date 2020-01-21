@@ -12,6 +12,7 @@ from matplotlib import pyplot as plt
 import gzip
 import os
 
+logging.getLogger('matplotlib.font_manager').disabled = True
 plt.style.use('seaborn-colorblind')
 plt.style.use('style.mplstyle')
 
@@ -22,9 +23,10 @@ def merge_datasets():
     """
     Merge the 10 files and keep the three useful columns ['timestamp', 'article_id', 'click'] in out.csv
     """
+    out = open("./data/R6A/out.csv", "a+")
+    out.write('timestamp article_id click\n')
     for j in range(10):
         f = gzip.open("./data/R6A/ydata-fp-td-clicks-v1_0.20090" + str(501 + j) + '.gz', "r")
-        out = open("./data/R6A/out.csv", "a+")
         for i, line in enumerate(f.readlines()):
             if i % 10000 == 0:
                 logging.info("./data/R6A/ydata-fp-td-clicks-v1_0.20090" + str(501 + j) + ' : ' + str(i))
@@ -36,7 +38,7 @@ def prepare_dataset():
     Download out.csv, cast the right datatypes and convert date
     :return: Dataframe - columns =  ['timestamp', 'article_id', 'click', 'date']
     """
-    df = pd.read_csv('./data/R6A/out.csv',usecols=['timestamp', 'article_id', 'click'], sep=' ')
+    df = pd.read_csv('./data/R6A/out.csv', usecols=['timestamp', 'article_id', 'click'], sep=' ')
     df = df.astype({'timestamp': int, 'article_id': int, 'click': bool})
     df['date'] = df.timestamp.apply(lambda dt: datetime.fromtimestamp(dt))
     return df
@@ -78,7 +80,11 @@ def split_dataset(df, traffic, freq=10):
                 df[(df.index >= '2009-05-' + str(i) + ' 00:00:00') & (df.index < '2009-05-' + str(i) + ' 12:00:00')])
     dfs = [df[df.columns[~df.isnull().any()]] if len(df) else pd.DataFrame() for df in dfs]
     dfs = [d.apply(lambda row: row.apply(lambda x: [x])) for d in dfs]
-    dfs = [d.apply(lambda col: col * traffic.loc[col.index]).sum().apply(lambda liste: liste[::freq]) for d in dfs]
+    dfs = [
+        d.apply(lambda col: col * traffic.loc[col.index])
+            .sum()
+            .apply(lambda liste: pd.Series(liste[::freq])) for d in dfs
+    ]
     for i, d in enumerate(dfs):
         d.to_csv('./data/Reward/reward_data_day_%s.csv' % (i + 1))
     return dfs
@@ -88,12 +94,14 @@ def plot_reward(df, i):
     """
     Plot the reward functions.
     """
+    print(df)
     fig, ax = plt.subplots(figsize=(12, 10))
     df.apply(lambda data: ax.plot(range(len(data)), data))
+    df.apply(lambda data: print(data))
     ax.set_ylim([0, 0.075])
     ax.set_xlabel('Round (t)')
     ax.set_ylabel("Arms Average Reward")
-    ax.set_title("Day %s - $K = %s$" % (i + 1, len(df.columns)), y=1.03)
+    ax.set_title("Day %s - $K = %s$" % (i + 1, len(df)))
     fig.savefig("./data/Reward/reward_plot_day%s.pdf" % (i + 1))
 
 
