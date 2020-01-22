@@ -27,9 +27,13 @@ DAY = 2
 data_file = 'data/Reward/reward_data_day_%s.csv' % (DAY)
 DRAWS = 10
 logging.info("CONSTANT CONFIG : DATA %s" % data_file)
-df = pd.read_csv(data_file, index_col=0, header=None).reset_index(drop=True)
+df = pd.read_csv(data_file, index_col=0).transpose().reset_index(drop=True)
 
-arms = [[RestlessBinomial, {'rewardFunction': lambda t: df[col][t], 'draws': DRAWS}] for col in df.columns]  # TODO arms
+def rew_function(df, col):
+    def res(t):
+        return df[col][t]
+    return res
+arms = [[RestlessBinomial, {'rewardFunction': rew_function(df, col), 'draws': DRAWS}] for col in df.columns]  # TODO arms
 K = len(arms)
 for i, arm in enumerate(arms):
     logging.info("DYNAMIC CONFIG :  ARM " + str(i) + " " + str(arm[0](**arm[1])))
@@ -62,10 +66,11 @@ policy_name = str(policy[0](nbArms=2, **policy[1]))
 policy_name_nospace = policy_name.replace(' ', '_')
 logging.info("CONSTANT CONFIG :  POLICY " + str(i) + " " + policy_name)
 rew, noisy_rew, time, pulls, cumul_pulls = repetedRuns(policy, arms, rep=REPETITIONS, T=HORIZON, parallel=PARALLEL)
-oracle_rew, noisy_oracle_rew, oracle_time, oracle_pull, oracle_cumul_pulls = repetedRuns(
-    [GreedyOracle, {}], arms, rep=1, T=HORIZON, oracle=True
-)
-regret = oracle_rew - rew
+print(rew)
+print(noisy_rew)
+oracle_rew = df.max(axis=1).cumsum().to_numpy()
+print(oracle_rew)
+regret = DRAWS*oracle_rew - rew
 logging.info("EVENT : SAVING ... ")
 path_regret = os.path.join('./data/DAY_%s_REGRET_%s_%s' % (DAY, policy_name_nospace, date))
 np.save(path_regret, regret)
