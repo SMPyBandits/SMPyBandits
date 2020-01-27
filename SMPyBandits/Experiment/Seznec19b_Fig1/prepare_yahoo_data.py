@@ -3,7 +3,7 @@ author : Julien SEZNEC
 Download raw data from R6A - Yahoo! Front Page Today Module User Click Log Dataset, version 1.0 (1.1 GB)
 (https://webscope.sandbox.yahoo.com/catalog.php?datatype=r)
 and put the content of the unzip dataset 'R6' in ./data/R6A/
-Then, you can run this script and
+Then, you can run this script which outputs arm's reward plot and data for each day in ./data/Reward. 
 """
 import pandas as pd
 import logging
