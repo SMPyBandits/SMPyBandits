@@ -52,6 +52,8 @@ if __name__ != "__main__":
     from .DiscreteArm import DiscreteArm
     from .RestedRottingArm import RestedRottingArm, RestedRottingBernoulli, RestedRottingBinomial, \
         RestedRottingConstant, RestedRottingExponential, RestedRottingGaussian, RestedRottingPoisson
+    from .RestlessArm import RestlessArm, RestlessBernoulli, RestlessBinomial, RestlessConstant, RestlessExponential, \
+        RestlessGaussian, RestlessPoisson
 
     mapping_ARM_TYPE = {
         "Constant": Constant,
