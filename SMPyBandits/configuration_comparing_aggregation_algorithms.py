@@ -76,8 +76,8 @@ NB_RANDOM_EVENTS = 5  #: Number of random events. They are uniformly spaced in t
 TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 TEST_Aggregator = True
 
-TEST_CORRAL = False  # XXX do not let this = False if you want to test the CORRAL policy
 TEST_CORRAL = True
+TEST_CORRAL = False  # XXX do not let this = False if you want to test the CORRAL policy
 
 TEST_LEARNEXP = False  # XXX do not let this = False if you want to test the LearnExp policy
 TEST_LEARNEXP = True
