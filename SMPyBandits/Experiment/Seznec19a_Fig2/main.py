@@ -68,8 +68,10 @@ diffpulls = np.abs(cumul_pulls - oracle_cumul_pulls)
 logging.info("EVENT : SAVING ... ")
 path_regret = os.path.join('./data/', 'REGRET_' + policy_name_nospace + '_' + date )
 path_diffpull = os.path.join('./data/', 'DIFFPULL_' + policy_name_nospace + '_' + date )
+path_time = os.path.join('./data/', 'TIME_' + policy_name_nospace + '_' + date )
 np.save(path_regret, regret)
 np.save(path_diffpull, diffpulls)
+np.save(path_time, np.array(time))
 logging.info("EVENT : END ... ")
 
 

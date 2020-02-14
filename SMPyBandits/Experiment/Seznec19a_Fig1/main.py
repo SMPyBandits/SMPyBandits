@@ -34,7 +34,8 @@ policy = policies[policy_ind]
 policy_name = str(policy[0](nbArms=2, **policy[1]))
 policy_name_nospace = policy_name.replace(' ', '_')
 
-path = os.path.join('./data', 'REGRET_' + policy_name_nospace + '_' + date)
+regret_path = os.path.join('./data', 'REGRET_' + policy_name_nospace + '_' + date)
+time_path = os.path.join('./data', 'TIME_' + policy_name_nospace + '_' + date)
 os.makedirs('./data/logging/', exist_ok=True)
 logging.basicConfig(filename=os.path.join('./data/logging', date + '.log'), level=logging.INFO,
                     format='%(asctime)s %(message)s')
@@ -77,5 +78,7 @@ for m, mu in enumerate(mus):
     regret = oracle_rew - rew
     logging.info("EVENT : SAVING ... ")
     regret_res.append(regret)
-    np.save(path, np.array(regret_res))
+    time_res.append(time)
+    np.save(regret_path, np.array(regret_res))
+    np.save(time_path, np.array(regret_res))
 logging.info("EVENT : END ... ")

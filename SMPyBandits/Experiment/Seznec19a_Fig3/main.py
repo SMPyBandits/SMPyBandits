@@ -61,7 +61,9 @@ oracle_rew, noisy_oracle_rew, oracle_time, oracle_pull, oracle_cumul_pulls = rep
 regret = oracle_rew - rew
 logging.info("EVENT : SAVING ... ")
 path_regret = os.path.join('./data/', 'REGRET1_' + policy_name_nospace + '_' + date)
+path_time = os.path.join('./data/', 'TIME1_' + policy_name_nospace + '_' + date)
 np.save(path_regret, regret)
+np.save(path_time, time)
 
 ### GAME 2
 logging.info("EVENT : GAME 2 mu = 1")
@@ -77,5 +79,7 @@ oracle_rew, noisy_oracle_rew, oracle_time, oracle_pull, oracle_cumul_pulls = rep
 regret = oracle_rew - rew
 logging.info("EVENT : SAVING ... ")
 path_regret = os.path.join('./data/', 'REGRET2_' + policy_name_nospace + '_' + date)
+path_time = os.path.join('./data/', 'TIME2_' + policy_name_nospace + '_' + date)
 np.save(path_regret, regret)
+np.save(path_time, time)
 logging.info("EVENT : END ... ")
