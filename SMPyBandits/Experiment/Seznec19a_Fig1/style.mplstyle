@@ -1,5 +1,5 @@
-xtick.labelsize: 30
-ytick.labelsize: 30
+xtick.labelsize: 25
+ytick.labelsize: 25
 font.size: 40
 figure.autolayout: False
 figure.figsize: 7.2,4.45

@@ -94,7 +94,7 @@ class Aggregator(BasePolicy):
         self.extra_str = extra_str  #: A string to add at the end of the ``str(self)``, to specify which algorithms are aggregated for instance.
         self.update_all_children = update_all_children  #: Flag, see above.
         self.nbChildren = len(children)  #: Number N of slave algorithms.
-        self.t = -1  #: Internal time
+        self.t = 0  #: Internal time
         self.update_like_exp4 = update_like_exp4  #: Flag, see above.
         # If possible, pre compute the learning rate
         if horizon is not None and decreaseRate == 'auto':

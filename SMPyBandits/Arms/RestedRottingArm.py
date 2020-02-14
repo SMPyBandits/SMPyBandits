@@ -3,8 +3,16 @@ author: Julien Seznec
 Rested rotting arm, i.e. arms with mean value which decay at each pull
 """
 
-from . import Arm, Bernoulli, Binomial, UnboundedExponential, UnboundedGaussian, Constant, UnboundedPoisson
-
+try:
+    from . import Arm, Bernoulli, Binomial, UnboundedExponential, UnboundedGaussian, Constant, UnboundedPoisson
+except ImportError:
+    from Arm import Arm
+    from Bernoulli import Bernoulli
+    from Binomial import Binomial
+    from Exponential import UnboundedExponential
+    from Gaussian import UnboundedGaussian
+    from Constant import Constant
+    from Poisson import UnboundedPoisson
 
 class RestedRottingArm(Arm):
     def __init__(self, decayingFunction, staticArm):
@@ -16,12 +24,13 @@ class RestedRottingArm(Arm):
         self.mean = self.arm.mean
 
     def draw(self, t=None):
-        draw = self.arm.draw(t)
         current_mean = self.mean
-        self.pull_count += 1
         self.arm.set_mean_param(self.decayingFunction(self.pull_count))
         self.mean = self.arm.mean
         assert current_mean >= self.mean, "Arm has increased."
+        draw = self.arm.draw(t)
+        self.pull_count += 1
+
         return draw
 
 

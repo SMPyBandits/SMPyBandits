@@ -198,7 +198,7 @@ class UnsupervisedLearning(object):
                  *args, **kwargs):
         """ Create a new UnsupervisedLearning policy."""
         self.nbArms = nbArms  #: Number of arms of the MAB problem.
-        self.t = -1  #: Current time.
+        self.t = 0  #: Current time.
         T_0 = int(T_0)
         self.T_0 = int(max(1, T_0))  #: Number of random exploration of each arm at the beginning.
         self.fit_every = int(fit_every)  #: Frequency of refit of the unsupervised models.
@@ -222,7 +222,7 @@ class UnsupervisedLearning(object):
 
     def startGame(self):
         """ Reinitialize the estimators."""
-        self.t = -1
+        self.t = 0
         self.ests = [self._estimator(*self._args, **self._kwargs) for _ in range(self.nbArms)]
 
     def getReward(self, armId, reward):

@@ -149,7 +149,7 @@ pip install -r requirements_full.txt
 # run a single-player simulation!
 N=100 T=10000 K=9 N_JOBS=4 make single
 # run a multi-player simulation!
-N=100 T=10000 M=3 K=9 N_JOBS=4 make more
+N=100 T=10000 M=3 K=9 N_JOBS=4 make moremulti
 ```
 
 You can also install it directly with [`pip`](https://pip.pypa.io/) and from GitHub:
@@ -165,6 +165,23 @@ pip install git+https://github.com/SMPyBandits/SMPyBandits.git#egg=SMPyBandits[f
 
 > - If speed matters to you and you want to use algorithms based on [kl-UCB](https://smpybandits.github.io/docs/Policies.klUCB.html), you should take the time to build and install the fast C implementation of the utilities KL functions. Default is to use [kullback.py](https://smpybandits.github.io/docs/Policies.kullback.html), but using [the C version from Policies/C/](Policies/C/) really speeds up the computations. Just follow the instructions, it should work well (you need `gcc` to be installed).
 > - And if speed matters, be sure that you have a working version of [Numba](https://numba.pydata.org/), it is used by many small functions to (try to automatically) speed up the computations.
+
+### Nix
+
+A pinned [Nix](https://nixos.org) environment is available for this experimental setup in the [`nix/pkgs/`](nix/pkgs) directory.
+From the root of the project:
+
+```bash 
+$ nix-shell
+nix-shell$ jupyter_notebook 
+nix-shell$ N=100 T=10000 K=9 N_JOBS=4 make single
+``` 
+
+The following one-liner lets you explore one of the example notebooks from any Nix-enabled machine, without cloning the repository:
+
+```bash
+$ nix-shell https://github.com/SMPYBandits/SMPyBandits/archive/master.tar.gz --run 'jupyter-notebook $EXAMPLE_NOTEBOOKS/Example_of_a_small_Multi-Player_Simulation__with_Centralized_Algorithms.ipynb' 
+```
 
 ----
 

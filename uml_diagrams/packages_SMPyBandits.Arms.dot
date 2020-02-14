@@ -11,9 +11,11 @@ rankdir=BT
 "7" [label="SMPyBandits.Arms.Gamma", shape="box"];
 "8" [label="SMPyBandits.Arms.Gaussian", shape="box"];
 "9" [label="SMPyBandits.Arms.Poisson", shape="box"];
-"10" [label="SMPyBandits.Arms.UniformArm", shape="box"];
-"11" [label="SMPyBandits.Policies.kullback", shape="box"];
-"12" [label="SMPyBandits.Policies.usenumba", shape="box"];
+"10" [label="SMPyBandits.Arms.RestedRottingArm", shape="box"];
+"11" [label="SMPyBandits.Arms.UniformArm", shape="box"];
+"12" [label="SMPyBandits.Policies.kullback", shape="box"];
+"13" [label="SMPyBandits.Policies.usenumba", shape="box"];
+"0" -> "1" [arrowhead="open", arrowtail="none"];
 "0" -> "2" [arrowhead="open", arrowtail="none"];
 "0" -> "3" [arrowhead="open", arrowtail="none"];
 "0" -> "4" [arrowhead="open", arrowtail="none"];
@@ -23,6 +25,7 @@ rankdir=BT
 "0" -> "8" [arrowhead="open", arrowtail="none"];
 "0" -> "9" [arrowhead="open", arrowtail="none"];
 "0" -> "10" [arrowhead="open", arrowtail="none"];
+"0" -> "11" [arrowhead="open", arrowtail="none"];
 "2" -> "1" [arrowhead="open", arrowtail="none"];
 "3" -> "1" [arrowhead="open", arrowtail="none"];
 "4" -> "1" [arrowhead="open", arrowtail="none"];
@@ -31,6 +34,6 @@ rankdir=BT
 "7" -> "1" [arrowhead="open", arrowtail="none"];
 "8" -> "1" [arrowhead="open", arrowtail="none"];
 "9" -> "1" [arrowhead="open", arrowtail="none"];
-"10" -> "1" [arrowhead="open", arrowtail="none"];
-"11" -> "12" [arrowhead="open", arrowtail="none"];
+"11" -> "1" [arrowhead="open", arrowtail="none"];
+"12" -> "13" [arrowhead="open", arrowtail="none"];
 }

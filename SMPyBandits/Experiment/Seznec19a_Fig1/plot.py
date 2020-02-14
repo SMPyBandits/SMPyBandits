@@ -13,31 +13,29 @@ from SMPyBandits.Policies import wSWA, FEWA, EFF_FEWA
 import os
 import numpy as np
 
+plt.style.use('seaborn-colorblind') # not the prettiest but accessible
 plt.style.use('style.mplstyle')
 MARKERS = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
-COLORS = ['b', 'r', 'g', 'tab:purple', 'k', 'c', 'm', 'y']
 
 
 def fig1A(data, L, save=True, name="fig1A.pdf"):
     # --------------  PLOT  --------------
-    fig = plt.figure(figsize=(12, 10))
-    ax = plt.subplot()
+    fig, ax= plt.subplots(figsize = (12,10))
     for i, policy in enumerate(data):
-        ax.semilogx(L, data[policy]["mean"][:, -1], label=policy, color=COLORS[i % len(COLORS)],
+        ax.semilogx(L, data[policy]["mean"][:, -1], label=policy,
                     marker=MARKERS[i % len(MARKERS)], linewidth=3, markersize=6)
-        ax.semilogx(L, data[policy]["uppq"][:, -1], label=None, linestyle='--', color=COLORS[i % len(COLORS)],
+        color = ax.get_lines()[-1].get_c()
+        ax.semilogx(L, data[policy]["uppq"][:, -1], label=None, linestyle='--',color = color,
                     linewidth=1)
-        ax.semilogx(L, data[policy]["lowq"][:, -1], label=None, linestyle='--', color=COLORS[i % len(COLORS)],
+        ax.semilogx(L, data[policy]["lowq"][:, -1], label=None, linestyle='--',color = color,
                     linewidth=1)
-        plt.fill_between(L, data[policy]["uppq"][:, -1], data[policy]["lowq"][:, -1], alpha=.05,
-                         color=COLORS[i % len(COLORS)])
+        plt.fill_between(L, data[policy]["uppq"][:, -1], data[policy]["lowq"][:, -1], alpha=.05, color = color)
     plt.ylim(0, 400)
     plt.legend(prop={'variant': 'small-caps'})
     plt.xlabel('$L$')
     plt.ylabel('Average regret at $T = 10^4$')
     ax.xaxis.set_label_coords(0.5, -0.08)
     ax.yaxis.set_label_coords(-0.09, 0.5)
-
     # -------------- SAVE --------------
     if save:
         plt.savefig(name)
@@ -46,17 +44,17 @@ def fig1A(data, L, save=True, name="fig1A.pdf"):
 def fig1BC(data, mus, mu_index=11, name='fig1B.pdf', ylim=300):
     # --------------  PLOT  --------------
     L = mus[mu_index]
-    fig = plt.figure(figsize=(12, 10))
-    ax = plt.subplot()
+    fig,ax  = plt.subplots(figsize=(12, 10))
     for i, policy in enumerate(data):
         X = range(data[policy]["mean"].shape[1])
-        ax.plot(X, data[policy]["mean"][mu_index, :], label=policy, color=COLORS[i % len(COLORS)], linewidth=3)
-        ax.plot(X, data[policy]["uppq"][mu_index, :], label=None, linestyle='--', color=COLORS[i % len(COLORS)],
+        ax.plot(X, data[policy]["mean"][mu_index, :], label=policy, linewidth=3)
+        color = ax.get_lines()[-1].get_c()
+        ax.plot(X, data[policy]["uppq"][mu_index, :], label=None, linestyle='--', color=color,
                 linewidth=1)
-        ax.plot(X, data[policy]["lowq"][mu_index, :], label=None, linestyle='--', color=COLORS[i % len(COLORS)],
+        ax.plot(X, data[policy]["lowq"][mu_index, :], label=None, linestyle='--', color=color,
                 linewidth=1)
         plt.fill_between(X, data[policy]["uppq"][mu_index, :], data[policy]["lowq"][mu_index, :], alpha=.05,
-                         color=COLORS[i % len(COLORS)])
+                         color=color)
     plt.ylim(0, ylim)
     plt.legend(prop={'variant': 'small-caps'})
     plt.xlabel('Round ($t$)')

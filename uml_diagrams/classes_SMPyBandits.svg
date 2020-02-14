@@ -54,7 +54,7 @@
 <polygon fill="none" stroke="#000000" points="86.5,-.5 86.5,-174.5 544.5,-174.5 544.5,-.5 86.5,-.5"/>
 <text text-anchor="middle" x="315.5" y="-159.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.complete_tree_exploration_for_MP_bandits.StateWithMemory</text>
 <polyline fill="none" stroke="#000000" points="86.5,-151.5 544.5,-151.5 "/>
-<text text-anchor="start" x="94.5" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">memories : tuple, NoneType</text>
+<text text-anchor="start" x="94.5" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">memories : NoneType, tuple</text>
 <text text-anchor="start" x="94.5" y="-121.3" font-family="Times,serif" font-size="14.00" fill="#000000">update_memories</text>
 <polyline fill="none" stroke="#000000" points="86.5,-113.5 544.5,-113.5 "/>
 <text text-anchor="start" x="94.5" y="-98.3" font-family="Times,serif" font-size="14.00" fill="#000000">__hash__(full)</text>

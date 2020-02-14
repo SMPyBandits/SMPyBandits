@@ -60,10 +60,10 @@ class Binomial(Arm):
         return np.asarray(npbinomial(self.draws, self.probability, shape), dtype=float)
 
     def set_mean_param(self, probability, draws=None):
-        if draws==None:
+        if draws!=None:
             self.draws = draws
-        self.mean = probability
-        self.probability = probability * self.draws
+        self.mean = probability * self.draws
+        self.probability = probability
 
     # --- Printing
 

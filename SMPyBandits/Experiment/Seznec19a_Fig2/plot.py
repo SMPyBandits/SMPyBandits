@@ -13,41 +13,37 @@ import os
 import numpy as np
 from numpy import format_float_scientific
 from matplotlib import pyplot as plt
-
+plt.style.use('seaborn-colorblind')
 plt.style.use('style.mplstyle')
-
-MARKERS = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
-COLORS = ['b', 'r', 'g', 'tab:purple', 'c', 'm', 'y']
 
 
 def fig2A(data, name='fig2.pdf', ylim=2400, ylim2=500):
     # --------------  PLOT  --------------
     legend_size = 0.45
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3, gridspec_kw={'width_ratios': [1, 1, legend_size]})
-    for i, policy in enumerate(data):
-        X = range(data[policy]["mean"].shape[0])
-        ax1.plot(X, data[policy]["mean"], color=COLORS[i % len(COLORS)], linewidth=3)
-        ax1.plot(X, data[policy]["uppq"], linestyle='--', color=COLORS[i % len(COLORS)], linewidth=1)
-        ax1.plot(X, data[policy]["lowq"], linestyle='--', color=COLORS[i % len(COLORS)], linewidth=1)
-        ax1.fill_between(X, data[policy]["uppq"], data[policy]["lowq"], alpha=.05, color=COLORS[i % len(COLORS)])
-    ax1.set_ylim(0, ylim)
-    ax1.set_xlabel('Round ($t$)', fontsize=30)
-    ax1.set_ylabel('Average regret $R_t$', fontsize=30)
-    ax1.xaxis.set_label_coords(0.5, -0.08)
     N_arms = 9
     ind = np.arange(N_arms)  # the x locations for the groups
     width = 0.7  # the width of the bars
     L = np.array([0.001 * np.sqrt(10) ** (i) for i in range(9)])
     for i, policy in enumerate(data):
+        X = range(data[policy]["mean"].shape[0])
+        ax1.plot(X, data[policy]["mean"], linewidth=3)
+        color = ax1.get_lines()[-1].get_c()
+        ax1.plot(X, data[policy]["uppq"], linestyle='--', color= color, linewidth=1)
+        ax1.plot(X, data[policy]["lowq"], linestyle='--', color= color, linewidth=1)
+        ax1.fill_between(X, data[policy]["uppq"], data[policy]["lowq"], alpha=.05, color= color)
+
         height = data[policy]["pull"][1:] * L
         x_pos = ind - width / 2 + (i + 2) * width / len(data)
         width_bar = width / len(data)
-        ax2.bar(x_pos, height, width_bar, bottom=0, label=policy,color=COLORS[i % len(COLORS)])
+        ax2.bar(x_pos, height, width_bar, bottom=0, label=policy, color=color)
         for j in np.argwhere(height > ylim2):
-            ax2.text(x_pos[j], ylim2*1.01, int(height[j]), ha='center', va='bottom', rotation ='vertical',
-                    fontsize=18, color=COLORS[i % len(COLORS)])
-
-
+            ax2.text(x_pos[j], ylim2 * 1.01, int(height[j]), ha='center', va='bottom', rotation='vertical',
+                     fontsize=18, color=color)
+    ax1.set_ylim(0, ylim)
+    ax1.set_xlabel('Round ($t$)', fontsize=30)
+    ax1.set_ylabel('Average regret $R_t$', fontsize=30)
+    ax1.xaxis.set_label_coords(0.5, -0.08)
     ax2.set_xticks(ind + width / len(data))
     xticks = [format_float_scientific(mu, exp_digits=1, precision=0) for mu in L]
     xticks = [float(xtick) if j % 2 == 0 else '' for j, xtick in enumerate(xticks)]
@@ -65,9 +61,6 @@ def fig2A(data, name='fig2.pdf', ylim=2400, ylim2=500):
     # Hide axes ticks
     ax3.set_xticks([])
     ax3.set_yticks([])
-        # ax2.legend(prop={'variant': 'small-caps'}, loc=(1.04, 0.5))
-        # box = ax2.get_position()
-        # ax2.set_position([box.x0, box.y0, box.width * 1/(1+legend_size), box.height])
         # -------------- SAVE --------------
     fig.set_size_inches(30, 10)
     fig.tight_layout()

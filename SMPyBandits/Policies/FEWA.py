@@ -47,8 +47,8 @@ class EFF_FEWA(BasePolicy):
         # [0,:,:] : current statistics, [1,:,:]: pending statistics, [2,:,:]: number of sample in the pending statistics
         self.windows = np.array([1, int(np.ceil(m))])
         self.outlogconst = self._append_thresholds(self.windows)
-        self.delta = delta if delta != None else 1
-        self.inlogconst = 1 / delta ** (1 / alpha) if delta != None else 1
+        self.delta = delta if delta is not None else 1
+        self.inlogconst = 1 / delta ** (1 / alpha) if delta is not None else 1
         self.armSet = np.arange(nbArms)
         self.grid = m
         self.tmp =[]
@@ -57,11 +57,15 @@ class EFF_FEWA(BasePolicy):
         if self.delta != None:
             return r"EFF_FEWA($\alpha={:.3g}, \, \delta={:.3g}, \, m={:.3g}$)".format(self.alpha, self.delta, self.grid)
         else:
-            return r"EFF_FEWA($\alpha={:.3g}, \, m={:.3g}$)".format(self.alpha, self.grid)
+            if self.display_m:
+                return r"EFF_FEWA($\alpha={:.3g}, \, m={:.3g}$)".format(self.alpha, self.grid)
+            else: 
+                return r"EFF_FEWA($\alpha={:.3g}$)".format(self.alpha)
+            
 
     def getReward(self, arm, reward):
         super(EFF_FEWA, self).getReward(arm, reward)
-        if not np.all(np.isnan(self.statistics[1, :, -1])):
+        if not np.all(np.isnan(self.statistics[0, :, -1])):
             self.statistics = np.append(self.statistics, np.nan * np.ones([3, self.nbArms, 1]), axis=2)
         while self.statistics.shape[2] > min(len(self.outlogconst), len(self.windows)):
             self.windows = np.append(self.windows, int(np.ceil(self.windows[-1] * self.grid)))
@@ -126,9 +130,13 @@ if __name__ == "__main__":
     # Code for debugging purposes.
     HORIZON = 100000
     sigma = 1
-    policy = EFF_FEWA(1, subgaussian=sigma, alpha=0.06, m=1.1)
-    reward = {0: 2}#, 1: 0.2, 2: 0.4, 3: 0.6, 4: 0.8}
+    policy = EFF_FEWA(5, subgaussian=sigma, alpha=0.06, m=1.1)
+    reward = {0: 0, 1: 0.2, 2: 0.4, 3: 0.6, 4: 0.8}
     for t in range(HORIZON):
         choice = policy.choice()
         policy.getReward(choice, reward[choice])
-    print(np.min(policy.tmp))
+    print(policy.statistics[0, :, :])
+    print(policy.statistics.shape)
+    print(policy.windows)
+    print(len(policy.windows))
+    print(policy.pulls)
