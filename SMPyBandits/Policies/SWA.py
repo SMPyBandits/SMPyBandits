@@ -44,6 +44,7 @@ class SWA(IndexPolicy):
     def getReward(self, arm, reward):
         super(SWA, self).getReward(arm, reward)
         self.arms_history[arm] = np.insert(self.arms_history[arm], 0, 0) + reward
+        self.arms_history[arm] = self.arms_history[arm][:self.h]
 
     def computeIndex(self, arm):
         """ Compute the mean of the h last value """
