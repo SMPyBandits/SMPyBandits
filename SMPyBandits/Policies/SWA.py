@@ -72,6 +72,7 @@ class wSWA(SWA):
     def doublingTrick(self):
         self.horizon *= 2
         self.h = self.setWindow()
+        self.t=0
         self.startGame(resetHorizon=False)
 
     def getReward(self, arm, reward):
