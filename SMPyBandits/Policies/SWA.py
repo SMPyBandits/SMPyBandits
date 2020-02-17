@@ -29,33 +29,31 @@ class SWA(IndexPolicy):
         super(SWA, self).__init__(nbArms)
         self.t = 0
         self.nbArms = nbArms
-        self.arms_history = {arm: [] for arm in range(nbArms)}
         self.armSet = set(range(nbArms))
         self.horizon = horizon
         self.starting_horizon = horizon
         self.alpha = alpha if alpha is not None else (2*maxDecrement)**(-2/3)
         self.subgaussian = subgaussian
         self.h = self.setWindow()
+        self.arms_history = {arm: np.full(self.h, np.nan) for arm in range(nbArms)}
         self.doubling = doublingTrick
 
     def setWindow(self):
-        return np.ceil(self.alpha * (16 * self.subgaussian**2 * self.horizon**2 * np.log(np.sqrt(2)*self.horizon)/ len(self.armSet)**2)**(1/3))
+        return int(np.ceil(self.alpha * (16 * self.subgaussian**2 * self.horizon**2 * np.log(np.sqrt(2)*self.horizon)/ len(self.armSet)**2)**(1/3)))
 
     def getReward(self, arm, reward):
         super(SWA, self).getReward(arm, reward)
-        self.arms_history[arm] = np.insert(self.arms_history[arm], 0, 0) + reward
-        self.arms_history[arm] = self.arms_history[arm][:self.h]
+        if self.h >1:
+            self.arms_history[arm][1:] = self.arms_history[arm][:-1] + reward
+        self.arms_history[arm][0] = reward
 
     def computeIndex(self, arm):
         """ Compute the mean of the h last value """
-        if len(self.arms_history[arm]) < self.h:
-            return float('+inf')
-        else:
-            return self.arms_history[arm][int(self.h)-1]
+        return self.arms_history[arm][-1] if not np.isnan(self.arms_history[arm][-1]) else float('+inf')
 
     def startGame(self, resetHorizon = True):
         super(SWA, self).startGame()
-        self.arms_history = {arm: [] for arm in range(self.nbArms)}
+        self.arms_history = {arm: np.full(self.h, np.nan) for arm in range(self.nbArms)}
         if resetHorizon:
             self.horizon = self.starting_horizon
 
@@ -88,6 +86,5 @@ if __name__ == "__main__":
     policy = wSWA(5)
     for t in range(1000):
         choice = policy.choice()
-        print("chosen:%s" % choice)
         policy.getReward(choice, reward[choice])
     print(policy.pulls)
