@@ -23,7 +23,7 @@ import sys
 date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 # Arms & DATA
-DAY = 2
+DAY = 2 if len(sys.argv) == 1 else sys.argv[1]
 data_file = 'data/Reward/reward_data_day_%s.csv' % (DAY)
 DRAWS = 10
 logging.info("CONSTANT CONFIG : DATA %s" % data_file)
@@ -40,7 +40,7 @@ for i, arm in enumerate(arms):
 
 # Config
 PARALLEL = -1  # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
-REPETITIONS = 3  # Set the number of repetitions
+REPETITIONS = 3  if len(sys.argv) == 1 else sys.argv[3]# Set the number of repetitions
 HORIZON = T = len(df)  # Horizon T
 SIGMA = (0.03 * 0.97 * 10) ** .5
 logging.info("CONSTANT CONFIG : CPU %s" % os.cpu_count())
@@ -60,7 +60,7 @@ policies = [
     [Exp3S, {'alpha': 1 / T, 'gamma': min(1, sqrt(K * log(K * T) / T))}],
 ]
 
-policy_ind = 2 if len(sys.argv) == 1 else sys.argv[1]
+policy_ind = 2 if len(sys.argv) == 1 else sys.argv[2]
 policy = policies[policy_ind]
 policy_name = str(policy[0](nbArms=2, **policy[1]))
 policy_name_nospace = policy_name.replace(' ', '_')
