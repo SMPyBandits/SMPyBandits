@@ -35,7 +35,7 @@ class SWA(IndexPolicy):
         self.alpha = alpha if alpha is not None else (2*maxDecrement)**(-2/3)
         self.subgaussian = subgaussian
         self.h = self.setWindow()
-        self.arms_history = {arm: np.full(self.h, np.nan) for arm in range(nbArms)}
+        self.arms_history = {arm: np.full(self.h, np.inf) for arm in range(nbArms)}
         self.doubling = doublingTrick
 
     def setWindow(self):
@@ -49,11 +49,11 @@ class SWA(IndexPolicy):
 
     def computeIndex(self, arm):
         """ Compute the mean of the h last value """
-        return self.arms_history[arm][-1] if not np.isnan(self.arms_history[arm][-1]) else float('+inf')
+        return self.arms_history[arm][-1]
 
     def startGame(self, resetHorizon = True):
         super(SWA, self).startGame()
-        self.arms_history = {arm: np.full(self.h, np.nan) for arm in range(self.nbArms)}
+        self.arms_history = {arm: np.full(self.h, np.inf) for arm in range(self.nbArms)}
         if resetHorizon:
             self.horizon = self.starting_horizon
 
