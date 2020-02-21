@@ -43,15 +43,15 @@ class EFF_FEWA(BasePolicy):
     self.alpha = alpha
     self.nbArms = nbArms
     self.subgaussian = subgaussian
-    self.statistics = np.ones(shape=(3, self.nbArms, 2)) * np.nan
-    # [0,:,:] : current statistics, [1,:,:]: pending statistics, [2,:,:]: number of sample in the pending statistics
-    self.windows = np.array([1, int(np.ceil(m))])
-    self.outlogconst = self._append_thresholds(self.windows)
     self.delta = delta
     self.inlogconst = 1 / delta ** (1 / alpha) if delta is not None else 1
     self.armSet = np.arange(nbArms)
     self.display_m = m is not None
     self.grid = m if m is not None else 2
+    self.statistics = np.ones(shape=(3, self.nbArms, 2)) * np.nan
+    # [0,:,:] : current statistics, [1,:,:]: pending statistics, [2,:,:]: number of sample in the pending statistics
+    self.windows = np.array([1, int(np.ceil(self.grid))])
+    self.outlogconst = self._append_thresholds(self.windows)
     self.tmp = []
 
   def __str__(self):
