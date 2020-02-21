@@ -50,11 +50,11 @@ logging.info("CONSTANT CONFIG : SIGMA %s" % SIGMA)
 
 ### SET Policies
 policies = [
-    [EFF_RAWUCB, {'alpha': 1.4, 'subgaussian': SIGMA, 'delta': K, 'm': 1.1}],
-    [EFF_RAWUCB, {'alpha': 1.4, 'subgaussian': SIGMA, 'delta': K, 'm': 2}],
-    [EFF_RAWUCB, {'alpha': 4, 'subgaussian': SIGMA, 'delta': K, 'm': 1.1}],
-    [EFF_FEWA, {'alpha': .06, 'subgaussian': SIGMA, 'delta': K, 'm': 1.1}],
-    [EFF_FEWA, {'alpha': 4, 'subgaussian': SIGMA, 'delta': K, 'm': 1.1}],
+    [EFF_RAWUCB, {'alpha': 1.4, 'subgaussian': SIGMA,  'm': 1.1}],
+    [EFF_RAWUCB, {'alpha': 1.4, 'subgaussian': SIGMA, 'm': 2}],
+    [EFF_RAWUCB, {'alpha': 4, 'subgaussian': SIGMA, 'm': 1.1}],
+    [EFF_FEWA, {'alpha': .06, 'subgaussian': SIGMA, 'm': 1.1}],
+    [EFF_FEWA, {'alpha': 4, 'subgaussian': SIGMA, 'm': 1.1}],
     [GaussianGLR_IndexPolicy,
      {'policy': klUCBloglog_forGLR, 'delta': sqrt(1 / T), 'alpha0': 0, 'per_arm_restart': True, 'sig2': SIGMA ** 2}],
     [Exp3S, {'alpha': 1 / T, 'gamma': min(1, sqrt(K * log(K * T) / T))}],
