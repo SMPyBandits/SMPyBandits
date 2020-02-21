@@ -39,7 +39,7 @@ os.makedirs('./data/logging/', exist_ok = True)
 logging.basicConfig(filename=os.path.join('./data/logging', date + '.log'), level=logging.INFO, format='%(asctime)s %(message)s')
 logging.info("Policy : %s$" % (policy_name))
 
-PARALLEL = False # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
+PARALLEL = -1 # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
 REPETITIONS =  1 if len(sys.argv) < 3 else int(sys.argv[2]) # Set the number of repetitions
 HORIZON = 25000 # Horizon T
 sigma = 1 # Gaussian noise std
