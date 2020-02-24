@@ -10,7 +10,7 @@ https://arxiv.org/abs/1811.11043 (updated version)
 """
 
 from SMPyBandits.Arms import RestedRottingGaussian
-from SMPyBandits.Policies import FEWA, EFF_FEWA, wSWA, GreedyOracle
+from SMPyBandits.Policies import FEWA, EFF_FEWA, wSWA, GreedyOracle, RAWUCB, Exp3S, GaussianGLR_IndexPolicy, klUCBloglog_forGLR
 from SMPyBandits.Environment.MAB_rotting import repetedRuns
 import numpy as np
 import datetime
@@ -19,6 +19,12 @@ import logging
 import sys
 
 date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+PARALLEL = -1  # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
+REPETITIONS = 4 if len(sys.argv) < 3 else int(sys.argv[2])  # Set the number of repetitions
+HORIZON = T = 10000  # Horizon T
+sigma = 1  # Gaussian noise std
+K = 2
+
 ### SET Policies
 policies = [
     [FEWA, {'alpha': .03, 'delta': 1}],
@@ -28,6 +34,12 @@ policies = [
     [wSWA, {'alpha': 0.002}],
     [wSWA, {'alpha': 0.02}],
     [wSWA, {'alpha': 0.2}],
+    [RAWUCB, {'alpha': 1.4}],
+    [RAWUCB, {'alpha': 4}],
+    [FEWA, {'alpha': 4}],
+    [GaussianGLR_IndexPolicy,
+     {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'alpha0': 0, 'per_arm_restart': True, 'sig2': sigma ** 2}],
+    [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}],
 ]
 policy_ind = 3 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
@@ -40,11 +52,6 @@ os.makedirs('./data/logging/', exist_ok=True)
 logging.basicConfig(filename=os.path.join('./data/logging', date + '.log'), level=logging.INFO,
                     format='%(asctime)s %(message)s')
 logging.info("Policy : %s$" % (policy_name))
-
-PARALLEL = -1  # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
-REPETITIONS = 4 if len(sys.argv) < 3 else int(sys.argv[2])  # Set the number of repetitions
-HORIZON = 10000  # Horizon T
-sigma = 1  # Gaussian noise std
 
 ### SET L/2 in figure 1
 mus = [.01 * 1.25 ** i for i in range(30)]

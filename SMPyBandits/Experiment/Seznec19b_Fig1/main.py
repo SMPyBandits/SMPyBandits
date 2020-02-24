@@ -43,6 +43,7 @@ PARALLEL = -1  # Set positive int to indicate the number of core, -1 to use all 
 REPETITIONS = 3  if len(sys.argv) == 1 else int(sys.argv[3])# Set the number of repetitions
 HORIZON = T = len(df)  # Horizon T
 SIGMA = (0.03 * 0.97 * 10) ** .5
+V = 0.04
 logging.info("CONSTANT CONFIG : CPU %s" % os.cpu_count())
 logging.info("CONSTANT CONFIG : REPETITIONS %s" % REPETITIONS)
 logging.info("CONSTANT CONFIG : HORIZON %s" % HORIZON)
@@ -57,7 +58,7 @@ policies = [
     [EFF_FEWA, {'alpha': 4, 'subgaussian': SIGMA, 'm': 1.1}],
     [GaussianGLR_IndexPolicy,
      {'policy': klUCBloglog_forGLR, 'delta': sqrt(1 / T), 'alpha0': 0, 'per_arm_restart': True, 'sig2': SIGMA ** 2}],
-    [Exp3S, {'alpha': 1 / T, 'gamma': min(1, sqrt(K * log(K * T) / T))}],
+    [Exp3S, {'alpha': 1 / T, 'gamma': (K * V / T)**(1/3)}],
 ]
 
 policy_ind = 2 if len(sys.argv) == 1 else int(sys.argv[2])
