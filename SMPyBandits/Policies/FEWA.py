@@ -106,7 +106,7 @@ class EFF_FEWA(BasePolicy):
   def startGame(self):
     super(EFF_FEWA, self).startGame()
     self.statistics = np.ones(shape=(3, self.nbArms, 2)) * np.nan
-    self.windows = np.array([1, int(np.ceil(self.m))])
+    self.windows = np.array([1, int(np.ceil(self.grid))])
     self.outlogconst = self._append_thresholds(self.windows)
 
 
