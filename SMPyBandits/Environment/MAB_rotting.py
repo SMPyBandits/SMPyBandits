@@ -34,6 +34,7 @@ def singleRun(policy, arms, T = HORIZON,rep_index = 0, oracle=False):
     if oracle:
         policy[1]['arms'] = myArms
     myPolicy = policy[0](len(myArms), **policy[1])
+    myPolicy.startGame()
     logging.debug(str(rep_index) + ' ' + myPolicy.__str__())
     res = play(myArms, myPolicy, T, Oracle=oracle)
     return {
