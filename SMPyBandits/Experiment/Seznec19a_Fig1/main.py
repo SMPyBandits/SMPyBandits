@@ -27,19 +27,19 @@ K = 2
 
 ### SET Policies
 policies = [
-    [FEWA, {'alpha': .03, 'delta': 1}],
-    [FEWA, {'alpha': .06, 'delta': 1}],
-    [FEWA, {'alpha': .1, 'delta': 1}],
-    [EFF_FEWA, {'alpha': 0.06, 'delta': 1}],
-    [wSWA, {'alpha': 0.002}],
-    [wSWA, {'alpha': 0.02}],
-    [wSWA, {'alpha': 0.2}],
-    [RAWUCB, {'alpha': 1.4}],
-    [RAWUCB, {'alpha': 4}],
-    [FEWA, {'alpha': 4}],
-    [GaussianGLR_IndexPolicy,
-     {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'alpha0': 0, 'per_arm_restart': True, 'sig2': sigma ** 2}],
-    [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}],
+    [FEWA, {'alpha': .03, 'delta': 1}], #0
+    [FEWA, {'alpha': .06, 'delta': 1}], #1
+    [FEWA, {'alpha': .1, 'delta': 1}], #2
+    [EFF_FEWA, {'alpha': 0.06, 'delta': 1}], #3
+    [wSWA, {'alpha': 0.002}], #4
+    [wSWA, {'alpha': 0.02}], #5
+    [wSWA, {'alpha': 0.2}], #6
+    [RAWUCB, {'alpha': 1.4}], #7
+    [RAWUCB, {'alpha': 4}], #8
+    [FEWA, {'alpha': 4}], #9
+    [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'alpha0': 0,
+                               'per_arm_restart': True, 'sig2': sigma ** 2}], #10
+    [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}], #11
 ]
 policy_ind = 3 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]

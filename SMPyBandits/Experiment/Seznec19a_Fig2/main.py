@@ -28,20 +28,19 @@ K = 10
 
 ### SET Policies
 policies = [
-  [FEWA, {'alpha': .06, 'delta': 1}],
-  [EFF_FEWA, {'alpha': 0.06, 'delta': 1}],
-  [wSWA, {'alpha': 0.002}],
-  [wSWA, {'alpha': 0.02}],
-  [wSWA, {'alpha': 0.2}],
-  [DUCB, {'gamma': 0.997}],
-  [SWUCB, {'tau': 200}],
-  [FEWA, {'alpha': 4}],
-  [RAWUCB, {'alpha': 1.4}],
-  [RAWUCB, {'alpha': 4}],
-  [FEWA, {'alpha': 4}],
+  [FEWA, {'alpha': .06, 'delta': 1}], #0
+  [EFF_FEWA, {'alpha': 0.06, 'delta': 1}], #1
+  [wSWA, {'alpha': 0.002}], #2
+  [wSWA, {'alpha': 0.02}], #3
+  [wSWA, {'alpha': 0.2}], #4
+  [DUCB, {'gamma': 0.997}], #5
+  [SWUCB, {'tau': 200}], #6
+  [FEWA, {'alpha': 4}], #7
+  [RAWUCB, {'alpha': 1.4}], #8
+  [RAWUCB, {'alpha': 4}], #9
   [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'use_increasing_alpha': True,
-                             'per_arm_restart': True, 'sig2': sigma ** 2, 'horizon': T}],
-  [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}],
+                             'per_arm_restart': True, 'sig2': sigma ** 2, 'horizon': T}], #10
+  [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}], #11
 ]
 policy_ind = 1 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
