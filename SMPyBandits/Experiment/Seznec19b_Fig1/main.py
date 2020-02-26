@@ -21,6 +21,9 @@ import logging
 import sys
 
 date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+os.makedirs('./data/logging/', exist_ok=True)
+logging.basicConfig(filename=os.path.join('./data/logging', date + '.log'), level=logging.INFO,
+                    format='%(asctime)s %(message)s')
 
 # Arms & DATA
 DAY = 2 if len(sys.argv) == 1 else int(sys.argv[1])
