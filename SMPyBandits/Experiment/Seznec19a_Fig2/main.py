@@ -39,10 +39,12 @@ policies = [
   [RAWUCB, {'alpha': 1.4}], #8
   [RAWUCB, {'alpha': 4}], #9
   [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'use_increasing_alpha': True,
-                             'per_arm_restart': True, 'sig2': sigma ** 2, 'horizon': T}], #10
-  [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}], #11
-  [UCB, {}], #12
-  [Exp3, {'T': T}] #13
+                             'per_arm_restart': True, 'sig2': sigma ** 2, 'horizon': T, 'use_localization': False}], #10
+  [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'alpha0': 0,
+                             'per_arm_restart': True, 'sig2': sigma ** 2, 'use_localization': False}],  # 11
+  [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}], #12
+  [UCB, {}], #13
+  [Exp3, {'T': T}] #14
 ]
 policy_ind = 1 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
