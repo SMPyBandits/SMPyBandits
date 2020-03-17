@@ -51,7 +51,7 @@ class EFF_RAWUCB(EFF_FEWA):
 
     def _append_thresholds(self, w):
         # FEWA use two confidence bounds. Hence, the outlogconst is twice smaller for RAWUCB
-        return np.sqrt(2 * self.subgaussian ** 2 / w)
+        return np.sqrt(2 * self.alpha * self.subgaussian ** 2 / w)
 
     def __str__(self):
         return r"EFF_RAW-UCB($\alpha={:.3g}, \, m={:.3g}$)".format(self.alpha, self.grid)
