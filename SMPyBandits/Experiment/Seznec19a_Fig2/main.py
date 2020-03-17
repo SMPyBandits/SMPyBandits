@@ -44,9 +44,9 @@ policies = [
                              'per_arm_restart': True, 'sig2': sigma ** 2, 'use_localization': False}],  # 11
   [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}], #12
   [UCB, {}], #13
-  [Exp3, {'T': T}] #14
+  [Exp3, {'horizon': T}] #14
 ]
-policy_ind = 1 if len(sys.argv) == 1 else int(sys.argv[1])
+policy_ind = 13 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
 policy_name = str(policy[0](nbArms=2, **policy[1]))
 policy_name_nospace = policy_name.replace(' ', '_')
