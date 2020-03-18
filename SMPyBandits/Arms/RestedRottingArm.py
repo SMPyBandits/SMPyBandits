@@ -24,13 +24,14 @@ class RestedRottingArm(Arm):
         self.mean = self.arm.mean
 
     def draw(self, t=None):
+        self.arm.set_mean_param(self.decayingFunction(self.pull_count))
         current_mean = self.mean
+        self.mean = self.arm.mean
+        draw = self.arm.draw(t)
+        self.pull_count += 1
         self.arm.set_mean_param(self.decayingFunction(self.pull_count))
         self.mean = self.arm.mean
         assert current_mean >= self.mean, "Arm has increased."
-        draw = self.arm.draw(t)
-        self.pull_count += 1
-
         return draw
 
 

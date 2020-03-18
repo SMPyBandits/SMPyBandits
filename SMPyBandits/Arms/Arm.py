@@ -46,8 +46,9 @@ class Arm(object):
     def oracle_draw(self, t = None):
         # draw the arm as usual but return the mean
         assert hasattr(self , "mean"), "oracle_draw can be used on Arm with self.mean"
+        mean = self.mean
         self.draw(t)
-        return self.mean
+        return mean
 
     def set_mean_param(self,mean):
         raise NotImplementedError("This method draw(t) has to be implemented in the class inheriting from Arm.")
