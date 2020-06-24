@@ -16,6 +16,7 @@ __author__ = "Julien Seznec"
 __version__ = "0.1"
 
 import numpy as np
+import time
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 try:
@@ -114,14 +115,15 @@ class EFF_RAWUCB_asymptotic(EFF_RAWUCB):
 
 if __name__ == "__main__":
     # Code for debugging purposes.
-    HORIZON = 50000
+    start = time.time()
+    HORIZON = 20
     sigma = 1
-    policy = EFF_RAWUCB(5, subgaussian=sigma, alpha=1., m=1.1)
-    reward = {0: 0., 1: 0.2, 2: 0.4, 3: 0.6, 4: 0.8}
+    reward = {0: 0, 1: 0.2, 2: 0.4, 3: 0.6, 4: 0.8}
+    policy = RAWUCB(5, subgaussian=sigma, alpha=1.4)
     for t in range(HORIZON):
         choice = policy.choice()
         policy.getReward(choice, reward[choice])
-    print(policy.statistics[0, :, :])
-    print(policy.statistics.shape)
-    print(policy.windows)
+    print(time.time() - start)
+    print(policy.windows[:10])
+    print(policy.outlogconst[:10])
     print(policy.pulls)

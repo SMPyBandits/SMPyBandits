@@ -21,7 +21,7 @@ __author__ = "Julien Seznec"
 __version__ = "0.1"
 
 import numpy as np
-
+import time
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 try:
@@ -52,7 +52,7 @@ class EFF_FEWA(BasePolicy):
     # [0,:,:] : current statistics, [1,:,:]: pending statistics, [2,:,:]: number of sample in the pending statistics
     self.windows = np.array([1, int(np.ceil(self.grid))])
     self.outlogconst = self._append_thresholds(self.windows)
-    self.tmp = []
+    self.idx_nan = np.ones(nbArms)
 
   def __str__(self):
     if self.delta != None:
@@ -68,20 +68,20 @@ class EFF_FEWA(BasePolicy):
 
   def getReward(self, arm, reward):
     super(EFF_FEWA, self).getReward(arm, reward)
-    if not np.all(np.isnan(self.statistics[0, :, -1])):
-      self.statistics = np.append(self.statistics, np.nan * np.ones([3, self.nbArms, 1]), axis=2)
-    while self.statistics.shape[2] > min(len(self.outlogconst), len(self.windows)):
-      self.windows = np.append(self.windows, int(np.ceil(self.windows[-1] * self.grid)))
-      self.outlogconst = np.append(self.outlogconst, self._append_thresholds(self.windows[-1]))
+    if not np.all(np.isnan(self.statistics[2, :, -1])):
+      add_size = 3 * self.statistics.shape[2]
+      self.statistics = np.append(self.statistics, np.nan * np.ones([3, self.nbArms, add_size]), axis=2)
+      self.windows = np.append(self.windows, np.array(self._compute_windows(self.windows[-1], add_size)))
+      self.outlogconst = self._append_thresholds(self.windows)
     self.statistics[1, arm, 0] = reward
     self.statistics[2, arm, 0] = 1
     self.statistics[1, arm, 1:] += reward
     self.statistics[2, arm, 1:] += 1
     idx = np.where((self.statistics[2, arm, :] == self.windows))[0]
     self.statistics[0, arm, idx] = self.statistics[1, arm, idx]
-    self.tmp.append(np.nanmin(self.statistics[2, arm, :] / self.windows))
-    idx_nan = np.where(np.isnan(self.statistics[2, arm, :]))[0]
-    idx = np.concatenate([idx, np.array([i for i in idx_nan if i - 1 in set(list(idx))]).astype(int)])
+    if int(self.idx_nan[arm] -1) in idx:
+      idx = np.append(idx, int(self.idx_nan[arm]))
+      self.idx_nan[arm] += 1
     self.statistics[1:, arm, idx[idx != 0]] = self.statistics[1:, arm, idx[idx != 0] - 1]
 
   def choice(self):
@@ -99,6 +99,16 @@ class EFF_FEWA(BasePolicy):
 
   def _append_thresholds(self, w):
     return np.sqrt(8 * w * self.alpha * self.subgaussian ** 2)
+
+  def _compute_windows(self, first_window, add_size):
+      last_window = first_window
+      res = []
+      for i in range(add_size):
+        new_window = int(np.ceil(last_window * self.grid))
+        res.append(new_window)
+        last_window = new_window
+      return res
+
 
   def _inlog(self):
     return max(self.inlogconst * self.t, 1)
@@ -130,15 +140,15 @@ class FEWA(EFF_FEWA):
 
 if __name__ == "__main__":
   # Code for debugging purposes.
-  HORIZON = 100000
+  start = time.time()
+  HORIZON = 1000
   sigma = 1
-  policy = EFF_FEWA(5, subgaussian=sigma, alpha=0.06, m=1.1)
+  policy = FEWA(5, subgaussian=sigma, alpha=0.06)
   reward = {0: 0, 1: 0.2, 2: 0.4, 3: 0.6, 4: 0.8}
   for t in range(HORIZON):
     choice = policy.choice()
     policy.getReward(choice, reward[choice])
-  print(policy.statistics[0, :, :])
+  print(time.time() -start)
   print(policy.statistics.shape)
-  print(policy.windows)
-  print(len(policy.windows))
+  print(policy.idx_nan)
   print(policy.pulls)
