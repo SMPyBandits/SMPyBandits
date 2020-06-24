@@ -20,8 +20,8 @@ import logging
 import sys
 
 date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-PARALLEL = -1  # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
-REPETITIONS = 4 if len(sys.argv) < 3 else int(sys.argv[2])  # Set the number of repetitions
+PARALLEL = False  # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
+REPETITIONS = 1 if len(sys.argv) < 3 else int(sys.argv[2])  # Set the number of repetitions
 HORIZON = T = 10000  # Horizon T
 sigma = 1  # Gaussian noise std
 K = 2
@@ -42,7 +42,7 @@ policies = [
                              'per_arm_restart': True, 'sig2': sigma ** 2, 'use_localization': False}],  # 10
   [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}],  # 11
 ]
-policy_ind = 3 if len(sys.argv) == 1 else int(sys.argv[1])
+policy_ind = 8 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
 policy_name = str(policy[0](nbArms=2, **policy[1]))
 policy_name_nospace = policy_name.replace(' ', '_')

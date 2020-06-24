@@ -10,7 +10,7 @@ https://arxiv.org/abs/1811.11043 (updated version)
 """
 
 from SMPyBandits.Arms import RestedRottingGaussian
-from SMPyBandits.Policies import FEWA, EFF_FEWA, wSWA, GreedyOracle, SWUCB, DiscountedUCB as DUCB, RAWUCB, \
+from SMPyBandits.Policies import FEWA, EFF_FEWA, wSWA, GreedyOracle, SWUCB, DiscountedUCB as DUCB, RAWUCB, EFF_RAWUCB, \
   GaussianGLR_IndexPolicy, Exp3S, klUCBloglog_forGLR, UCB, Exp3WithHorizon as Exp3
 from SMPyBandits.Environment.MAB_rotting import repetedRuns
 import numpy as np
@@ -28,23 +28,24 @@ K = 10
 
 ### SET Policies
 policies = [
-  [FEWA, {'alpha': .06, 'delta': 1}], #0
-  [EFF_FEWA, {'alpha': 0.06, 'delta': 1}], #1
-  [wSWA, {'alpha': 0.002}], #2
-  [wSWA, {'alpha': 0.02}], #3
-  [wSWA, {'alpha': 0.2}], #4
-  [DUCB, {'gamma': 0.997}], #5
-  [SWUCB, {'tau': 200}], #6
-  [FEWA, {'alpha': 4}], #7
-  [RAWUCB, {'alpha': 1.4}], #8
-  [RAWUCB, {'alpha': 4}], #9
+  [FEWA, {'alpha': .06, 'delta': 1}],  # 0
+  [EFF_FEWA, {'alpha': 0.06, 'delta': 1, 'm': 1.1}],  # 1
+  [wSWA, {'alpha': 0.002}],  # 2
+  [wSWA, {'alpha': 0.02}],  # 3
+  [wSWA, {'alpha': 0.2}],  # 4
+  [DUCB, {'gamma': 0.997}],  # 5
+  [SWUCB, {'tau': 200}],  # 6
+  [FEWA, {'alpha': 4}],  # 7
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.1}],  # 8
+  [RAWUCB, {'alpha': 4}],  # 9
   [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'use_increasing_alpha': True,
-                             'per_arm_restart': True, 'sig2': sigma ** 2, 'horizon': T, 'use_localization': False}], #10
+                             'per_arm_restart': True, 'sig2': sigma ** 2, 'horizon': T, 'use_localization': False}],
+  # 10
   [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'alpha0': 0,
                              'per_arm_restart': True, 'sig2': sigma ** 2, 'use_localization': False}],  # 11
-  [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}], #12
-  [UCB, {}], #13
-  [Exp3, {'horizon': T}] #14
+  [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}],  # 12
+  [UCB, {}],  # 13
+  [Exp3, {'horizon': T}]  # 14
 ]
 policy_ind = 13 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
@@ -74,10 +75,10 @@ def abruptDecayFunction(mui, muf, breakpoint):
 arms = [
   [RestedRottingGaussian, {'decayingFunction': abruptDecayFunction(mu, -mu, 1000), 'sigma': sigma, }] for mu in mus
 ]
-
 rew, noisy_rew, time, pulls, cumul_pulls = repetedRuns(policy, arms, rep=REPETITIONS, T=HORIZON, parallel=PARALLEL)
-oracle_rew, noisy_oracle_rew, oracle_time, oracle_pull, oracle_cumul_pulls = repetedRuns([GreedyOracle, {}], arms,
-                                                                                         rep=1, T=HORIZON, oracle=True)
+oracle_rew, noisy_oracle_rew, oracle_time, oracle_pull, oracle_cumul_pulls = repetedRuns(
+  [GreedyOracle, {}], arms, rep=1, T=HORIZON, oracle=True
+)
 regret = oracle_rew - rew
 diffpulls = np.abs(cumul_pulls - oracle_cumul_pulls)
 logging.info("EVENT : SAVING ... ")
