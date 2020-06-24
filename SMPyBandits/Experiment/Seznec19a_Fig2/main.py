@@ -36,7 +36,7 @@ policies = [
   [DUCB, {'gamma': 0.997}],  # 5
   [SWUCB, {'tau': 200}],  # 6
   [FEWA, {'alpha': 4}],  # 7
-  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.1}],  # 8
+  [RAWUCB, {'alpha': 1.4}],  # 8
   [RAWUCB, {'alpha': 4}],  # 9
   [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'use_increasing_alpha': True,
                              'per_arm_restart': True, 'sig2': sigma ** 2, 'horizon': T, 'use_localization': False}],
