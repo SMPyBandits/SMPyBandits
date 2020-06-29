@@ -1,12 +1,7 @@
 """
 author: Julien SEZNEC
-Produce the experiment and record the relevant data to reproduce Figure 1 of [Seznec et al.,  2019a]
-Reference: [Seznec et al.,  2019a]
-Rotting bandits are not harder than stochastic ones;
-Julien Seznec, Andrea Locatelli, Alexandra Carpentier, Alessandro Lazaric, Michal Valko ;
-Proceedings of Machine Learning Research, PMLR 89:2564-2572, 2019.
-http://proceedings.mlr.press/v89/seznec19a.html
-https://arxiv.org/abs/1811.11043 (updated version)
+Produce the experiment about the efficiency of EFF_RAWUCB
+For the thesis manuscript.
 """
 
 from SMPyBandits.Arms import RestedRottingGaussian
