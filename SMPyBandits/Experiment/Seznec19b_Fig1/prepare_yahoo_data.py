@@ -95,12 +95,12 @@ def plot_reward(df, i):
     Plot the reward functions.
     """
     fig, ax = plt.subplots(figsize=(12, 10))
-    df.apply(lambda data: ax.plot(range(len(data)), data), axis=1)
+    df.apply(lambda data: ax.plot(range(len(data)), data, rasterized = True), axis=1)
     ax.set_ylim([0, 0.075])
     ax.set_xlabel('Round (t)')
     ax.set_ylabel("Arms Average Reward")
     ax.set_title("Day %s - $K = %s$" % (i + 1, len(df)), y= 1.03)
-    fig.savefig("./data/Reward/reward_plot_day%s.pdf" % (i + 1))
+    fig.savefig("./data/Reward/reward_plot_day%s.pdf" % (i + 1), dpi = 600)
 
 
 if __name__ == '__main__':
