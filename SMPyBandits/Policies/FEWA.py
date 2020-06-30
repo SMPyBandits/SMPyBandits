@@ -69,9 +69,9 @@ class EFF_FEWA(BasePolicy):
   def getReward(self, arm, reward):
     super(EFF_FEWA, self).getReward(arm, reward)
     if not np.all(np.isnan(self.statistics[2, :, -1])):
-      add_size = 3 * self.statistics.shape[2]
+      add_size = (1 if self.grid > 1.005 else 3) * self.statistics.shape[2]
       self.statistics = np.append(self.statistics, np.nan * np.ones([3, self.nbArms, add_size]), axis=2)
-      self.windows = np.append(self.windows, np.array(self._compute_windows(self.windows[-1], add_size)))
+      self.windows = np.append(self.windows, np.array(self._compute_windows(self.windows[-1], add_size), dtype=np.double))
       self.outlogconst = self._append_thresholds(self.windows)
     self.statistics[1, arm, 0] = reward
     self.statistics[2, arm, 0] = 1

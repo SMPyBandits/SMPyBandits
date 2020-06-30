@@ -34,7 +34,7 @@ policies = [
   [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.2}],  # 9
   [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.5}],  # 10
 ]
-policy_ind = 1 if len(sys.argv) == 1 else int(sys.argv[1])
+policy_ind = 10 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
 policy_name = str(policy[0](nbArms=2, **policy[1]))
 policy_name_nospace = policy_name.replace(' ', '_')
