@@ -43,8 +43,8 @@ policy = policies[policy_ind]
 policy_name = str(policy[0](nbArms=2, **policy[1]))
 policy_name_nospace = policy_name.replace(' ', '_')
 
-regret_path = os.path.join('./data', 'mu=%d_REGRET_'%(mu) + policy_name_nospace + '_' + date)
-time_path = os.path.join('./data', 'mu=%d_TIME_' + policy_name_nospace + '_' + date)
+regret_path = os.path.join('./data', 'REGRET_' + policy_name_nospace + '_' + date)
+time_path = os.path.join('./data', 'TIME_' + policy_name_nospace + '_' + date)
 os.makedirs('./data/logging/', exist_ok=True)
 logging.basicConfig(filename=os.path.join('./data/logging', date + '.log'), level=logging.INFO,
                     format='%(asctime)s %(message)s')
