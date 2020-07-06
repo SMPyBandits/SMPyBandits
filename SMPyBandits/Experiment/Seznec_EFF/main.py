@@ -28,15 +28,16 @@ policies = [
   [wSWA, {'alpha': 0.002}],  # 2
   [wSWA, {'alpha': 0.02}],  # 3
   [wSWA, {'alpha': 0.2}],  # 4
-  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.2}],  # 5
-  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.5}],  # 6
-  [EFF_RAWUCB, {'alpha': 1.4, 'm': 2.1}],  # 7
-  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.9}],  # 8
-  [EFF_RAWUCB, {'alpha': 1.4, 'm': 3}],  # 9
-  [EFF_RAWUCB, {'alpha': 1.4, 'm': 4}],  # 10
-  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.01}],  # 11
-  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.05}],  # 12
-  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.1}],  # 13
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.01}],  # 5
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.1}],  # 6
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.2}],  # 7
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.3}],  # 8
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.5}],  # 9
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.9}],  # 10
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 2.1}],  # 11
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 3}],  # 12
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 10}],  # 13
+
 ]
 policy_ind = 10 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
