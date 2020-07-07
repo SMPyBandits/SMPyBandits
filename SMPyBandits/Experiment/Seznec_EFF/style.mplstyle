@@ -1,0 +1,14 @@
+xtick.labelsize: 25
+ytick.labelsize: 25
+font.size: 40
+figure.autolayout: False
+figure.figsize: 7.2,4.45
+axes.titlesize : 50
+axes.labelsize : 40
+lines.linewidth : 2
+lines.markersize : 6
+legend.fontsize: 25
+mathtext.fontset: stix
+font.family: STIXGeneral
+pdf.fonttype : 42
+ps.fonttype : 42
