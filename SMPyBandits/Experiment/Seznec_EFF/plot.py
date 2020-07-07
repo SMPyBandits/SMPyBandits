@@ -12,50 +12,27 @@ plt.style.use('style.mplstyle')
 MARKERS = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
 
 
-def fig1A(data, L, save=True, name="fig1A.pdf"):
+def fig_eff(data,  name='fig_eff.pdf'):
   # --------------  PLOT  --------------
   fig, ax = plt.subplots(figsize=(12, 10))
   for i, policy in enumerate(data):
-    ax.semilogx(L, data[policy]["mean"][:, -1], label=policy,
-                marker=MARKERS[i % len(MARKERS)], linewidth=3, markersize=6)
+    X = range(data[policy]["mean"].shape[0])
+    ax.plot(X, data[policy]["mean"], label=policy, linewidth=3)
     color = ax.get_lines()[-1].get_c()
-    ax.semilogx(L, data[policy]["uppq"][:, -1], label=None, linestyle='--', color=color,
-                linewidth=1)
-    ax.semilogx(L, data[policy]["lowq"][:, -1], label=None, linestyle='--', color=color,
-                linewidth=1)
-    plt.fill_between(L, data[policy]["uppq"][:, -1], data[policy]["lowq"][:, -1], alpha=.05, color=color)
-  plt.ylim(0, 400)
-  plt.legend(prop={'variant': 'small-caps'})
-  plt.xlabel('$L$')
-  plt.ylabel('Average regret at $T = 10^4$')
-  ax.xaxis.set_label_coords(0.5, -0.08)
-  ax.yaxis.set_label_coords(-0.09, 0.5)
-  # -------------- SAVE --------------
-  if save:
-    plt.savefig(name)
-
-
-def fig1BC(data, mus, mu_index=11, name='fig1B.pdf', ylim=300):
-  # --------------  PLOT  --------------
-  L = mus[mu_index]
-  fig, ax = plt.subplots(figsize=(12, 10))
-  for i, policy in enumerate(data):
-    X = range(data[policy]["mean"].shape[1])
-    ax.plot(X, data[policy]["mean"][mu_index, :], label=policy, linewidth=3)
-    color = ax.get_lines()[-1].get_c()
-    ax.plot(X, data[policy]["uppq"][mu_index, :], label=None, linestyle='--', color=color,
-            linewidth=1)
-    ax.plot(X, data[policy]["lowq"][mu_index, :], label=None, linestyle='--', color=color,
-            linewidth=1)
-    plt.fill_between(X, data[policy]["uppq"][mu_index, :], data[policy]["lowq"][mu_index, :], alpha=.05,
-                     color=color)
-  plt.ylim(0, ylim)
+    if "uppq" in data[policy]:
+      ax.plot(X, data[policy]["uppq"], label=None, linestyle='--', color=color,
+              linewidth=1)
+      ax.plot(X, data[policy]["lowq"], label=None, linestyle='--', color=color,
+              linewidth=1)
+      plt.fill_between(X, data[policy]["uppq"], data[policy]["lowq"][:], alpha=.05,
+                       color=color)
+  max_value = np.max([np.max(data[key]['uppq'] if 'uppq' in data[key] else data[key]['mean'])for key in data])
+  plt.ylim(0, 1.2 * max_value)
   plt.legend(prop={'variant': 'small-caps'})
   plt.xlabel('Round ($t$)')
   plt.ylabel('Average regret $R_t$')
   ax.xaxis.set_label_coords(0.5, -0.08)
   ax.yaxis.set_label_coords(-0.09, 0.5)
-  plt.title('$L = {:.3g}$'.format(L), y=1.04)
   # -------------- SAVE --------------
   plt.savefig(name)
 
@@ -118,6 +95,7 @@ if __name__ == "__main__":
 
   data = {}
   for policy in policies:
+    quantile = False
     policy_name = str(policy[0](nbArms=2, **policy[1]))
     policy_name_nospace = policy_name.replace(' ', '_')
     policy_data = [
@@ -126,11 +104,18 @@ if __name__ == "__main__":
     ]
     if not policy_data:
       continue
-    policy_data_array = np.concatenate(policy_data, axis=1)
+    policy_data_array = np.concatenate(policy_data, axis=0)
     print(len(policy_data), policy_data_array.shape)
     del policy_data
-    data[policy_name] = {
-      "mean": policy_data_array.mean(axis=1),
-    }
+    if quantile :
+      data[policy_name] = {
+        "mean": policy_data_array.mean(axis=0),
+        "uppq": np.quantile(policy_data_array, 0.9, axis=0),
+        "lowq": np.quantile(policy_data_array, 0.1, axis=0)
+      }
+    else:
+      data[policy_name] = {
+        "mean": policy_data_array.mean(axis=0),
+      }
     del policy_data_array
 
