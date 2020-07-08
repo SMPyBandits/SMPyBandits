@@ -19,7 +19,7 @@ REPETITIONS = 1 if len(sys.argv) < 3 else int(sys.argv[2])  # Set the number of 
 HORIZON = T = 10**6  # Horizon T
 sigma = 1  # Gaussian noise std
 K = 2
-mu = 0.01
+mu = 0.1
 
 ### SET Policies
 policies = [
