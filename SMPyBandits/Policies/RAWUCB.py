@@ -106,7 +106,6 @@ class EFF_RAWUCB_pp(EFF_RAWUCB):
         self.beta = beta
 
     def __str__(self):
-        print(self.beta)
         return r"EFF-RAW-UCB++($\beta={:.3g}, \, m={:.3g}$)".format(self.beta, self.grid)
 
     def _compute_ucb(self):

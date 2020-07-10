@@ -14,7 +14,7 @@ import logging
 import sys
 
 date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-PARALLEL = False  # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
+PARALLEL = -1  # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
 REPETITIONS = 1 if len(sys.argv) < 3 else int(sys.argv[2])  # Set the number of repetitions
 HORIZON = T = 10**6  # Horizon T
 sigma = 1  # Gaussian noise std
