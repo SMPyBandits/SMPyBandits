@@ -116,7 +116,6 @@ class EFF_RAWUCB_pp(EFF_RAWUCB):
         moss_confidence = self.t/(w * self.nbArms)
         moss_confidence[moss_confidence < 1] = 1
         inlog = moss_confidence * (1 + np.log(moss_confidence)) ** self.beta
-        print(self.outlogconst* np.sqrt(np.log(inlog)), self.windows)
         return inlog
 
 class RAWUCB_pp(EFF_RAWUCB_pp):
