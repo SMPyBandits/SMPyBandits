@@ -22,12 +22,12 @@ K = 2
 
 ### SET Policies
 policies = [
-  [MOSSAnytime, {'alpha':3}]
-  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.01}],  # 0
-  [EFF_RAWUCB_pp, {'beta': 0, 'm': 1.01}], # 1
-  [EFF_RAWUCB_pp, {'beta': 1, 'm': 1.01}], # 2
-  [EFF_RAWUCB_pp, {'beta': 2, 'm': 1.01}],  # 3
-  [EFF_RAWUCB_pp, {'beta': 3, 'm': 1.01}],  # 4
+  [MOSSAnytime, {'alpha':3}], #0
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.01}],  # 1
+  [EFF_RAWUCB_pp, {'beta': 0, 'm': 1.01}], # 2
+  [EFF_RAWUCB_pp, {'beta': 1, 'm': 1.01}], # 3
+  [EFF_RAWUCB_pp, {'beta': 2, 'm': 1.01}],  # 4
+  [EFF_RAWUCB_pp, {'beta': 3, 'm': 1.01}],  # 5
 ]
 policy_ind = 0 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
