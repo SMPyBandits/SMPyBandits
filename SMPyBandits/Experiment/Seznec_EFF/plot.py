@@ -31,6 +31,7 @@ def fig_eff(data,  name='fig_eff.pdf'):
   plt.legend(prop={'variant': 'small-caps'})
   plt.xlabel('Round ($t$)')
   plt.ylabel('Average regret $R_t$')
+  ax.grid(False)
   ax.xaxis.set_label_coords(0.5, -0.08)
   ax.yaxis.set_label_coords(-0.09, 0.5)
   # -------------- SAVE --------------
@@ -50,7 +51,7 @@ def delay_data(T, m=2):
     res[i] = np.append(r[:final_length], np.nan * np.ones(final_length - len(r[:final_length])))
   return np.arange(1, T+2 ,1), policy.windows[:final_length], np.array(res) / policy.windows[:final_length]
 
-def delay_plot(x,w,Z,T,m, max_delay=None, mean_delay = None):
+def delay_plot(x,w,Z,T,m):
   fig, ax = plt.subplots(figsize=(12, 7))
   ax.set_xticks(np.arange(len(x)), minor=True)
   ax.set_yticks(np.arange(len(w)), minor=True)
@@ -69,53 +70,53 @@ def delay_plot(x,w,Z,T,m, max_delay=None, mean_delay = None):
 
 
 if __name__ == "__main__":
-  # M = [1.01, 1.1, 1.2, 1.3, 1.5, 1.9, 2, 2.1, 3]
-  # for m in M:
-  #   T = 5000
-  #   x,w,z = delay_data(T, m)
-  #   delay_plot(x, w, z, T, m )
+  M = [10]
+  for m in M:
+    T = 5000
+    x,w,z = delay_data(T, m)
+    delay_plot(x, w, z, T, m )
 
-  policies = [
-    [RAWUCB, {'alpha': 1.4}],  # 0
-    [EFF_RAWUCB, {'alpha': 1.4, 'm': 2}],  # 1
-    [wSWA, {'alpha': 0.002}],  # 2
-    [wSWA, {'alpha': 0.02}],  # 3
-    [wSWA, {'alpha': 0.2}],  # 4
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.01}],  # 5
-    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.1}],  # 6
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.2}],  # 7
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.3}],  # 8
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.5}],  # 9
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.9}],  # 10
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 2.1}],  # 11
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 3}],  # 12
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 10}],  # 13
-  ]
-
-
-  data = {}
-  for policy in policies:
-    quantile = False
-    policy_name = str(policy[0](nbArms=2, **policy[1]))
-    policy_name_nospace = policy_name.replace(' ', '_')
-    policy_data = [
-      np.load(os.path.join('./data', file)) for file in os.listdir('./data') if
-      file.startswith("REGRET_" + policy_name_nospace)
-    ]
-    if not policy_data:
-      continue
-    policy_data_array = np.concatenate(policy_data, axis=0)
-    print(len(policy_data), policy_data_array.shape)
-    del policy_data
-    if quantile :
-      data[policy_name] = {
-        "mean": policy_data_array.mean(axis=0),
-        "uppq": np.quantile(policy_data_array, 0.9, axis=0),
-        "lowq": np.quantile(policy_data_array, 0.1, axis=0)
-      }
-    else:
-      data[policy_name] = {
-        "mean": policy_data_array.mean(axis=0),
-      }
-    del policy_data_array
+  # policies = [
+  #   [RAWUCB, {'alpha': 1.4}],  # 0
+  #   [EFF_RAWUCB, {'alpha': 1.4, 'm': 2}],  # 1
+  #   [wSWA, {'alpha': 0.002}],  # 2
+  #   [wSWA, {'alpha': 0.02}],  # 3
+  #   [wSWA, {'alpha': 0.2}],  # 4
+  #   #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.01}],  # 5
+  #   [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.1}],  # 6
+  #   #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.2}],  # 7
+  #   #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.3}],  # 8
+  #   #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.5}],  # 9
+  #   #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.9}],  # 10
+  #   #[EFF_RAWUCB, {'alpha': 1.4, 'm': 2.1}],  # 11
+  #   #[EFF_RAWUCB, {'alpha': 1.4, 'm': 3}],  # 12
+  #   #[EFF_RAWUCB, {'alpha': 1.4, 'm': 10}],  # 13
+  # ]
+  #
+  #
+  # data = {}
+  # for policy in policies:
+  #   quantile = False
+  #   policy_name = str(policy[0](nbArms=2, **policy[1]))
+  #   policy_name_nospace = policy_name.replace(' ', '_')
+  #   policy_data = [
+  #     np.load(os.path.join('./data', file)) for file in os.listdir('./data') if
+  #     file.startswith("REGRET_" + policy_name_nospace)
+  #   ]
+  #   if not policy_data:
+  #     continue
+  #   policy_data_array = np.concatenate(policy_data, axis=0)
+  #   print(len(policy_data), policy_data_array.shape)
+  #   del policy_data
+  #   if quantile :
+  #     data[policy_name] = {
+  #       "mean": policy_data_array.mean(axis=0),
+  #       "uppq": np.quantile(policy_data_array, 0.9, axis=0),
+  #       "lowq": np.quantile(policy_data_array, 0.1, axis=0)
+  #     }
+  #   else:
+  #     data[policy_name] = {
+  #       "mean": policy_data_array.mean(axis=0),
+  #     }
+  #   del policy_data_array
 

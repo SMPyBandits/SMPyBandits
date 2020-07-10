@@ -38,7 +38,7 @@ class EFF_FEWA(BasePolicy):
   We use the confidence level :math:`\delta_t = \frac{1}{t^\alpha}`.
    """
 
-  def __init__(self, nbArms, alpha=0.06, subgaussian=1, m=None, delta=None):
+  def __init__(self, nbArms, alpha=0.06, subgaussian=1, m=None, delta=None, delay = False):
     super(EFF_FEWA, self).__init__(nbArms)
     self.alpha = alpha
     self.nbArms = nbArms
@@ -52,6 +52,7 @@ class EFF_FEWA(BasePolicy):
     # [0,:,:] : current statistics, [1,:,:]: pending statistics, [2,:,:]: number of sample in the pending statistics
     self.windows = np.array([1, int(np.ceil(self.grid))])
     self.outlogconst = self._append_thresholds(self.windows)
+    self.delay = np.array([0, np.nan]) if delay else []
     self.idx_nan = np.ones(nbArms)
 
   def __str__(self):
@@ -73,11 +74,16 @@ class EFF_FEWA(BasePolicy):
       self.statistics = np.append(self.statistics, np.nan * np.ones([3, self.nbArms, add_size]), axis=2)
       self.windows = np.append(self.windows, np.array(self._compute_windows(self.windows[-1], add_size), dtype=np.double))
       self.outlogconst = self._append_thresholds(self.windows)
+      if len(self.delay):
+        self.delay = np.append(self.delay, np.nan * np.ones(add_size))
     self.statistics[1, arm, 0] = reward
     self.statistics[2, arm, 0] = 1
     self.statistics[1, arm, 1:] += reward
     self.statistics[2, arm, 1:] += 1
     idx = np.where((self.statistics[2, arm, :] == self.windows))[0]
+    if len(self.delay):
+      self.delay += 1
+      self.delay[idx] = 0
     self.statistics[0, arm, idx] = self.statistics[1, arm, idx]
     if int(self.idx_nan[arm] -1) in idx:
       idx = np.append(idx, int(self.idx_nan[arm]))
@@ -87,7 +93,8 @@ class EFF_FEWA(BasePolicy):
   def choice(self):
     remainingArms = self.armSet.copy()
     i = 0
-    selected = remainingArms[np.isnan(self.statistics[0, :, i])]
+    selected = remainingArms[np.isnan(self.statistics[0, :, i])] if len(
+        remainingArms) != 1 else remainingArms
     sqrtlogt = np.sqrt(np.log(self._inlog()))
     while len(selected) == 0:
       thresh = np.max(self.statistics[0, remainingArms, i]) - sqrtlogt * self.outlogconst[i]
@@ -138,16 +145,21 @@ class FEWA(EFF_FEWA):
       return r"FEWA($\alpha={:.3g}$)".format(self.alpha)
 
 
+
+
 if __name__ == "__main__":
   # Code for debugging purposes.
   start = time.time()
-  HORIZON = 1000
+  HORIZON = 100
   sigma = 1
   policy = FEWA(5, subgaussian=sigma, alpha=0.06)
   reward = {0: 0, 1: 0.2, 2: 0.4, 3: 0.6, 4: 0.8}
+  res = []
   for t in range(HORIZON):
     choice = policy.choice()
     policy.getReward(choice, reward[choice])
+    res.append(policy.delay.copy())
+
   print(time.time() -start)
   print(policy.statistics.shape)
   print(policy.idx_nan)
