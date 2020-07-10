@@ -93,33 +93,50 @@ class RAWUCB(EFF_RAWUCB):
         return r"RAW-UCB($\alpha={:.3g}$)".format(self.alpha)
 
 
-class EFF_RAWUCB_asymptotic(EFF_RAWUCB):
+class EFF_RAWUCB_pp(EFF_RAWUCB):
     """
-    Efficient Rotting Adaptive Window Upper Confidence Bound (RAW-UCB) [Seznec et al.,  2019b, WIP]
+    Efficient Rotting Adaptive Window Upper Confidence Bound ++ (RAW-UCB++) [Seznec et al.,  2020, Thesis]
     We use the confidence level :math:`\delta_t = \frac{1}{t(1+log(t)^\Beta)}`.
     :math:`\Beta=2` corresponds to an asymptotic optimal tuning of UCB for stationnary bandits
     (Bandit Algorithms, Lattimore and Szepesvari,  Chapter 7, https://tor-lattimore.com/downloads/book/book.pdf)
     """
 
     def __init__(self, nbArms, subgaussian=1, beta=2, m =2):
-        super(EFF_RAWUCB_asymptotic, self).__init__(nbArms=nbArms, subgaussian=subgaussian, alpha=1, m=m)
+        super(EFF_RAWUCB_pp, self).__init__(nbArms=nbArms, subgaussian=subgaussian, alpha=1, m=m)
         self.beta = beta
 
     def __str__(self):
         print(self.beta)
-        return r"EFF-RAW-UCB($\delta_t=\frac{1}{t(1+log(t)^{:.3g}}$)".format(self.beta)
+        return r"EFF-RAW-UCB++($\beta={:.3g}, \, m={:.3g}$)".format(self.beta, self.grid)
 
-    def _inlog(self):
-        return self.t * (1 + np.log(self.t) ** self.beta)
+    def _compute_ucb(self):
+        return (self.statistics[0, :, :] / self.windows + self.outlogconst * np.sqrt(np.log(self._inlog(self.windows))))
 
+    def _inlog(self, w):
+        moss_confidence = self.t/(w * self.nbArms)
+        moss_confidence[moss_confidence < 1] = 1
+        inlog = moss_confidence * (1 + np.log(moss_confidence)) ** self.beta
+        print(self.outlogconst* np.sqrt(np.log(inlog)), self.windows)
+        return inlog
+
+class RAWUCB_pp(EFF_RAWUCB_pp):
+    """
+    Rotting Adaptive Window Upper Confidence Bound (RAW-UCB) [Seznec et al.,  2019b, WIP]
+    We use the confidence level :math:`\delta_t = \frac{1}{t^\alpha}`.
+    """
+    def __init__(self, nbArms, subgaussian=1, beta=2):
+        super(EFF_RAWUCB_pp, self).__init__(nbArms=nbArms, subgaussian=subgaussian, beta=beta, m=1 + 1e-15)
+
+    def __str__(self):
+        return r"RAW-UCB++($\beta={:.3g}$)".format(self.beta)
 
 if __name__ == "__main__":
     # Code for debugging purposes.
     start = time.time()
-    HORIZON = 20
+    HORIZON = 10**4
     sigma = 1
     reward = {0: 0, 1: 0.2, 2: 0.4, 3: 0.6, 4: 0.8}
-    policy = RAWUCB(5, subgaussian=sigma, alpha=1.4)
+    policy = EFF_RAWUCB_pp(5, subgaussian=sigma, beta=2)
     for t in range(HORIZON):
         choice = policy.choice()
         policy.getReward(choice, reward[choice])

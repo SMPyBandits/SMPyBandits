@@ -218,7 +218,7 @@ from .MEGA import MEGA  # Cf. [Avner & Mannor, 2014](https://arxiv.org/abs/1404.
 # --- Rotting bandits
 from .SWA import SWA, wSWA
 from .FEWA import FEWA, EFF_FEWA
-from .RAWUCB import RAWUCB, EFF_RAWUCB, EFF_RAWUCB_asymptotic, EFF_RAWklUCB
+from .RAWUCB import RAWUCB, EFF_RAWUCB, EFF_RAWUCB_pp, EFF_RAWklUCB
 from .GreedyOracle import GreedyOracle, GreedyPolicy
 
 # --- Utility functions
