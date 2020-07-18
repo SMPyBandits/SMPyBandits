@@ -13,7 +13,7 @@ import os
 import logging
 import sys
 
-date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
 PARALLEL = -1  # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
 REPETITIONS = 1 if len(sys.argv) < 3 else int(sys.argv[2])  # Set the number of repetitions
 HORIZON = T = 10**6  # Horizon T
@@ -29,7 +29,7 @@ policies = [
   [EFF_RAWUCB_pp, {'beta': 2, 'm': 1.01}],  # 4
   [EFF_RAWUCB_pp, {'beta': 3, 'm': 1.01}],  # 5
 ]
-policy_ind = 2 if len(sys.argv) == 1 else int(sys.argv[1])
+policy_ind = 0 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
 policy_name = str(policy[0](nbArms=2, **policy[1]))
 policy_name_nospace = policy_name.replace(' ', '_')

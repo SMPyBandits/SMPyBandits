@@ -18,7 +18,7 @@ import os
 import logging
 import sys
 
-date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
 ### SET Policies
 policies = [
     [FEWA, {'alpha': .01, 'delta': 1, 'subgaussian': 1}],
