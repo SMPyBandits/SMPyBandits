@@ -45,7 +45,7 @@ logging.basicConfig(filename=os.path.join('./data/logging', date + '.log'), leve
 logging.info("Policy : %s$" % (policy_name))
 
 ### SET L/2
-mus = [1]
+mus = [0.01, 1]
 logging.info("CONFIG : CPU %s" % os.cpu_count())
 logging.info("CONFIG : REPETITIONS %s" % REPETITIONS)
 logging.info("CONFIG : HORIZON %s" % HORIZON)
