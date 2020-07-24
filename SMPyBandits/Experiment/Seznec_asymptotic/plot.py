@@ -1,9 +1,9 @@
 """
 author: Julien SEZNEC
-Plot utility to reproduce Efficient algorithms experiment figure (thesis)
+Plot utility to reproduce RAWUCB++ algorithms experiment figure (thesis)
 """
 from matplotlib import pyplot as plt
-from SMPyBandits.Policies import wSWA, FEWA, EFF_FEWA, RAWUCB, EFF_RAWUCB
+from SMPyBandits.Policies import MOSSAnytime, EFF_RAWUCB, EFF_RAWUCB_pp, UCB
 import os
 import numpy as np
 
@@ -12,7 +12,7 @@ plt.style.use('style.mplstyle')
 MARKERS = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
 
 
-def fig_eff(data,  name='fig_eff.pdf'):
+def fig_asymp(data,  name='fig_asy.pdf'):
   # --------------  PLOT  --------------
   fig, ax = plt.subplots(figsize=(12, 10))
   for i, policy in enumerate(data):
@@ -41,23 +41,20 @@ def fig_eff(data,  name='fig_eff.pdf'):
 
 
 if __name__ == "__main__":
-  policies = [
-    [RAWUCB, {'alpha': 1.4}],  # 0
-    [EFF_RAWUCB, {'alpha': 1.4, 'm': 2}],  # 1
-    #[wSWA, {'alpha': 0.002}],  # 2
-    #[wSWA, {'alpha': 0.02}],  # 3
-    [wSWA, {'alpha': 0.2}],  # 4
-    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.01}],  # 5
-    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.1}],  # 6
-    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.2}],  # 7
-    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.3}],  # 8
-    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.5}],  # 9
-    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.9}],  # 10
-    [EFF_RAWUCB, {'alpha': 1.4, 'm': 2.1}],  # 11
-    [EFF_RAWUCB, {'alpha': 1.4, 'm': 3}],  # 12
-    [EFF_RAWUCB, {'alpha': 1.4, 'm': 10}],  # 13
-  ]
+  mus = [0.01, 1]
   data = {}
+  for mu in mus :
+    data[mu] = {}
+  policies = [
+    [MOSSAnytime, {'alpha': 3}],  # 0
+    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.01}],  # 1
+    [EFF_RAWUCB_pp, {'beta': 0, 'm': 1.01}],  # 2
+    [EFF_RAWUCB_pp, {'beta': 1, 'm': 1.01}],  # 3
+    [EFF_RAWUCB_pp, {'beta': 2, 'm': 1.01}],  # 4
+    [EFF_RAWUCB_pp, {'beta': 3, 'm': 1.01}],  # 5
+    [UCB, {'beta': 3, 'm': 1.01}],  # 5
+
+  ]
   for policy in policies:
     quantile = False
     policy_name = str(policy[0](nbArms=2, **policy[1]))
@@ -68,19 +65,20 @@ if __name__ == "__main__":
     ]
     if not policy_data:
       continue
-    policy_data_array = np.concatenate(policy_data, axis=1)[0,:,:]
+    policy_data_array = np.concatenate(policy_data, axis=1)
     print(len(policy_data), policy_data_array.shape)
     del policy_data
-    if quantile :
-      data[policy_name] = {
-        "mean": policy_data_array.mean(axis=0),
-        "uppq": np.quantile(policy_data_array, 0.9, axis=0),
-        "lowq": np.quantile(policy_data_array, 0.1, axis=0)
-      }
-    else:
-      data[policy_name] = {
-        "mean": policy_data_array.mean(axis=0),
-      }
+    for i, mu in enumerate(mus):
+      if quantile :
+        data[mu][policy_name] = {
+          "mean": policy_data_array[i,:,:].mean(axis=0),
+          "uppq": np.quantile(policy_data_array[i,:,:], 0.9, axis=0),
+          "lowq": np.quantile(policy_data_array[i,:,:], 0.1, axis=0)
+        }
+      else:
+        data[mu][policy_name] = {
+          "mean": policy_data_array[i,:,:].mean(axis=0),
+        }
     del policy_data_array
     # policy_data_time = [
     #   np.load(os.path.join('./data', file))
@@ -89,4 +87,5 @@ if __name__ == "__main__":
     # ]
     # time_array = np.concatenate(policy_data, axis=1)[0, :, :]
     # data[policy_name]["time_mean"] = time_array.mean(axis=0)
-  fig_eff(data, name='try.pdf')
+  for mu in data:
+    fig_asymp(data[mu], name='try%s.pdf'%mu)

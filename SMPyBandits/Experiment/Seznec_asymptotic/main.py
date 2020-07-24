@@ -5,7 +5,7 @@ For the thesis manuscript.
 """
 
 from SMPyBandits.Arms import RestedRottingGaussian, UnboundedGaussian as Gaussian
-from SMPyBandits.Policies import  GreedyOracle, RAWUCB, EFF_RAWUCB, EFF_RAWUCB_pp, MOSSAnytime
+from SMPyBandits.Policies import  GreedyOracle, RAWUCB, EFF_RAWUCB, EFF_RAWUCB_pp, MOSSAnytime, UCB
 from SMPyBandits.Environment.MAB_rotting import repetedRuns
 import numpy as np
 import datetime
@@ -14,7 +14,7 @@ import logging
 import sys
 
 date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
-PARALLEL = -1  # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
+PARALLEL = False  # Set positive int to indicate the number of core, -1 to use all the cores, and False to not parallelize
 REPETITIONS = 1 if len(sys.argv) < 3 else int(sys.argv[2])  # Set the number of repetitions
 HORIZON = T = 10**6  # Horizon T
 sigma = 1  # Gaussian noise std
@@ -28,8 +28,9 @@ policies = [
   [EFF_RAWUCB_pp, {'beta': 1, 'm': 1.01}], # 3
   [EFF_RAWUCB_pp, {'beta': 2, 'm': 1.01}],  # 4
   [EFF_RAWUCB_pp, {'beta': 3, 'm': 1.01}],  # 5
+  [UCB, {}], #6
 ]
-policy_ind = 0 if len(sys.argv) == 1 else int(sys.argv[1])
+policy_ind = 4 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
 policy_name = str(policy[0](nbArms=2, **policy[1]))
 policy_name_nospace = policy_name.replace(' ', '_')
@@ -42,7 +43,7 @@ logging.basicConfig(filename=os.path.join('./data/logging', date + '.log'), leve
 logging.info("Policy : %s$" % (policy_name))
 
 ### SET L/2
-mus = [0.01, 1]
+mus = [1]
 logging.info("CONFIG : CPU %s" % os.cpu_count())
 logging.info("CONFIG : REPETITIONS %s" % REPETITIONS)
 logging.info("CONFIG : HORIZON %s" % HORIZON)
