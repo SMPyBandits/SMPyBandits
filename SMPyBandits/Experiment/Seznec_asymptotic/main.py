@@ -29,6 +29,8 @@ policies = [
   [EFF_RAWUCB_pp, {'beta': 2, 'm': 1.01}],  # 4
   [EFF_RAWUCB_pp, {'beta': 3, 'm': 1.01}],  # 5
   [UCB, {}], #6
+  [EFF_RAWUCB_pp, {'beta': 2.5, 'm': 1.01}],  # 7
+  [EFF_RAWUCB_pp, {'beta': 3.5, 'm': 1.01}],  # 8
 ]
 policy_ind = 4 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
