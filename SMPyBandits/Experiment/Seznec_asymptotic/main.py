@@ -74,8 +74,8 @@ for m, mu in enumerate(mus):
   )
   regret = oracle_rew - rew
   regret_res.append(regret)
-  time_res.append(time)
+ # time_res.append(time)
 logging.info("EVENT : SAVING ... ")
 np.save(regret_path, np.array(regret_res))
-np.save(time_path, np.array(regret_res))
+#np.save(time_path, np.array(regret_res))
 logging.info("EVENT : END ... ")
