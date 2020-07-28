@@ -96,9 +96,7 @@ class RAWUCB(EFF_RAWUCB):
 class EFF_RAWUCB_pp(EFF_RAWUCB):
     """
     Efficient Rotting Adaptive Window Upper Confidence Bound ++ (RAW-UCB++) [Seznec et al.,  2020, Thesis]
-    We use the confidence level :math:`\delta_t = \frac{1}{t(1+log(t)^\Beta)}`.
-    :math:`\Beta=2` corresponds to an asymptotic optimal tuning of UCB for stationnary bandits
-    (Bandit Algorithms, Lattimore and Szepesvari,  Chapter 7, https://tor-lattimore.com/downloads/book/book.pdf)
+    We use the confidence level :math:`\delta_t = \frac{Kh}{t(1+log(t/Kh)^\Beta)}`.
     """
 
     def __init__(self, nbArms, subgaussian=1, beta=2, m =2):
@@ -117,10 +115,29 @@ class EFF_RAWUCB_pp(EFF_RAWUCB):
         inlog = moss_confidence * (1 + np.log(moss_confidence)) ** self.beta
         return inlog
 
+class EFF_RAWUCB_pp2(EFF_RAWUCB):
+    """
+    Efficient Rotting Adaptive Window Upper Confidence Bound ++ (RAW-UCB++) [Seznec et al.,  2020, Thesis]
+    We use the confidence level :math:`\delta_t = \left(\frac{Kh}{t}\right)^{\alpha}`.
+    :math:`\Beta=2` corresponds to an asymptotic optimal tuning of UCB for stationnary bandits
+    (Bandit Algorithms, Lattimore and Szepesvari,  Chapter 7, https://tor-lattimore.com/downloads/book/book.pdf)
+    """
+
+    def __str__(self):
+        return r"EFF-RAW-UCB++($\alpha={:.3g}, \, m={:.3g}$)".format(self.alpha, self.grid)
+
+    def _compute_ucb(self):
+        return (self.statistics[0, :, :] / self.windows + self.outlogconst * np.sqrt(np.log(self._inlog(self.windows))))
+
+    def _inlog(self, w):
+        moss_confidence = self.t/(w * self.nbArms)
+        moss_confidence[moss_confidence < 1] = 1
+        return moss_confidence **self.alpha
+
 class RAWUCB_pp(EFF_RAWUCB_pp):
     """
     Rotting Adaptive Window Upper Confidence Bound (RAW-UCB) [Seznec et al.,  2019b, WIP]
-    We use the confidence level :math:`\delta_t = \frac{1}{t^\alpha}`.
+    We use the confidence level :math:`\delta_t = \frac{Kh}{t^\alpha}`.
     """
     def __init__(self, nbArms, subgaussian=1, beta=2):
         super(EFF_RAWUCB_pp, self).__init__(nbArms=nbArms, subgaussian=subgaussian, beta=beta, m=1 + 1e-15)
