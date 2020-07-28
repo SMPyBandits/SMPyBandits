@@ -5,7 +5,7 @@ For the thesis manuscript.
 """
 
 from SMPyBandits.Arms import RestedRottingGaussian, UnboundedGaussian as Gaussian
-from SMPyBandits.Policies import  GreedyOracle, RAWUCB, EFF_RAWUCB, EFF_RAWUCB_pp, MOSSAnytime, UCB
+from SMPyBandits.Policies import  GreedyOracle, RAWUCB, EFF_RAWUCB, EFF_RAWUCB_pp, EFF_RAWUCB_pp2, MOSSAnytime, UCB
 from SMPyBandits.Environment.MAB_rotting import repetedRuns
 import numpy as np
 import datetime
@@ -31,8 +31,13 @@ policies = [
   [UCB, {}], #6
   [EFF_RAWUCB_pp, {'beta': 2.5, 'm': 1.01}],  # 7
   [EFF_RAWUCB_pp, {'beta': 3.5, 'm': 1.01}],  # 8
+  [EFF_RAWUCB_pp2, {'alpha': 1.3, 'm': 1.01}],  # 9
+  [EFF_RAWUCB_pp2, {'alpha': 1.4, 'm': 1.01}],  # 10
+  [EFF_RAWUCB_pp2, {'alpha': 1.5, 'm': 1.01}],  # 11
+  [EFF_RAWUCB_pp2, {'alpha': 1.7, 'm': 1.01}],  # 12
+
 ]
-policy_ind = 4 if len(sys.argv) == 1 else int(sys.argv[1])
+policy_ind = 9 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
 policy_name = str(policy[0](nbArms=2, **policy[1]))
 policy_name_nospace = policy_name.replace(' ', '_')
@@ -69,8 +74,8 @@ for m, mu in enumerate(mus):
   )
   regret = oracle_rew - rew
   regret_res.append(regret)
-  time_res.append(time)
+ # time_res.append(time)
 logging.info("EVENT : SAVING ... ")
 np.save(regret_path, np.array(regret_res))
-np.save(time_path, np.array(regret_res))
+#np.save(time_path, np.array(time_res))
 logging.info("EVENT : END ... ")
