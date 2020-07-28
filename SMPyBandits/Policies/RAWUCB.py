@@ -96,7 +96,7 @@ class RAWUCB(EFF_RAWUCB):
 class EFF_RAWUCB_pp(EFF_RAWUCB):
     """
     Efficient Rotting Adaptive Window Upper Confidence Bound ++ (RAW-UCB++) [Seznec et al.,  2020, Thesis]
-    We use the confidence level :math:`\delta_t = \frac{Kh}{t(1+log(t/Kh)^\Beta)}`.
+    We use the confidence level :math:`\delta_{t,h} = \frac{Kh}{t(1+log(t/Kh)^\Beta)}`.
     """
 
     def __init__(self, nbArms, subgaussian=1, beta=2, m =2):
@@ -118,9 +118,7 @@ class EFF_RAWUCB_pp(EFF_RAWUCB):
 class EFF_RAWUCB_pp2(EFF_RAWUCB):
     """
     Efficient Rotting Adaptive Window Upper Confidence Bound ++ (RAW-UCB++) [Seznec et al.,  2020, Thesis]
-    We use the confidence level :math:`\delta_t = \left(\frac{Kh}{t}\right)^{\alpha}`.
-    :math:`\Beta=2` corresponds to an asymptotic optimal tuning of UCB for stationnary bandits
-    (Bandit Algorithms, Lattimore and Szepesvari,  Chapter 7, https://tor-lattimore.com/downloads/book/book.pdf)
+    We use the confidence level :math:`\delta_{t,h} = \left(\frac{Kh}{t}\right)^{\alpha}`.
     """
 
     def __str__(self):
