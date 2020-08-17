@@ -71,20 +71,20 @@ if __name__ == "__main__":
   sigma = 1  # Gaussian noise std
   K = 2
   policies = [
-    # [FEWA, {'alpha': .03, 'delta': 1}],  # 0
-
-    # [FEWA, {'alpha': .1, 'delta': 1}],  # 2
-    # [EFF_FEWA, {'alpha': 0.06, 'delta': 1}],  # 3
-    # [wSWA, {'alpha': 0.002}],  # 4
-    # [wSWA, {'alpha': 0.02}],  # 5
-    # [wSWA, {'alpha': 0.2}],  # 6
+    [FEWA, {'alpha': .03, 'delta': 1}],  # 0
+    [FEWA, {'alpha': .06, 'delta': 1}],  # 1
+    [FEWA, {'alpha': .1, 'delta': 1}],  # 2
+    [EFF_FEWA, {'alpha': 0.06, 'delta': 1}],  # 3
+    [wSWA, {'alpha': 0.002}],  # 4
+    [wSWA, {'alpha': 0.02}],  # 5
+    [wSWA, {'alpha': 0.2}],  # 6
     [RAWUCB, {'alpha': 1.4}],  # 7
     [RAWUCB, {'alpha': 4}],  # 8
-    [FEWA, {'alpha': .06}],  # 1
     [FEWA, {'alpha': 4}],  # 9
     [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'alpha0': 0,
                                'per_arm_restart': True, 'sig2': sigma ** 2, 'use_localization': False}],  # 10
     [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}],  # 11
+    [EFF_RAWUCB_pp2, {'alpha': 1.4, 'm': 1.01}],  # 12
   ]
   L = [0.02 * 1.25 ** (i) for i in range(30)]
   data = {}

@@ -11,21 +11,24 @@ plt.style.use('seaborn-colorblind')  # not the prettiest but accessible
 plt.style.use('style.mplstyle')
 MARKERS = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
 
+def lai_and_robbins_lb(X, delta, sigma = 1):
+  return 2*sigma**2*np.log(X)/delta
 
-def fig_asymp(data,  name='fig_asy.pdf'):
+def fig_asymp(data, delta,  name='fig_asy.pdf'):
   # --------------  PLOT  --------------
   fig, ax = plt.subplots(figsize=(12, 10))
   for i, policy in enumerate(data):
     X = range(data[policy]["mean"].shape[0])
-    ax.plot(X, data[policy]["mean"], label=policy, linewidth=3)
+    ax.semilogx(X, data[policy]["mean"], label=policy, linewidth=3)
     color = ax.get_lines()[-1].get_c()
     if "uppq" in data[policy]:
-      ax.plot(X, data[policy]["uppq"], label=None, linestyle='--', color=color,
+      ax.semilogx(X, data[policy]["uppq"], label=None, linestyle='--', color=color,
               linewidth=1)
-      ax.plot(X, data[policy]["lowq"], label=None, linestyle='--', color=color,
+      ax.semilogx(X, data[policy]["lowq"], label=None, linestyle='--', color=color,
               linewidth=1)
       plt.fill_between(X, data[policy]["uppq"], data[policy]["lowq"][:], alpha=.05,
                        color=color)
+  ax.semilogx(X, lai_and_robbins_lb(X,delta), label='Lai and Robbins ', linewidth=5, color = 'k')
   max_value = np.max([np.max(data[key]['uppq'] if 'uppq' in data[key] else data[key]['mean'])for key in data])
   plt.ylim(0, 1.2 * max_value)
   plt.legend(prop={'variant': 'small-caps'})
@@ -48,15 +51,18 @@ if __name__ == "__main__":
   policies = [
     [MOSSAnytime, {'alpha': 3}],  # 0
     [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.01}],  # 1
-    [EFF_RAWUCB_pp, {'beta': 0, 'm': 1.01}],  # 2
-    [EFF_RAWUCB_pp, {'beta': 1, 'm': 1.01}],  # 3
+    #[EFF_RAWUCB_pp, {'beta': 0, 'm': 1.01}],  # 2
+    #[EFF_RAWUCB_pp, {'beta': 1, 'm': 1.01}],  # 3
     [EFF_RAWUCB_pp, {'beta': 2, 'm': 1.01}],  # 4
+    [EFF_RAWUCB_pp, {'beta': 2.5, 'm': 1.01}],  # 4
     [EFF_RAWUCB_pp, {'beta': 3, 'm': 1.01}],  # 5
-    [UCB, {'beta': 3, 'm': 1.01}],  # 5
+    [EFF_RAWUCB_pp, {'beta': 3.5, 'm': 1.01}],  # 4
+    [UCB, {}],  # 5
 
   ]
   for policy in policies:
     quantile = False
+    print(str(policy[0](nbArms=2, **policy[1])))
     policy_name = str(policy[0](nbArms=2, **policy[1]))
     policy_name_nospace = policy_name.replace(' ', '_')
     policy_data = [
@@ -64,6 +70,7 @@ if __name__ == "__main__":
       file.startswith("REGRET_" + policy_name_nospace)
     ]
     if not policy_data:
+      print('no data')
       continue
     policy_data_array = np.concatenate(policy_data, axis=1)
     print(len(policy_data), policy_data_array.shape)

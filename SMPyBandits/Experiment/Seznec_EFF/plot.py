@@ -34,6 +34,7 @@ def fig_eff(data,  name='fig_eff.pdf'):
   ax.grid(False)
   ax.xaxis.set_label_coords(0.5, -0.08)
   ax.yaxis.set_label_coords(-0.09, 0.5)
+  ax.grid(False)
   # -------------- SAVE --------------
   plt.savefig(name)
 
@@ -43,21 +44,19 @@ if __name__ == "__main__":
   policies = [
     [RAWUCB, {'alpha': 1.4}],  # 0
     [EFF_RAWUCB, {'alpha': 1.4, 'm': 2}],  # 1
-    [wSWA, {'alpha': 0.002}],  # 2
-    [wSWA, {'alpha': 0.02}],  # 3
+    #[wSWA, {'alpha': 0.002}],  # 2
+    #[wSWA, {'alpha': 0.02}],  # 3
     [wSWA, {'alpha': 0.2}],  # 4
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.01}],  # 5
+    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.01}],  # 5
     [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.1}],  # 6
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.2}],  # 7
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.3}],  # 8
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.5}],  # 9
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 1.9}],  # 10
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 2.1}],  # 11
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 3}],  # 12
-    #[EFF_RAWUCB, {'alpha': 1.4, 'm': 10}],  # 13
+    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.2}],  # 7
+    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.3}],  # 8
+    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.5}],  # 9
+    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.9}],  # 10
+    [EFF_RAWUCB, {'alpha': 1.4, 'm': 2.1}],  # 11
+    [EFF_RAWUCB, {'alpha': 1.4, 'm': 3}],  # 12
+    [EFF_RAWUCB, {'alpha': 1.4, 'm': 10}],  # 13
   ]
-
-
   data = {}
   for policy in policies:
     quantile = False
@@ -69,7 +68,7 @@ if __name__ == "__main__":
     ]
     if not policy_data:
       continue
-    policy_data_array = np.concatenate(policy_data, axis=0)
+    policy_data_array = np.concatenate(policy_data, axis=1)[0,:,:]
     print(len(policy_data), policy_data_array.shape)
     del policy_data
     if quantile :
@@ -83,4 +82,11 @@ if __name__ == "__main__":
         "mean": policy_data_array.mean(axis=0),
       }
     del policy_data_array
-
+    # policy_data_time = [
+    #   np.load(os.path.join('./data', file))
+    #   for file in os.listdir('./data') if
+    #   file.startswith("TIME_" + policy_name_nospace)
+    # ]
+    # time_array = np.concatenate(policy_data, axis=1)[0, :, :]
+    # data[policy_name]["time_mean"] = time_array.mean(axis=0)
+  fig_eff(data, name='try.pdf')

@@ -34,9 +34,9 @@ except ImportError:
 
 class EFF_RAWUCB(EFF_FEWA):
     """
-    Efficient Rotting Adaptive Window Upper Confidence Bound (RAW-UCB) [Seznec et al.,  2019b, WIP]
+    Efficient Rotting Adaptive Window Upper Confidence Bound (RAW-UCB) [Seznec et al.,  2020]
     Efficient trick described in [Seznec et al.,  2019a, https://arxiv.org/abs/1811.11043] (m=2)
-    and [Seznec et al.,  2019b, WIP] (m<=2)
+    and [Seznec et al.,  2020] (m<=2)
     We use the confidence level :math:`\delta_t = \frac{1}{t^\alpha}`.
     """
 
@@ -83,7 +83,7 @@ class EFF_RAWklUCB(EFF_RAWUCB):
 
 class RAWUCB(EFF_RAWUCB):
     """
-    Rotting Adaptive Window Upper Confidence Bound (RAW-UCB) [Seznec et al.,  2019b, WIP]
+    Rotting Adaptive Window Upper Confidence Bound (RAW-UCB) [Seznec et al.,  2020]
     We use the confidence level :math:`\delta_t = \frac{1}{t^\alpha}`.
     """
     def __init__(self, nbArms, subgaussian=1, alpha=1):
