@@ -27,7 +27,7 @@ logging.basicConfig(filename=os.path.join('./data/logging', date + '.log'), leve
 
 # Arms & DATA
 DAY = 2 if len(sys.argv) == 1 else int(sys.argv[1])
-data_file = '/Reward/reward_data_day_%s.csv' % (DAY)
+data_file = './Reward/reward_data_day_%s.csv' % (DAY)
 DRAWS = 10
 logging.info("CONSTANT CONFIG : DATA %s" % data_file)
 df = pd.read_csv(data_file, index_col=0).transpose().reset_index(drop=True)
