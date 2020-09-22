@@ -86,25 +86,25 @@ def split_dataset(df, traffic, freq=10):
             .apply(lambda liste: pd.Series(liste[::freq])) for d in dfs
     ]
     for i, d in enumerate(dfs):
-        d.to_csv('./data/Reward/reward_data_day_%s.csv' % (i + 1))
+        d.to_csv('./Reward/reward_data_day_%s.csv' % (i + 1))
     return dfs
 
 
-def plot_reward(df, i):
+def plot_reward(df, i,freq=1000):
     """
     Plot the reward functions.
     """
     fig, ax = plt.subplots(figsize=(12, 10))
-    df.apply(lambda data: ax.plot(range(len(data)), data, rasterized = True), axis=1)
+    df.apply(lambda data: ax.plot(range(len(data))[::freq], data[::freq]), axis=1)
     ax.set_ylim([0, 0.075])
     ax.set_xlabel('Round (t)')
     ax.set_ylabel("Arms Average Reward")
     ax.set_title("Day %s - $K = %s$" % (i + 1, len(df)), y= 1.03)
-    fig.savefig("./data/Reward/reward_plot_day%s.pdf" % (i + 1), dpi = 600)
+    fig.savefig("./Reward/reward_plot_day%s.pdf" % (i + 1), dpi = 600)
 
 
 if __name__ == '__main__':
-    os.makedirs('./data/Reward/', exist_ok=True)
+    os.makedirs('./Reward/', exist_ok=True)
     if not os.path.isfile('./data/R6A/out.csv'):
         merge_datasets()
     logging.info("Prepare dataset")

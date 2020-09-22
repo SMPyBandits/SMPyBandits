@@ -76,5 +76,4 @@ for m, mu in enumerate(mus):
  # time_res.append(time)
 logging.info("EVENT : SAVING ... ")
 np.save(regret_path, np.array(regret_res))
-#np.save(time_path, np.array(time_res))
 logging.info("EVENT : END ... ")
