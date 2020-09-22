@@ -20,18 +20,18 @@ plt.style.use('style.mplstyle')
 MARKERS = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
 
 
-def fig1(data, name='fig1.pdf'):
+def fig1(data, name='fig1.pdf', freq=1000):
     # --------------  PLOT  --------------
     fig,ax  = plt.subplots(figsize=(12, 10))
     for i, policy in enumerate(data):
         X = range(data[policy]["mean"].shape[0])
-        ax.plot(X, data[policy]["mean"], label=policy, linewidth=3)
+        ax.plot(X[::freq], data[policy]["mean"][::freq], label=policy, linewidth=3, color = 'gray' if i==6 else None)
         color = ax.get_lines()[-1].get_c()
-        ax.plot(X, data[policy]["uppq"], label=None, linestyle='--', color=color,
+        ax.plot(X[::freq], data[policy]["uppq"][::freq], label=None, linestyle='--', color=color,
                 linewidth=1)
-        ax.plot(X, data[policy]["lowq"], label=None, linestyle='--', color=color,
+        ax.plot(X[::freq], data[policy]["lowq"][::freq], label=None, linestyle='--', color=color,
                 linewidth=1)
-        plt.fill_between(X, data[policy]["uppq"], data[policy]["lowq"], alpha=.05,
+        plt.fill_between(X[::freq], data[policy]["uppq"][::freq], data[policy]["lowq"][::freq], alpha=.05,
                          color=color)
     max_value = np.max([np.max(data[key]['uppq']) for key in data])
     plt.ylim(0, 1.1 * max_value)
@@ -46,23 +46,23 @@ def fig1(data, name='fig1.pdf'):
 
 
 if __name__ == "__main__":
-    DAY = 2
-    data_file = 'data/Reward/reward_data_day_%s.csv' % (DAY)
+    DAY = 4
+    data_file = '/Reward/reward_data_day_%s.csv' % (DAY)
     DRAWS = 10
     df = pd.read_csv(data_file, index_col=0).transpose().reset_index(drop=True)
     K = len(df.columns)
     HORIZON = T = len(df)  # Horizon T
     SIGMA = (0.03 * 0.97 * DRAWS) ** .5
     policies = [
-        [EFF_RAWUCB, {'alpha': 1.4, 'subgaussian': SIGMA, 'delta': K, 'm': 1.1}],
-        [EFF_RAWUCB, {'alpha': 1.4, 'subgaussian': SIGMA, 'delta': K, 'm': 2}],
-        [EFF_RAWUCB, {'alpha': 4, 'subgaussian': SIGMA, 'delta': K, 'm': 1.1}],
-        [EFF_FEWA, {'alpha': .06, 'subgaussian': SIGMA, 'delta': K, 'm': 1.1}],
-        [EFF_FEWA, {'alpha': 4, 'subgaussian': SIGMA, 'delta': K, 'm': 1.1}],
+        # [EFF_RAWUCB, {'alpha': 1.4, 'subgaussian': SIGMA, 'm': 1.1}],
+        # [EFF_RAWUCB, {'alpha': 1.4, 'subgaussian': SIGMA, 'm': 2}],
+        # [EFF_RAWUCB, {'alpha': 4, 'subgaussian': SIGMA, 'm': 1.1}],
+        # [EFF_FEWA, {'alpha': .06, 'subgaussian': SIGMA, 'm': 1.1}],
+        # [EFF_FEWA, {'alpha': 4, 'subgaussian': SIGMA, 'm': 1.1}],
         [GaussianGLR_IndexPolicy,
          {'policy': klUCBloglog_forGLR, 'delta': sqrt(1 / T), 'alpha0': 0, 'per_arm_restart': True,
           'sig2': SIGMA ** 2}],
-        [Exp3S, {'alpha': 1 / T, 'gamma': min(1, sqrt(K * log(K * T) / T))}],
+        # [Exp3S, {'alpha': 1 / T, 'gamma': min(1, sqrt(K * log(K * T) / T))}],
     ]
     data = {}
     for policy in policies:
@@ -73,14 +73,14 @@ if __name__ == "__main__":
             file.startswith("DAY_%s_REGRET_%s_"%(DAY, policy_name_nospace))
         ]
         if not policy_data:
+            print(policy_name, 'no data')
             continue
         policy_data_array = np.concatenate(policy_data, axis=0)
-        print(len(policy_data), policy_data_array.shape)
-        print(data)
+        print(policy_name, len(policy_data), policy_data_array.shape)
         data[policy_name] = {
             "mean": policy_data_array.mean(axis=0),
             "uppq": np.quantile(policy_data_array, 0.9, axis=0),
             "lowq": np.quantile(policy_data_array, 0.1, axis=0)
         }
-    fig1(data)
+    fig1(data, "DAYtemp%s.pdf"%DAY)
 

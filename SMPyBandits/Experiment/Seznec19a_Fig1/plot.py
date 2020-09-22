@@ -18,42 +18,46 @@ plt.style.use('style.mplstyle')
 MARKERS = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
 
 
-def fig1A(data, L, save=True, name="fig1A.pdf"):
+def fig1A(data, L, save=True, name="fig1A.pdf", ylim=400):
   # --------------  PLOT  --------------
   fig, ax = plt.subplots(figsize=(12, 10))
   for i, policy in enumerate(data):
     ax.semilogx(L, data[policy]["mean"][:, -1], label=policy,
-                marker=MARKERS[i % len(MARKERS)], linewidth=3, markersize=6)
+                marker=MARKERS[i % len(MARKERS)], linewidth=3, markersize=6,
+            color='gray' if i == 6 else None)
     color = ax.get_lines()[-1].get_c()
     ax.semilogx(L, data[policy]["uppq"][:, -1], label=None, linestyle='--', color=color,
                 linewidth=1)
     ax.semilogx(L, data[policy]["lowq"][:, -1], label=None, linestyle='--', color=color,
                 linewidth=1)
     plt.fill_between(L, data[policy]["uppq"][:, -1], data[policy]["lowq"][:, -1], alpha=.05, color=color)
-  plt.ylim(0, 400)
+  plt.ylim(0, ylim)
   plt.legend(prop={'variant': 'small-caps'})
   plt.xlabel('$L$')
   plt.ylabel('Average regret at $T = 10^4$')
   ax.xaxis.set_label_coords(0.5, -0.08)
   ax.yaxis.set_label_coords(-0.09, 0.5)
+  ax.grid(False)
   # -------------- SAVE --------------
   if save:
     plt.savefig(name)
 
 
-def fig1BC(data, mus, mu_index=11, name='fig1B.pdf', ylim=300):
+def fig1BC(data, mus, mu_index=11, name='fig1B.pdf', ylim=300, freq=50):
   # --------------  PLOT  --------------
   L = mus[mu_index]
   fig, ax = plt.subplots(figsize=(12, 10))
   for i, policy in enumerate(data):
     X = range(data[policy]["mean"].shape[1])
-    ax.plot(X, data[policy]["mean"][mu_index, :], label=policy, linewidth=3)
+    ax.plot(X[::freq], data[policy]["mean"][mu_index, :][::freq], label=policy, linewidth=3,
+            color='gray' if i == 6 else None)
     color = ax.get_lines()[-1].get_c()
-    ax.plot(X, data[policy]["uppq"][mu_index, :], label=None, linestyle='--', color=color,
+    ax.plot(X[::freq], data[policy]["uppq"][mu_index, :][::freq], label=None, linestyle='--', color=color,
             linewidth=1)
-    ax.plot(X, data[policy]["lowq"][mu_index, :], label=None, linestyle='--', color=color,
+    ax.plot(X[::freq], data[policy]["lowq"][mu_index, :][::freq], label=None, linestyle='--', color=color,
             linewidth=1)
-    plt.fill_between(X, data[policy]["uppq"][mu_index, :], data[policy]["lowq"][mu_index, :], alpha=.05,
+    plt.fill_between(X[::freq], data[policy]["uppq"][mu_index, :][::freq], data[policy]["lowq"][mu_index, :][::freq],
+                     alpha=.05,
                      color=color)
   plt.ylim(0, ylim)
   plt.legend(prop={'variant': 'small-caps'})
@@ -61,6 +65,7 @@ def fig1BC(data, mus, mu_index=11, name='fig1B.pdf', ylim=300):
   plt.ylabel('Average regret $R_t$')
   ax.xaxis.set_label_coords(0.5, -0.08)
   ax.yaxis.set_label_coords(-0.09, 0.5)
+  ax.grid(False)
   plt.title('$L = {:.3g}$'.format(L), y=1.04)
   # -------------- SAVE --------------
   plt.savefig(name)
@@ -71,21 +76,25 @@ if __name__ == "__main__":
   sigma = 1  # Gaussian noise std
   K = 2
   policies = [
-    [FEWA, {'alpha': .03, 'delta': 1}],  # 0
-    [FEWA, {'alpha': .06, 'delta': 1}],  # 1
-    [FEWA, {'alpha': .1, 'delta': 1}],  # 2
-    [EFF_FEWA, {'alpha': 0.06, 'delta': 1}],  # 3
     [wSWA, {'alpha': 0.002}],  # 4
     [wSWA, {'alpha': 0.02}],  # 5
     [wSWA, {'alpha': 0.2}],  # 6
-    [RAWUCB, {'alpha': 1.4}],  # 7
-    [RAWUCB, {'alpha': 4}],  # 8
-    [FEWA, {'alpha': 4}],  # 9
-    [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'alpha0': 0,
-                               'per_arm_restart': True, 'sig2': sigma ** 2, 'use_localization': False}],  # 10
-    [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}],  # 11
-    [EFF_RAWUCB_pp2, {'alpha': 1.4, 'm': 1.01}],  # 12
   ]
+  # policies = [
+  #   [RAWUCB, {'alpha': 1.4}],  # 7
+  #   [RAWUCB, {'alpha': 4}],  # 8
+  #   [FEWA, {'alpha': .06, 'delta': 1}],  # 1
+  #   [FEWA, {'alpha': 4}],  # 9
+  #   [wSWA, {'alpha': 0.002}],  # 4
+  #   [wSWA, {'alpha': 0.02}],  # 5
+  #   [wSWA, {'alpha': 0.2}],  # 6
+  # ]
+  # policies =[
+  # [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'alpha0': 0,
+  #                         'per_arm_restart': True, 'sig2': sigma ** 2, 'use_localization': False}],  # 10
+  # [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}],  # 11
+  # [EFF_RAWUCB_pp2, {'alpha': 1.4, 'm': 1.01}],  # 12
+  #   ]
   L = [0.02 * 1.25 ** (i) for i in range(30)]
   data = {}
   for policy in policies:
@@ -97,7 +106,7 @@ if __name__ == "__main__":
     ]
     if not policy_data:
       continue
-    policy_data_array = np.concatenate(policy_data, axis=1)[:, :10, :]
+    policy_data_array = np.concatenate(policy_data, axis=1)
     print(len(policy_data), policy_data_array.shape)
     data[policy_name] = {
       "mean": policy_data_array.mean(axis=1),
@@ -105,6 +114,6 @@ if __name__ == "__main__":
       "lowq": np.quantile(policy_data_array, 0.1, axis=1)
     }
 
-  fig1A(data, L)
-  fig1BC(data, L, mu_index=11, name='fig1B.pdf')
-  fig1BC(data, L, mu_index=24, name='fig1C.pdf')
+  fig1A(data, L, name='fig1A_SWA.pdf', ylim=900)
+  fig1BC(data, L, mu_index=11, name='fig1B_SWA.pdf', ylim=350)
+  fig1BC(data, L, mu_index=24, name='fig1C_SWA.pdf', ylim=350)

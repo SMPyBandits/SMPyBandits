@@ -12,3 +12,6 @@ mathtext.fontset: stix
 font.family: STIXGeneral
 pdf.fonttype : 42
 ps.fonttype : 42
+axes.grid: False
+axes.edgecolor: .15
+axes.linewidth: 1.25
