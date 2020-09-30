@@ -45,7 +45,7 @@ policies = [
                              'per_arm_restart': True, 'sig2': sigma ** 2, 'use_localization': False}],  # 11
   [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}],  # 12
   [UCB, {}],  # 13
-  [Exp3, {'horizon': T}]  # 14
+  [Exp3, {'horizon': T}],  # 14
   [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.1}],  # 15
   [EFF_RAWUCB, {'alpha': 1.4, 'm': 2}],  # 16
   [EFF_RAWUCB_pp, {'alpha': 1.4, 'm': 1.01}],  # 17
