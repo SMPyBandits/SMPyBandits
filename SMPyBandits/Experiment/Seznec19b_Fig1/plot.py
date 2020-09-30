@@ -36,7 +36,7 @@ def fig1(data, name='fig1.pdf', freq=1000):
     max_value = np.max([np.max(data[key]['uppq']) for key in data])
     plt.ylim(0, 1.1 * max_value)
     plt.xlim(0, data[policy]["mean"].shape[0])
-    plt.legend(prop={'variant': 'small-caps'})
+    plt.legend(prop={'variant': 'small-caps'}, edgecolor = 'k')
     plt.xlabel('Round ($t$)')
     plt.ylabel('Average regret $R_t$')
     ax.xaxis.set_label_coords(0.5, -0.08)
@@ -47,22 +47,22 @@ def fig1(data, name='fig1.pdf', freq=1000):
 
 if __name__ == "__main__":
     DAY = 4
-    data_file = '/Reward/reward_data_day_%s.csv' % (DAY)
+    data_file = './Reward/reward_data_day_%s.csv' % (DAY)
     DRAWS = 10
     df = pd.read_csv(data_file, index_col=0).transpose().reset_index(drop=True)
     K = len(df.columns)
     HORIZON = T = len(df)  # Horizon T
     SIGMA = (0.03 * 0.97 * DRAWS) ** .5
     policies = [
-        # [EFF_RAWUCB, {'alpha': 1.4, 'subgaussian': SIGMA, 'm': 1.1}],
-        # [EFF_RAWUCB, {'alpha': 1.4, 'subgaussian': SIGMA, 'm': 2}],
-        # [EFF_RAWUCB, {'alpha': 4, 'subgaussian': SIGMA, 'm': 1.1}],
-        # [EFF_FEWA, {'alpha': .06, 'subgaussian': SIGMA, 'm': 1.1}],
-        # [EFF_FEWA, {'alpha': 4, 'subgaussian': SIGMA, 'm': 1.1}],
+        [EFF_RAWUCB, {'alpha': 1.4, 'subgaussian': SIGMA, 'm': 1.1}],
+        [EFF_RAWUCB, {'alpha': 1.4, 'subgaussian': SIGMA, 'm': 2}],
+        [EFF_RAWUCB, {'alpha': 4, 'subgaussian': SIGMA, 'm': 1.1}],
+        [EFF_FEWA, {'alpha': .06, 'subgaussian': SIGMA, 'm': 1.1}],
+        [EFF_FEWA, {'alpha': 4, 'subgaussian': SIGMA, 'm': 1.1}],
         [GaussianGLR_IndexPolicy,
          {'policy': klUCBloglog_forGLR, 'delta': sqrt(1 / T), 'alpha0': 0, 'per_arm_restart': True,
           'sig2': SIGMA ** 2}],
-        # [Exp3S, {'alpha': 1 / T, 'gamma': min(1, sqrt(K * log(K * T) / T))}],
+        [Exp3S, {'alpha': 1 / T, 'gamma': min(1, sqrt(K * log(K * T) / T))}],
     ]
     data = {}
     for policy in policies:
@@ -82,5 +82,5 @@ if __name__ == "__main__":
             "uppq": np.quantile(policy_data_array, 0.9, axis=0),
             "lowq": np.quantile(policy_data_array, 0.1, axis=0)
         }
-    fig1(data, "DAYtemp%s.pdf"%DAY)
+    fig1(data, "DAY%s.pdf"%DAY)
 

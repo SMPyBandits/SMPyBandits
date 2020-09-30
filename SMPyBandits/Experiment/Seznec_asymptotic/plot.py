@@ -32,7 +32,7 @@ def fig_asymp(data, delta,  name='fig_asy.pdf', freq=1000):
   ax.semilogx(X, lai_and_robbins_lb(X,delta), label="Lai and Robbins' lower bound", linewidth=5, color = 'k')
   max_value = np.max([np.max(data[key]['uppq'] if 'uppq' in data[key] else data[key]['mean'])for key in data])
   plt.ylim(0, 1.2 * max_value)
-  plt.legend(prop={'variant': 'small-caps'}, loc = 2)
+  plt.legend(prop={'variant': 'small-caps'}, loc = 2, edgecolor = 'k')
   plt.xlabel('Round ($t$)')
   plt.ylabel('Average regret $R_t$')
   plt.title('$\Delta = {:.3g}$'.format(delta), y=1.04)

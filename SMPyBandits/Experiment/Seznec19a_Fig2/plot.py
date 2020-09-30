@@ -22,7 +22,7 @@ plt.style.use('style.mplstyle')
 def fig2(data, name='fig2.pdf', ylim=2400, ylim2=500, freq=50):
   # --------------  PLOT  --------------
   legend_size = 0.2
-  fig, (ax1, ax2, ax3) = plt.subplots(1, 3, gridspec_kw={'width_ratios': [1, 1, legend_size]})
+  fig, (ax1, ax2, ax3) = plt.subplots(1, 3, gridspec_kw={'width_ratios': [1, 1, legend_size]}, figsize=(12, 10))
   N_arms = 9
   ind = np.arange(N_arms)  # the x locations for the groups
   width = 0.7  # the width of the bars
@@ -45,8 +45,8 @@ def fig2(data, name='fig2.pdf', ylim=2400, ylim2=500, freq=50):
                fontsize=18, color=color)
   ax1.set_ylim(0, ylim)
   ax1.set_xlim(0, T)
-  ax1.set_xlabel('Round ($t$)', fontsize=30)
-  ax1.set_ylabel('Average regret $R_t$', fontsize=30)
+  ax1.set_xlabel('Round ($t$)')
+  ax1.set_ylabel('Average regret $R_t$')
   ax1.xaxis.set_label_coords(0.5, -0.08)
   ax1.grid(False)
   ax2.set_xticks(ind + width / len(data))
@@ -54,14 +54,15 @@ def fig2(data, name='fig2.pdf', ylim=2400, ylim2=500, freq=50):
   xticks = [float(xtick) if j % 2 == 0 else '' for j, xtick in enumerate(xticks)]
   ax2.set_ylim(0, ylim2)
   ax2.set_xticklabels(xticks)
-  ax2.set_ylabel('Average regret per arm $R_T^i$ at $T = 25000$', fontsize=30)
-  ax2.set_xlabel("Arm's $\Delta_i$", fontsize=30)
+  ax2.set_ylabel('Average regret per arm $R_T^i$ ($T = 25000$)')
+  ax2.set_xlabel("Arm's $\Delta_i$")
   ax2.grid(False)
   ax2.xaxis.set_label_coords(0.5, -0.08)
   ax2.yaxis.set_label_coords(-0.08, 0.5)
   handles, labels = ax2.get_legend_handles_labels()
   pos = ax3.get_position()
-  fig.legend(handles, labels, loc=[0.9 * pos.x0 + 0.1 * pos.x1, (pos.y1 - pos.y0) / 2])
+  fig.legend(handles, labels, loc=[0.9 * pos.x0 + 0.1 * pos.x1, (pos.y1 - pos.y0) / 2], prop={'variant': 'small-caps'},
+             edgecolor='k')
   ax3.grid(False)
   ax3.axis('off')
   # Hide axes ticks
@@ -71,6 +72,7 @@ def fig2(data, name='fig2.pdf', ylim=2400, ylim2=500, freq=50):
   fig.set_size_inches(30, 10)
   fig.tight_layout()
   fig.savefig(name)
+
 
 def preproc_plot_fig2(policies, name='fig2.pdf', ylim=2400, ylim2=500, freq=50):
   data = {}
@@ -112,7 +114,7 @@ if __name__ == "__main__":
     [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / 25000), 'alpha0': 0,
                                'per_arm_restart': True, 'sig2': 1, 'use_localization': False}],
   ]
-  preproc_plot_fig2(policies, name="fig2_maint.pdf", ylim=1400, ylim2=700)
+  preproc_plot_fig2(policies, name="fig2_main.pdf", ylim=1400, ylim2=700)
 
   policies = [
     [wSWA, {'alpha': 0.002}],
@@ -125,4 +127,4 @@ if __name__ == "__main__":
     [Exp3S, {}],
     # [EFF_RAWUCB_pp2, {'alpha': 1.4, 'm': 1.01}],  # 12
   ]
-  preproc_plot_fig2(policies, name="fig2_SWAt.pdf", ylim=5000, ylim2=750)
+  preproc_plot_fig2(policies, name="fig2_SWA.pdf", ylim=5000, ylim2=750)

@@ -32,7 +32,7 @@ def fig1A(data, L, save=True, name="fig1A.pdf", ylim=400):
                 linewidth=1)
     plt.fill_between(L, data[policy]["uppq"][:, -1], data[policy]["lowq"][:, -1], alpha=.05, color=color)
   plt.ylim(0, ylim)
-  plt.legend(prop={'variant': 'small-caps'})
+  plt.legend(prop={'variant': 'small-caps'}, edgecolor = 'k')
   plt.xlabel('$L$')
   plt.ylabel('Average regret at $T = 10^4$')
   ax.xaxis.set_label_coords(0.5, -0.08)
@@ -48,19 +48,19 @@ def fig1BC(data, mus, mu_index=11, name='fig1B.pdf', ylim=300, freq=50):
   L = mus[mu_index]
   fig, ax = plt.subplots(figsize=(12, 10))
   for i, policy in enumerate(data):
-    X = range(data[policy]["mean"].shape[1])
-    ax.plot(X[::freq], data[policy]["mean"][mu_index, :][::freq], label=policy, linewidth=3,
+    X = sorted(list(range(0,data[policy]["mean"].shape[1], freq)) + [2538, 2765])
+    ax.plot(X, data[policy]["mean"][mu_index, X], label=policy, linewidth=3,
             color='gray' if i == 6 else None)
     color = ax.get_lines()[-1].get_c()
-    ax.plot(X[::freq], data[policy]["uppq"][mu_index, :][::freq], label=None, linestyle='--', color=color,
+    ax.plot(X, data[policy]["uppq"][mu_index, X], label=None, linestyle='--', color=color,
             linewidth=1)
-    ax.plot(X[::freq], data[policy]["lowq"][mu_index, :][::freq], label=None, linestyle='--', color=color,
+    ax.plot(X, data[policy]["lowq"][mu_index, X], label=None, linestyle='--', color=color,
             linewidth=1)
-    plt.fill_between(X[::freq], data[policy]["uppq"][mu_index, :][::freq], data[policy]["lowq"][mu_index, :][::freq],
+    plt.fill_between(X, data[policy]["uppq"][mu_index, X], data[policy]["lowq"][mu_index, X],
                      alpha=.05,
                      color=color)
   plt.ylim(0, ylim)
-  plt.legend(prop={'variant': 'small-caps'})
+  plt.legend(prop={'variant': 'small-caps'}, edgecolor = 'k')
   plt.xlabel('Round ($t$)')
   plt.ylabel('Average regret $R_t$')
   ax.xaxis.set_label_coords(0.5, -0.08)
@@ -70,31 +70,7 @@ def fig1BC(data, mus, mu_index=11, name='fig1B.pdf', ylim=300, freq=50):
   # -------------- SAVE --------------
   plt.savefig(name)
 
-
-if __name__ == "__main__":
-  HORIZON = T = 10000  # Horizon T
-  sigma = 1  # Gaussian noise std
-  K = 2
-  policies = [
-    [wSWA, {'alpha': 0.002}],  # 4
-    [wSWA, {'alpha': 0.02}],  # 5
-    [wSWA, {'alpha': 0.2}],  # 6
-  ]
-  # policies = [
-  #   [RAWUCB, {'alpha': 1.4}],  # 7
-  #   [RAWUCB, {'alpha': 4}],  # 8
-  #   [FEWA, {'alpha': .06, 'delta': 1}],  # 1
-  #   [FEWA, {'alpha': 4}],  # 9
-  #   [wSWA, {'alpha': 0.002}],  # 4
-  #   [wSWA, {'alpha': 0.02}],  # 5
-  #   [wSWA, {'alpha': 0.2}],  # 6
-  # ]
-  # policies =[
-  # [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'alpha0': 0,
-  #                         'per_arm_restart': True, 'sig2': sigma ** 2, 'use_localization': False}],  # 10
-  # [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}],  # 11
-  # [EFF_RAWUCB_pp2, {'alpha': 1.4, 'm': 1.01}],  # 12
-  #   ]
+def plot_all_fig(policies, ylimA=900, ylimB=350, ylimC=350, name=''):
   L = [0.02 * 1.25 ** (i) for i in range(30)]
   data = {}
   for policy in policies:
@@ -113,7 +89,36 @@ if __name__ == "__main__":
       "uppq": np.quantile(policy_data_array, 0.9, axis=1),
       "lowq": np.quantile(policy_data_array, 0.1, axis=1)
     }
+    fig1A(data, L, name='fig1A_%s.pdf'%name, ylim=ylimA)
+    fig1BC(data, L, mu_index=11, name='fig1B_%s.pdf'%name, ylim=ylimB)
+    fig1BC(data, L, mu_index=24, name='fig1C_%s.pdf'%name, ylim=ylimC)
 
-  fig1A(data, L, name='fig1A_SWA.pdf', ylim=900)
-  fig1BC(data, L, mu_index=11, name='fig1B_SWA.pdf', ylim=350)
-  fig1BC(data, L, mu_index=24, name='fig1C_SWA.pdf', ylim=350)
+
+if __name__ == "__main__":
+  HORIZON = T = 10000  # Horizon T
+  sigma = 1  # Gaussian noise std
+  K = 2
+  policies = [
+    [wSWA, {'alpha': 0.002}],  # 4
+    [wSWA, {'alpha': 0.02}],  # 5
+    [wSWA, {'alpha': 0.2}],  # 6
+  ]
+  plot_all_fig(policies, name="SWA")
+  policies = [
+    [RAWUCB, {'alpha': 1.4}],  # 7
+    [RAWUCB, {'alpha': 4}],  # 8
+    [FEWA, {'alpha': .06, 'delta': 1}],  # 1
+    [FEWA, {'alpha': 4}],  # 9
+    [wSWA, {'alpha': 0.002}],  # 4
+    [wSWA, {'alpha': 0.02}],  # 5
+    [wSWA, {'alpha': 0.2}],  # 6
+  ]
+  plot_all_fig(policies, name="main")
+  # policies =[
+  # [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'alpha0': 0,
+  #                         'per_arm_restart': True, 'sig2': sigma ** 2, 'use_localization': False}],  # 10
+  # [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}],  # 11
+  # [EFF_RAWUCB_pp2, {'alpha': 1.4, 'm': 1.01}],  # 12
+  #   ]
+
+
