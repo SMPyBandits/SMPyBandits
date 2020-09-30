@@ -99,12 +99,19 @@ class EFF_RAWUCB_pp(EFF_RAWUCB):
     We use the confidence level :math:`\delta_{t,h} = \frac{Kh}{t(1+log(t/Kh)^\Beta)}`.
     """
 
-    def __init__(self, nbArms, subgaussian=1, beta=2, m =2):
-        super(EFF_RAWUCB_pp, self).__init__(nbArms=nbArms, subgaussian=subgaussian, alpha=1, m=m)
+    def __init__(self, nbArms, subgaussian=1, alpha=1, beta=0, m =2):
+        super(EFF_RAWUCB_pp, self).__init__(nbArms=nbArms, subgaussian=subgaussian, alpha=alpha, m=m)
         self.beta = beta
 
     def __str__(self):
-        return r"EFF-RAW-UCB++($\beta={:.3g}, \, m={:.3g}$)".format(self.beta, self.grid)
+        if self.alpha == 1:
+            return r"EFF-RAW-UCB++($\beta={:.3g}, \, m={:.3g}$)".format(self.beta, self.grid)
+        elif self.beta == 0:
+            return r"EFF-RAW-UCB++($\alpha={:.3g}, \, m={:.3g}$)".format(self.alpha, self.grid)
+        else:
+            return r"EFF-RAW-UCB++($\alpha={:.3g}, \, $\beta={:.3g}, \, m={:.3g}$)".format(self.alpha, self.beta, self.grid)
+
+
 
     def _compute_ucb(self):
         return (self.statistics[0, :, :] / self.windows + self.outlogconst * np.sqrt(np.log(self._inlog(self.windows))))
@@ -112,25 +119,8 @@ class EFF_RAWUCB_pp(EFF_RAWUCB):
     def _inlog(self, w):
         moss_confidence = self.t/(w * self.nbArms)
         moss_confidence[moss_confidence < 1] = 1
-        inlog = moss_confidence * (1 + np.log(moss_confidence)) ** self.beta
+        inlog = moss_confidence * (1 + np.log(moss_confidence)) ** (self.beta/self.alpha)
         return inlog
-
-class EFF_RAWUCB_pp2(EFF_RAWUCB):
-    """
-    Efficient Rotting Adaptive Window Upper Confidence Bound ++ (RAW-UCB++) [Seznec et al.,  2020, Thesis]
-    We use the confidence level :math:`\delta_{t,h} = \left(\frac{Kh}{t}\right)^{\alpha}`.
-    """
-
-    def __str__(self):
-        return r"EFF-RAW-UCB++($\alpha={:.3g}, \, m={:.3g}$)".format(self.alpha, self.grid)
-
-    def _compute_ucb(self):
-        return (self.statistics[0, :, :] / self.windows + self.outlogconst * np.sqrt(np.log(self._inlog(self.windows))))
-
-    def _inlog(self, w):
-        moss_confidence = self.t/(w * self.nbArms)
-        moss_confidence[moss_confidence < 1] = 1
-        return moss_confidence **self.alpha
 
 class RAWUCB_pp(EFF_RAWUCB_pp):
     """
@@ -149,7 +139,7 @@ if __name__ == "__main__":
     HORIZON = 10**4
     sigma = 1
     reward = {0: 0, 1: 0.2, 2: 0.4, 3: 0.6, 4: 0.8}
-    policy = EFF_RAWUCB_pp(5, subgaussian=sigma, beta=2)
+    policy = EFF_RAWUCB_pp(5, subgaussian=sigma, alpha=1.4)
     for t in range(HORIZON):
         choice = policy.choice()
         policy.getReward(choice, reward[choice])
