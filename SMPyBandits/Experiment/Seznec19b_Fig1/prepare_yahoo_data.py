@@ -23,13 +23,13 @@ def merge_datasets():
     """
     Merge the 10 files and keep the three useful columns ['timestamp', 'article_id', 'click'] in out.csv
     """
-    out = open("./data/R6A/out.csv", "a+")
+    out = open("./Reward/R6A/out.csv", "a+")
     out.write('timestamp article_id click\n')
     for j in range(10):
-        f = gzip.open("./data/R6A/ydata-fp-td-clicks-v1_0.20090" + str(501 + j) + '.gz', "r")
+        f = gzip.open("./Reward/R6A/ydata-fp-td-clicks-v1_0.20090" + str(501 + j) + '.gz', "r")
         for i, line in enumerate(f.readlines()):
             if i % 10000 == 0:
-                logging.info("./data/R6A/ydata-fp-td-clicks-v1_0.20090" + str(501 + j) + ' : ' + str(i))
+                logging.info("./Reward/R6A/ydata-fp-td-clicks-v1_0.20090" + str(501 + j) + ' : ' + str(i))
             out.write(line.decode('utf-8').split('|')[0][:-1] + '\n')
 
 
@@ -38,7 +38,7 @@ def prepare_dataset():
     Download out.csv, cast the right datatypes and convert date
     :return: Dataframe - columns =  ['timestamp', 'article_id', 'click', 'date']
     """
-    df = pd.read_csv('./data/R6A/out.csv', usecols=['timestamp', 'article_id', 'click'], sep=' ')
+    df = pd.read_csv('./Reward/R6A/out.csv', usecols=['timestamp', 'article_id', 'click'], sep=' ')
     df = df.astype({'timestamp': int, 'article_id': int, 'click': bool})
     df['date'] = df.timestamp.apply(lambda dt: datetime.fromtimestamp(dt))
     return df
@@ -105,7 +105,7 @@ def plot_reward(df, i,freq=1000):
 
 if __name__ == '__main__':
     os.makedirs('./Reward/', exist_ok=True)
-    if not os.path.isfile('./data/R6A/out.csv'):
+    if not os.path.isfile('./Reward/R6A/out.csv'):
         merge_datasets()
     logging.info("Prepare dataset")
     df = prepare_dataset()
