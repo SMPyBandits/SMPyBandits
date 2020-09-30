@@ -5,7 +5,7 @@ For the thesis manuscript.
 """
 
 from SMPyBandits.Arms import RestedRottingGaussian, UnboundedGaussian as Gaussian
-from SMPyBandits.Policies import  GreedyOracle, RAWUCB, EFF_RAWUCB, EFF_RAWUCB_pp, EFF_RAWUCB_pp2, MOSSAnytime, UCB
+from SMPyBandits.Policies import  GreedyOracle, RAWUCB, EFF_RAWUCB, EFF_RAWUCB_pp,  MOSSAnytime, UCB
 from SMPyBandits.Environment.MAB_rotting import repetedRuns
 import numpy as np
 import datetime
