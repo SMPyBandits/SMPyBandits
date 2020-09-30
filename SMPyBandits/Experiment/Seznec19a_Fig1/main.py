@@ -11,7 +11,7 @@ https://arxiv.org/abs/1811.11043 (updated version)
 
 from SMPyBandits.Arms import RestedRottingGaussian
 from SMPyBandits.Policies import FEWA, EFF_FEWA, wSWA, GreedyOracle, RAWUCB, Exp3S, GaussianGLR_IndexPolicy, \
-  klUCBloglog_forGLR, EFF_RAWUCB_pp2
+  klUCBloglog_forGLR, EFF_RAWUCB_pp, EFF_RAWUCB
 from SMPyBandits.Environment.MAB_rotting import repetedRuns
 import numpy as np
 import datetime
@@ -41,7 +41,9 @@ policies = [
   [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'alpha0': 0,
                              'per_arm_restart': True, 'sig2': sigma ** 2, 'use_localization': False}],  # 10
   [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}],  # 11
-  [EFF_RAWUCB_pp2, {'alpha': 1.4, 'm': 1.01}],  # 12
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.1}],  # 12
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 2}],  # 13
+  [EFF_RAWUCB_pp, {'alpha': 1.4, 'm': 1.01}],  # 14
 ]
 policy_ind = 8 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]
