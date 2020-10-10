@@ -12,19 +12,19 @@ plt.style.use('style.mplstyle')
 MARKERS = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
 
 
-def fig_eff(data,  name='fig_eff.pdf'):
+def fig_eff(data,  name='fig_eff.pdf', freq= 2000):
   # --------------  PLOT  --------------
   fig, ax = plt.subplots(figsize=(12, 10))
   for i, policy in enumerate(data):
-    X = range(data[policy]["mean"].shape[0])
-    ax.plot(X, data[policy]["mean"], label=policy, linewidth=3, color= 'gray' if i==6 else None)
+    X = range(0,data[policy]["mean"].shape[0], freq)
+    ax.plot(X, data[policy]["mean"][X], label=policy, linewidth=3, color= 'gray' if i==6 else 'k' if i==1 else None)
     color = ax.get_lines()[-1].get_c()
     if "uppq" in data[policy]:
-      ax.plot(X, data[policy]["uppq"], label=None, linestyle='--', color=color,
+      ax.plot(X, data[policy]["uppq"][X], label=None, linestyle='--', color=color,
               linewidth=1)
-      ax.plot(X, data[policy]["lowq"], label=None, linestyle='--', color=color,
+      ax.plot(X, data[policy]["lowq"][X], label=None, linestyle='--', color=color,
               linewidth=1)
-      plt.fill_between(X, data[policy]["uppq"], data[policy]["lowq"][:], alpha=.05,
+      plt.fill_between(X, data[policy]["uppq"][X], data[policy]["lowq"][X], alpha=.05,
                        color=color)
   max_value = np.max([np.max(data[key]['uppq'] if 'uppq' in data[key] else data[key]['mean'])for key in data])
   plt.ylim(0, 1.2 * max_value)
@@ -37,6 +37,12 @@ def fig_eff(data,  name='fig_eff.pdf'):
   ax.grid(False)
   # -------------- SAVE --------------
   plt.savefig(name)
+
+def time_m(data):
+  res = {}
+  for pol in data:
+    res[pol] = data[pol]['time_mean'].sum()
+  return res
 
 
 
@@ -81,11 +87,13 @@ if __name__ == "__main__":
         "mean": policy_data_array.mean(axis=0),
         "uppq": np.quantile(policy_data_array, 0.9, axis=0),
         "lowq": np.quantile(policy_data_array, 0.1, axis=0),
-        "time_mean": policy_data_time_array.mean(axis=0)
+        "time_mean": policy_data_time_array.mean(axis=0),
+        "time_uppq": np.quantile(policy_data_time_array, 0.9, axis=0),
+        "time_lowq": np.quantile(policy_data_time_array, 0.1, axis=0)
       }
     else:
       data[policy_name] = {
         "mean": policy_data_array.mean(axis=0),
       }
     del policy_data_array
-  fig_eff(data, name='try.pdf')
+  fig_eff(data, name='fig_eff.pdf')

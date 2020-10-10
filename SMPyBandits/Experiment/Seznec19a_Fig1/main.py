@@ -43,7 +43,8 @@ policies = [
   [Exp3S, {'alpha': 1 / T, 'gamma': min(1, np.sqrt(K * np.log(K * T) / T))}],  # 11
   [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.1}],  # 12
   [EFF_RAWUCB, {'alpha': 1.4, 'm': 2}],  # 13
-  [EFF_RAWUCB_pp, {'alpha': 1.4, 'm': 1.01}],  # 14
+  [EFF_RAWUCB_pp, {'alpha': 2, 'm': 1.01}],  # 14
+  [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.01}],  # 15
 ]
 policy_ind = 8 if len(sys.argv) == 1 else int(sys.argv[1])
 policy = policies[policy_ind]

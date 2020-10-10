@@ -40,13 +40,13 @@ def fig1(data, name='fig1.pdf', freq=1000):
     plt.xlabel('Round ($t$)')
     plt.ylabel('Average regret $R_t$')
     ax.xaxis.set_label_coords(0.5, -0.08)
-    ax.yaxis.set_label_coords(-0.09, 0.5)
+    ax.yaxis.set_label_coords(-0.105, 0.5)
     # -------------- SAVE --------------
     plt.savefig(name)
 
 
 if __name__ == "__main__":
-    DAY = 4
+    DAY = 10
     data_file = './Reward/reward_data_day_%s.csv' % (DAY)
     DRAWS = 10
     df = pd.read_csv(data_file, index_col=0).transpose().reset_index(drop=True)
@@ -65,22 +65,22 @@ if __name__ == "__main__":
         [Exp3S, {'alpha': 1 / T, 'gamma': min(1, sqrt(K * log(K * T) / T))}],
     ]
     data = {}
-    for policy in policies:
-        policy_name = str(policy[0](nbArms=2, **policy[1]))
-        policy_name_nospace = policy_name.replace(' ', '_')
-        policy_data = [
-            np.load(os.path.join('./data', file)) for file in os.listdir('./data') if
-            file.startswith("DAY_%s_REGRET_%s_"%(DAY, policy_name_nospace))
-        ]
-        if not policy_data:
-            print(policy_name, 'no data')
-            continue
-        policy_data_array = np.concatenate(policy_data, axis=0)
-        print(policy_name, len(policy_data), policy_data_array.shape)
-        data[policy_name] = {
-            "mean": policy_data_array.mean(axis=0),
-            "uppq": np.quantile(policy_data_array, 0.9, axis=0),
-            "lowq": np.quantile(policy_data_array, 0.1, axis=0)
-        }
-    fig1(data, "DAY%s.pdf"%DAY)
+    # for policy in policies:
+    #     policy_name = str(policy[0](nbArms=2, **policy[1]))
+    #     policy_name_nospace = policy_name.replace(' ', '_')
+    #     policy_data = [
+    #         np.load(os.path.join('./data', file)) for file in os.listdir('./data') if
+    #         file.startswith("DAY_%s_REGRET_%s_"%(DAY, policy_name_nospace))
+    #     ]
+    #     if not policy_data:
+    #         print(policy_name, 'no data')
+    #         continue
+    #     policy_data_array = np.concatenate(policy_data, axis=0)
+    #     print(policy_name, len(policy_data), policy_data_array.shape)
+    #     data[policy_name] = {
+    #         "mean": policy_data_array.mean(axis=0),
+    #         "uppq": np.quantile(policy_data_array, 0.9, axis=0),
+    #         "lowq": np.quantile(policy_data_array, 0.1, axis=0)
+    #     }
+    # fig1(data, "DAY%s.pdf"%DAY)
 

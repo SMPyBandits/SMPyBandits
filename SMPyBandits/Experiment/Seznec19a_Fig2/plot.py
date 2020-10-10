@@ -8,7 +8,7 @@ Proceedings of Machine Learning Research, PMLR 89:2564-2572, 2019.
 http://proceedings.mlr.press/v89/seznec19a.html
 https://arxiv.org/abs/1811.11043 (updated version)
 """
-from SMPyBandits.Policies import wSWA, FEWA, EFF_FEWA, RAWUCB, EFF_RAWUCB_pp2, GaussianGLR_IndexPolicy, \
+from SMPyBandits.Policies import wSWA, FEWA, EFF_FEWA, RAWUCB, EFF_RAWUCB, EFF_RAWUCB_pp, GaussianGLR_IndexPolicy, \
   klUCBloglog_forGLR, DiscountedUCB as DUCB, SWUCB, Exp3S
 import os
 import numpy as np
@@ -19,9 +19,9 @@ plt.style.use('seaborn-colorblind')
 plt.style.use('style.mplstyle')
 
 
-def fig2(data, name='fig2.pdf', ylim=2400, ylim2=500, freq=50):
+def fig2(data, name='fig2.pdf', ylim=2400, ylim2=500, freq=50, leg=0.2):
   # --------------  PLOT  --------------
-  legend_size = 0.2
+  legend_size = leg
   fig, (ax1, ax2, ax3) = plt.subplots(1, 3, gridspec_kw={'width_ratios': [1, 1, legend_size]}, figsize=(12, 10))
   N_arms = 9
   ind = np.arange(N_arms)  # the x locations for the groups
@@ -74,7 +74,7 @@ def fig2(data, name='fig2.pdf', ylim=2400, ylim2=500, freq=50):
   fig.savefig(name)
 
 
-def preproc_plot_fig2(policies, name='fig2.pdf', ylim=2400, ylim2=500, freq=50):
+def preproc_plot_fig2(policies, name='fig2.pdf', ylim=2400, ylim2=500, freq=50, leg=0.2):
   data = {}
   for policy in policies:
     policy_name = str(policy[0](nbArms=2, **policy[1]))
@@ -100,31 +100,44 @@ def preproc_plot_fig2(policies, name='fig2.pdf', ylim=2400, ylim2=500, freq=50):
       "lowq": np.quantile(regret_data_array, 0.1, axis=0),
       "pull": pull_data_array.mean(axis=0)
     }
-  return fig2(data, name=name, ylim=ylim, ylim2=ylim2)
+  return fig2(data, name=name, ylim=ylim, ylim2=ylim2, leg=leg)
 
 
-if __name__ == "__main__":
-  policies = [
-    [RAWUCB, {'alpha': 1.4}],
-    [RAWUCB, {'alpha': 4}],
-    [FEWA, {'alpha': .06}],
-    [FEWA, {'alpha': 4}],
-    [wSWA, {'alpha': 0.002}],
-    [wSWA, {'alpha': 0.02}],
-    [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / 25000), 'alpha0': 0,
-                               'per_arm_restart': True, 'sig2': 1, 'use_localization': False}],
-  ]
-  preproc_plot_fig2(policies, name="fig2_main.pdf", ylim=1400, ylim2=700)
+# if __name__ == "__main__":
+  # policies = [
+  #   [RAWUCB, {'alpha': 1.4}],
+  #   [RAWUCB, {'alpha': 4}],
+  #   [FEWA, {'alpha': .06}],
+  #   [FEWA, {'alpha': 4}],
+  #   [wSWA, {'alpha': 0.002}],
+  #   [wSWA, {'alpha': 0.02}],
+  #   [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / 25000), 'alpha0': 0,
+  #                              'per_arm_restart': True, 'sig2': 1, 'use_localization': False}],
+  # ]
+  # preproc_plot_fig2(policies, name="fig2_main.pdf", ylim=1400, ylim2=700)
+  #
+  # policies = [
+  #   [wSWA, {'alpha': 0.002}],
+  #   [wSWA, {'alpha': 0.02}],
+  #   [wSWA, {'alpha': 0.2}],
+  #   [DUCB, {'gamma': 0.997}],
+  #   [SWUCB, {'tau': 200}],
+  #   [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / 25000), 'alpha0': 0,
+  #                              'per_arm_restart': True, 'sig2': 1, 'use_localization': False}],
+  #   [Exp3S, {}],
+  #   # [EFF_RAWUCB_pp2, {'alpha': 1.4, 'm': 1.01}],  # 12
+  # ]
+  # preproc_plot_fig2(policies, name="fig2_SWA.pdf", ylim=5000, ylim2=750)
 
-  policies = [
-    [wSWA, {'alpha': 0.002}],
-    [wSWA, {'alpha': 0.02}],
-    [wSWA, {'alpha': 0.2}],
-    [DUCB, {'gamma': 0.997}],
-    [SWUCB, {'tau': 200}],
-    [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / 25000), 'alpha0': 0,
-                               'per_arm_restart': True, 'sig2': 1, 'use_localization': False}],
-    [Exp3S, {}],
-    # [EFF_RAWUCB_pp2, {'alpha': 1.4, 'm': 1.01}],  # 12
-  ]
-  preproc_plot_fig2(policies, name="fig2_SWA.pdf", ylim=5000, ylim2=750)
+  # policies = [
+  #   [RAWUCB, {'alpha': 1.4}],  # 7
+  #   [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.1}],  # 12
+  #   [EFF_RAWUCB, {'alpha': 1.4, 'm': 2}],  # 13
+  # ]
+  # preproc_plot_fig2(policies, name="fig2_eff.pdf", ylim=400, ylim2=150, leg = 0.4)
+
+  # policies = [
+  #   [RAWUCB, {'alpha': 1.4}],  # 7
+  #   [EFF_RAWUCB_pp, {'alpha': 1.4, 'm': 1.01}],  # 14
+  # ]
+  # preproc_plot_fig2(policies, name="fig2_pp.pdf", ylim=1400, ylim2=700)

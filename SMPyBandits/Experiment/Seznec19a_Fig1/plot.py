@@ -9,7 +9,7 @@ http://proceedings.mlr.press/v89/seznec19a.html
 https://arxiv.org/abs/1811.11043 (updated version)
 """
 from matplotlib import pyplot as plt
-from SMPyBandits.Policies import wSWA, FEWA, EFF_FEWA, RAWUCB, GaussianGLR_IndexPolicy, Exp3S, klUCBloglog_forGLR
+from SMPyBandits.Policies import wSWA, FEWA, EFF_FEWA, RAWUCB, GaussianGLR_IndexPolicy, Exp3S, klUCBloglog_forGLR, EFF_RAWUCB, EFF_RAWUCB_pp
 import os
 import numpy as np
 
@@ -48,7 +48,7 @@ def fig1BC(data, mus, mu_index=11, name='fig1B.pdf', ylim=300, freq=50):
   L = mus[mu_index]
   fig, ax = plt.subplots(figsize=(12, 10))
   for i, policy in enumerate(data):
-    X = sorted(list(range(0,data[policy]["mean"].shape[1], freq)) + [2538, 2765])
+    X = sorted(list(range(0,data[policy]["mean"].shape[1], freq)) + [2500, 2501, 2502, 2503, 2504,2505, 2506, 2538, 2765])
     ax.plot(X, data[policy]["mean"][mu_index, X], label=policy, linewidth=3,
             color='gray' if i == 6 else None)
     color = ax.get_lines()[-1].get_c()
@@ -98,22 +98,34 @@ if __name__ == "__main__":
   HORIZON = T = 10000  # Horizon T
   sigma = 1  # Gaussian noise std
   K = 2
-  policies = [
-    [wSWA, {'alpha': 0.002}],  # 4
-    [wSWA, {'alpha': 0.02}],  # 5
-    [wSWA, {'alpha': 0.2}],  # 6
-  ]
-  plot_all_fig(policies, name="SWA")
+  # policies = [
+  #   [wSWA, {'alpha': 0.002}],  # 4
+  #   [wSWA, {'alpha': 0.02}],  # 5
+  #   [wSWA, {'alpha': 0.2}],  # 6
+  # ]
+  # plot_all_fig(policies, name="SWA")
+  # policies = [
+  #   [RAWUCB, {'alpha': 1.4}],  # 7
+  #   [RAWUCB, {'alpha': 4}],  # 8
+  #   [FEWA, {'alpha': .06, 'delta': 1}],  # 1
+  #   [FEWA, {'alpha': 4}],  # 9
+  #   [wSWA, {'alpha': 0.002}],  # 4
+  #   [wSWA, {'alpha': 0.02}],  # 5
+  #   [wSWA, {'alpha': 0.2}],  # 6
+  # ]
+  # plot_all_fig(policies, name="main")
   policies = [
     [RAWUCB, {'alpha': 1.4}],  # 7
-    [RAWUCB, {'alpha': 4}],  # 8
-    [FEWA, {'alpha': .06, 'delta': 1}],  # 1
-    [FEWA, {'alpha': 4}],  # 9
-    [wSWA, {'alpha': 0.002}],  # 4
-    [wSWA, {'alpha': 0.02}],  # 5
-    [wSWA, {'alpha': 0.2}],  # 6
+    [EFF_RAWUCB, {'alpha': 1.4, 'm': 1.1}],  # 12
+    [EFF_RAWUCB, {'alpha': 1.4, 'm': 2}],  # 13
   ]
-  plot_all_fig(policies, name="main")
+  plot_all_fig(policies, name="eff", ylimA=250, ylimB=200, ylimC=30)
+
+  # policies = [
+  #   [RAWUCB, {'alpha': 1.4}],  # 7
+  #   [EFF_RAWUCB_pp, {'alpha': 1.4, 'm': 1.01}],  # 14
+  # ]
+  # plot_all_fig(policies, name="pp", ylimA=300, ylimB=300, ylimC=350)
   # policies =[
   # [GaussianGLR_IndexPolicy, {'policy': klUCBloglog_forGLR, 'delta': np.sqrt(1 / T), 'alpha0': 0,
   #                         'per_arm_restart': True, 'sig2': sigma ** 2, 'use_localization': False}],  # 10
