@@ -110,37 +110,52 @@ class AdSwitchNew(BasePolicy):
         self.all_rewards = [{} for _ in range(self.nbArms)]
         self.history_of_plays = []
 
+        self.mus_cache = {}
+        self.ns_cache = {}
+
     def check_changes_good_arms(self):
         """ Check for changes of good arms.
 
         - I moved this into a function, in order to stop the 4 for loops (``good_arm``, ``s_1``, ``s_2``, ``s``) as soon as a change was detected (early stopping).
-        - TODO this takes a crazy O(K t^3) time, it HAS to be done faster!
+        - TODO this takes a crazy O(K t^2) time, it HAS to be done faster!
         """
+        def subroutine(good_arm, s_1, s_2, s):
+            # check condition (3)
+            n_s1_s2_a = self.n_s_t(good_arm, s_1, s_2)  # sub interval [s1, s2] <= [s, t] (s <= s1 <= s2 <= t).
+            mu_hat_s1_s2_a = self.mu_hat_s_t(good_arm, s_1, s_2)  # sub interval [s1, s2] <= [s, t] (s <= s1 <= s2 <= t).
+            n_s_t_a = self.n_s_t(good_arm, s, self.t)
+            mu_hat_s_t_a = self.mu_hat_s_t(good_arm, s, self.t)
+            abs_difference_in_s1s2_st = abs(mu_hat_s1_s2_a - mu_hat_s_t_a)
+            confidence_radius_s1s2 = np.sqrt(2 * max(1, np.log(self.horizon)) / max(n_s1_s2_a, 1))
+            confidence_radius_st = np.sqrt(2 * max(1, np.log(self.horizon)) / max(n_s_t_a, 1))
+            right_side = confidence_radius_s1s2 + confidence_radius_st
+            if abs_difference_in_s1s2_st > right_side:  # check condition 3:
+                return True
+            else:
+                return False
+
+        if self.t == 1:
+            # Edge case. This is done for consistency with the older `check_changes_good_arms`
+            for good_arm in self.set_GOOD:
+                setting = (good_arm, 0, 0, 0)
+                if subroutine(*setting):
+                    return True
+
         for good_arm in self.set_GOOD:
-            for s_1 in range(self.start_of_episode, self.t + 1, self.delta_s):  # WARNING we could speed up this loop with their trick
-                for s_2 in range(s_1, self.t + 1, self.delta_s):  # WARNING we could speed up this loop with their trick
-                    for s in range(self.start_of_episode, self.t + 1, self.delta_s):  # WARNING we could speed up this loop with their trick
-                        # check condition (3)
-                        n_s1_s2_a = self.n_s_t(good_arm, s_1, s_2)  # sub interval [s1, s2] <= [s, t] (s <= s1 <= s2 <= t).
-                        mu_hat_s1_s2_a = self.mu_hat_s_t(good_arm, s_1, s_2)  # sub interval [s1, s2] <= [s, t] (s <= s1 <= s2 <= t).
-                        n_s_t_a = self.n_s_t(good_arm, s, self.t)
-                        mu_hat_s_t_a = self.mu_hat_s_t(good_arm, s, self.t)
-                        abs_difference_in_s1s2_st = abs(mu_hat_s1_s2_a - mu_hat_s_t_a)
-                        confidence_radius_s1s2 = np.sqrt(2 * max(1, np.log(self.horizon)) / max(n_s1_s2_a, 1))
-                        confidence_radius_st = np.sqrt(2 * max(1, np.log(self.horizon)) / max(n_s_t_a, 1))
-                        right_side = confidence_radius_s1s2 + confidence_radius_st
-                        # print("AdSwitchNew: should we start a new episode, by checking condition (3), with arm {}, s1 = {}, s2 = {}, s = {} and t = {}...".format(good_arm, s_1, s_2, s, self.t))  # DEBUG
-                        if abs_difference_in_s1s2_st > right_side:  # check condition 3:
-                            print("\n==> New episode was started, with arm {}, s1 = {}, s2 = {}, s = {} and t = {}, as condition (3) is satisfied!".format(good_arm, s_1, s_2, s, self.t))  # DEBUG
-                            # print("    n_s1_s2_a =", n_s1_s2_a)  # DEBUG
-                            # print("    mu_hat_s1_s2_a =", mu_hat_s1_s2_a)  # DEBUG
-                            # print("    n_s_t_a =", n_s_t_a)  # DEBUG
-                            # print("    mu_hat_s_t_a =", mu_hat_s_t_a)  # DEBUG
-                            # print("    abs_difference_in_s1s2_st =", abs_difference_in_s1s2_st)  # DEBUG
-                            # print("    confidence_radius_s1s2 =", confidence_radius_s1s2)  # DEBUG
-                            # print("    confidence_radius_st =", confidence_radius_st)  # DEBUG
-                            # print("    right_side =", right_side)  # DEBUG
-                            return True
+            for s_1 in range(self.start_of_episode, self.t + 1):  # WARNING we could speed up this loop with their trick
+                for s_2 in range(s_1, self.t + 1):  # WARNING we could speed up this loop with their trick
+                    setting = (good_arm, s_1, s_2, self.t)
+                    # Only need to check s = self.t because all previous check were done before
+                    if subroutine(*setting):
+                        return True
+
+            for s_1 in range(self.start_of_episode, self.t + 1):  # WARNING we could speed up this loop with their trick
+                for s in range(self.start_of_episode, self.t + 1):  # WARNING we could speed up this loop with their trick
+                    # Only need to check s_2 = self.t because all previous check were done before
+                    setting = (good_arm, s_1, self.t, s)
+                    if subroutine(*setting):
+                        return True
+
         # done for checking on good arms
         return False
 
@@ -241,16 +256,30 @@ class AdSwitchNew(BasePolicy):
     def n_s_t(self, arm, s, t):
         r""" Compute :math:`n_{[s,t]}(a) := \#\{\tau : s \leq \tau \leq t, a_{\tau} = a \}`, naively by using the dictionary of all plays :attr:`all_rewards`."""
         assert s <= t, "Error: n_s_t only exists for s <= t, but here s = {} and t = {} for arm a = {}.".format(s, t, arm)  # DEBUG
+        # Use cached version first, if possible
+        setting = (arm, s, t)
+        if setting in self.ns_cache:
+            return self.ns_cache[setting]
+
         all_rewards_of_that_arm = self.all_rewards[arm]
         all_rewards_s_to_t = [r for (tau, r) in all_rewards_of_that_arm.items() if s <= tau <= t]
-        return len(all_rewards_s_to_t)
+        result = len(all_rewards_s_to_t)
+        self.ns_cache[setting] = result
+        return result
 
     def mu_hat_s_t(self, arm, s, t):
         r""" Compute :math:`\hat{\tau}_{[s,t]}(a) := \frac{1}{n_{[s,t]}(a)} \sum_{\tau : s \leq \tau \leq t, a_{\tau} = a} r_t`, naively by using the dictionary of all plays :attr:`all_rewards`."""
         assert s <= t, "Error: mu_hat_s_t only exists for s <= t, but here s = {} and t = {} for arm a = {}.".format(s, t, arm)  # DEBUG
+        # Use cached version first, if possible
+        setting = (arm, s, t)
+        if setting in self.ns_cache:
+            return self.ns_cache[setting]
+
         all_rewards_of_that_arm = self.all_rewards[arm]
         all_rewards_s_to_t = [r for (tau, r) in all_rewards_of_that_arm.items() if s <= tau <= t]
-        return mymean(all_rewards_s_to_t)
+        result = mymean(all_rewards_s_to_t)
+        self.ns_cache[setting] = result
+        return result
 
     def find_max_i(self, gap):
         r""" Follow the algorithm and, with a gap estimate :math:`\widehat{\Delta_k}`, find :math:`I_k = \max\{ i : d_i \geq \widehat{\Delta_k} \}`, where :math:`d_i := 2^{-i}`. There is no need to do an exhaustive search:
