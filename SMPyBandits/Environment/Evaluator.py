@@ -255,7 +255,11 @@ class Evaluator(object):
                 self.maxCumRewards[policyId, envId, :] = np.maximum(self.maxCumRewards[policyId, envId, :], np.cumsum(r.rewards)) if repeatId > 1 else np.cumsum(r.rewards)
             self.bestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, r.indexes_bestarm))
             self.pulls[envId][policyId, :] += r.pulls
-            if self.moreAccurate: self.allPulls[envId][policyId, :, :] += np.array([1 * (r.choices == armId) for armId in range(env.nbArms)])  # XXX consumes a lot of zeros but it is not so costly
+            if self.moreAccurate:
+                # Make allPulls by selecting rows of an identity matrix using r.choices
+                # The identity matrix is made with shape (nbArms, nbArms)
+                select_rows = r.choices.reshape(1, -1)
+                self.allPulls[envId][policyId, :, :] += np.transpose(np.identity(self.envs[envId].nbArms, dtype=int)[select_rows][0])
             self.memoryConsumption[envId][policyId, repeatId] = r.memory_consumption
             self.lastPulls[envId][policyId, :, repeatId] = r.pulls
             self.runningTimes[envId][policyId, repeatId] = r.running_time
