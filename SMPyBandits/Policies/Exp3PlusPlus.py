@@ -95,7 +95,7 @@ class Exp3PlusPlus(BasePolicy):
 
     @property
     def epsilon(self):
-        r"""Compute the vector of parameters :math:`\eta_t(a) = \min\left(\frac{1}{2 K}, \frac{1}{2} \sqrt{\frac{\log K}{t K}}, \xi_t(a) \right)`."""
+        r"""Compute the vector of per-arm exploration rates :math:`\varepsilon_t(a) = \min\left(\frac{1}{2 K}, \frac{1}{2} \sqrt{\frac{\log K}{t K}}, \xi_t(a) \right)`."""
         return np.minimum(
             0.5 / self.nbArms,
             0.5 * np.sqrt(np.log(self.nbArms) / (self.t * self.nbArms)),
@@ -104,17 +104,17 @@ class Exp3PlusPlus(BasePolicy):
 
     @property
     def trusts(self):
-        r"""Update the trusts probabilities according to Exp3PlusPlus formula, and the parameter :math:`\eta_t`.
+        r"""Update the trusts probabilities according to Exp3PlusPlus formula, mixing the weights with the per-arm exploration rates :math:`\varepsilon_t(a)` (the :attr:`epsilon` property), **not** the scalar learning rate :math:`\eta_t`.
 
         .. math::
 
-           \tilde{\rho}'_{t+1}(a) &= (1 - \sum_{a'=1}^{K}\eta_t(a')) w_t(a) + \eta_t(a), \\
+           \tilde{\rho}'_{t+1}(a) &= (1 - \sum_{a'=1}^{K}\varepsilon_t(a')) w_t(a) + \varepsilon_t(a), \\
            \tilde{\rho}_{t+1} &= \tilde{\rho}'_{t+1} / \sum_{a=1}^{K} \tilde{\rho}'_{t+1}(a).
 
         If :math:`rho_t(a)` is the current weight from arm a.
         """
-        # Mixture between the weights and the uniform distribution
-        trusts = ((1 - np.sum(self.eta)) * self.weights) + self.eta
+        # Mixture between the weights and the per-arm exploration rates epsilon_t(a)
+        trusts = ((1 - np.sum(self.epsilon)) * self.weights) + self.epsilon
         # XXX Handle weird cases, slow down everything but safer!
         if not np.all(np.isfinite(trusts)):
             trusts[~np.isfinite(trusts)] = 0  # set bad values to 0
