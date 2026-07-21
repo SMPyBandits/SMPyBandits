@@ -268,7 +268,7 @@ plotAll(evaluation, 0)
 
 # $\mu = [B(0.01), B(0.02), B(0.3), B(0.4), B(0.5), B(0.6), B(0.795), B(0.8), B(0.805)]$ is harder. There is $3$ good arms, very close in term of mean rewards.
 # 
-# We could think that `EmpiricalMeans` will perform even more poorly here, but in fact although $\mathrm{UCB}_{\alpha=1/2}$ is more efficient in term of best arm identification, `EmpiricalMeans` is better in term of rewards as it simply focussed on the best arms, without trying to differente between the best $3$ arms.
+# We could think that `EmpiricalMeans` will perform even more poorly here, but in fact although $\mathrm{UCB}_{\alpha=1/2}$ is more efficient in term of best arm identification, `EmpiricalMeans` is better in term of rewards as it simply focused on the best arms, without trying to differente between the best $3$ arms.
 
 # In[17]:
 
